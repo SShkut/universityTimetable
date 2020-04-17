@@ -1,10 +1,10 @@
 package com.foxminded.university_timetable.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +15,7 @@ class TimetableTest {
 	
 	Timetable timetable;
 	Teacher johnTeacher;
+	Teacher emptyTeacher;
 	Student adamStudent;
 
 	@BeforeEach
@@ -31,20 +32,23 @@ class TimetableTest {
 		adamStudent = new Student("Adam", "Smith", "123456789", "123123123", "adam@mail.com", adamCourses, "SN001");
 		List<Student> students = Arrays.asList(adamStudent);
 		johnTeacher = new Teacher("John", "Dow", "987654321", "321321321", "dow@mail.com", teacherCourses, "PhD");
+		emptyTeacher = new Teacher("", "", "", "", "", new ArrayList<>(), "");
 		Group adamGroup = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), students);
+		Group emptyGroup = new Group("00", "", "", new Semester(1998, ""), new ArrayList<>());
 		
 		TimeSlot slot1 = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), cs111, johnTeacher, adamGroup, null);
-		TimeSlot slot2 = new TimeSlot(LocalTime.of(10, 40), LocalTime.of(12, 10), cs444, johnTeacher, null, null);
+		TimeSlot slot2 = new TimeSlot(LocalTime.of(10, 40), LocalTime.of(12, 10), cs444, emptyTeacher, emptyGroup, null);
 		
-		DailyTimetable dailyTimetable = new DailyTimetable(LocalDate.now(), Arrays.asList(slot1));
+		DailyTimetable dailyTimetable = new DailyTimetable(LocalDate.now(), Arrays.asList(slot1, slot2));
 		
 		timetable = new Timetable("test", Arrays.asList(dailyTimetable));
 	}
 
 	@Test
 	void givenStudentAndDate_whenGetTimetableDay_thenReturnTimetableForGivenDay() {
-		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), new Course("CS", null), johnTeacher, new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent)), null);
-		
+		Course course = new Course("CS", null);
+		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
+		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);	
 		DailyTimetable expected = new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot));
 		
 		DailyTimetable actual = timetable.getTimetableDay(LocalDate.now(), adamStudent).get();
@@ -54,7 +58,14 @@ class TimetableTest {
 
 	@Test
 	void givenTeacherAndDate_whenGetTimetableDay_thenReturnTimetableForGivenDay() {
-		fail("Not yet implemented");
+		Course course = new Course("CS", null);
+		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
+		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);
+		DailyTimetable expected = new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot));
+		
+		DailyTimetable actual = timetable.getTimetableDay(LocalDate.now(), johnTeacher).get();
+		
+		assertEquals(expected, actual);
 	}
 
 }
