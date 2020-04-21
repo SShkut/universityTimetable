@@ -4,9 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,13 +47,31 @@ class TimetableTest {
 	}
 
 	@Test
-	void givenStudentAndDate_whenGetTimetableDay_thenReturnTimetableForGivenDay() {
+	void givenStudentAndDate_whenGetTimetableDay_thenReturnOptionalTimetableForGivenDay() {
 		Course course = new Course("CS", null);
 		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
 		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);	
 		DailyTimetable expected = new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot));
 		
 		DailyTimetable actual = timetable.getTimetableDay(LocalDate.now(), adamStudent).get();
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenStudentAndDateWithoutTimetable_whenGetTimetableDay_thenReturnOptionalEmpty() {
+		Optional<DailyTimetable> expected = Optional.empty();
+		
+		Optional<DailyTimetable> actual = timetable.getTimetableDay(LocalDate.now().minusDays(1), adamStudent);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test 
+	void givenStudentAndNullAsDate_whenGetTimetableDay_thenthenReturnOptionalEmpty() {
+		Optional<DailyTimetable> expected = Optional.empty();
+		
+		Optional<DailyTimetable> actual = timetable.getTimetableDay(null, adamStudent);
 		
 		assertEquals(expected, actual);
 	}
@@ -67,5 +87,82 @@ class TimetableTest {
 		
 		assertEquals(expected, actual);
 	}
+	
+	@Test 
+	void givenTeacherAndDateWhithoutTimetable_whenGetTimetableDay_thenReturnOptionalEmpty() {
+		Optional<DailyTimetable> expected = Optional.empty();
+		
+		Optional<DailyTimetable> actual = timetable.getTimetableDay(LocalDate.now().minusDays(1), johnTeacher);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test 
+	void givenTeacherAndNullAsDate_whenGetTimetableDay_thenthenReturnOptionalEmpty() {
+		Optional<DailyTimetable> expected = Optional.empty();
+		
+		Optional<DailyTimetable> actual = timetable.getTimetableDay(null, johnTeacher);
+		
+		assertEquals(expected, actual);
+	}
 
+	@Test
+	void givenNullAsPersonAndDate_whenGetTimetableDay_thenReturnOptionalEmpty() {
+		Optional<DailyTimetable> expected = Optional.empty();
+		
+		Optional<DailyTimetable> actual = timetable.getTimetableDay(LocalDate.now(), null);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test 
+	void givenStudentAndMonth_whenGetTimetableMonth_thenReturnTimetableForMonth() {
+		Course course = new Course("CS", null);
+		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
+		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);	
+		List<DailyTimetable> expected = Arrays.asList(new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot)));
+		
+		List<DailyTimetable> actual = timetable.getTimetableMonth(LocalDate.now().getMonth(), adamStudent);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenTeacherAndMonth_whenGetTimetableMonth_thenthenReturnTimetableForMonth() {
+		Course course = new Course("CS", null);
+		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
+		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);
+		List<DailyTimetable> expected = Arrays.asList(new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot)));
+		
+		List<DailyTimetable> actual = timetable.getTimetableMonth(LocalDate.now().getMonth(), johnTeacher);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenNullAsPersonAndMonth_whenGetTimetableMonth_thenReturnEmptyList() {
+		List<DailyTimetable> expected = new ArrayList<>();
+		
+		List<DailyTimetable> actual = timetable.getTimetableMonth(LocalDate.now().getMonth(), null);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenStudentAndMonthWithoutTimetable_whenGetTimetableMonth_thenReturnEmptyList() {
+		List<DailyTimetable> expected = new ArrayList<>();
+		
+		List<DailyTimetable> actual = timetable.getTimetableMonth(Month.of(LocalDate.now().getMonth().getValue() - 1), adamStudent);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenTeacherAndMonthWithoutTimetable_whenGetTimetableMonth_thenReturnEmptyList() {
+		List<DailyTimetable> expected = new ArrayList<>();
+		
+		List<DailyTimetable> actual = timetable.getTimetableMonth(Month.of(LocalDate.now().getMonth().getValue() - 1), johnTeacher);
+		
+		assertEquals(expected, actual);
+	}
 }

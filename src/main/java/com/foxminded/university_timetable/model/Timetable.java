@@ -54,8 +54,7 @@ public class Timetable {
 						.collect(Collectors.toList());
 				return Optional.of(new DailyTimetable(date, slots));	
 			}
-		}
-		
+		}		
 		return Optional.empty();
 	}
 	
@@ -68,8 +67,7 @@ public class Timetable {
 				if (timetable.isPresent()) {
 					result.add(timetable.get());
 				}
-			});
-		
+			});		
 		return result;
 	}
 }
