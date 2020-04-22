@@ -1,5 +1,6 @@
 package com.foxminded.university_timetable.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
@@ -8,8 +9,16 @@ public class Group {
 	private String major;
 	private String department;
 	private Semester semester;
-	private List<Student> students;
+	private List<Student> students;	
 	
+	public Group(String name, String major, String department, Semester semester) {
+		this.name = name;
+		this.major = major;
+		this.department = department;
+		this.semester = semester;
+		this.students = new ArrayList<>();
+	}
+
 	public Group(String name, String major, String department, Semester semester, List<Student> students) {
 		this.name = name;
 		this.major = major;
@@ -56,6 +65,10 @@ public class Group {
 	
 	public void setStudents(List<Student> students) {
 		this.students = students;
+	}
+	
+	public void addStudent(Student student) {
+		getStudents().add(student);
 	}
 
 	@Override
@@ -106,4 +119,9 @@ public class Group {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return name + " major: " + major + " department: " + department + " semester: " + semester;
+	}	
 }

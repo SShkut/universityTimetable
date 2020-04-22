@@ -56,4 +56,9 @@ public class Room {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return sybmol;
+	}	
 }

@@ -5,6 +5,13 @@ import java.util.List;
 public class Teacher extends Person {
 
 	private String degree;
+	
+
+	public Teacher(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
+			String degree) {
+		super(firstName, lastName, taxNumber, phoneNumber, email);
+		this.degree = degree;
+	}
 
 	public Teacher(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
 			List<Course> courses, String degree) {
@@ -18,5 +25,10 @@ public class Teacher extends Person {
 
 	public void setDegree(String degree) {
 		this.degree = degree;
+	}
+
+	@Override
+	public String toString() {
+		return degree + " " + getFirstName() + " " + getLastName();
 	}	
 }

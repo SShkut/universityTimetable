@@ -56,4 +56,9 @@ public class Semester {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return period + " " + yearOfStudy;
+	}	
 }

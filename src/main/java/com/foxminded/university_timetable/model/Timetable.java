@@ -13,8 +13,13 @@ import java.util.stream.IntStream;
 public class Timetable {
 	
 	private String name;
-	private List<DailyTimetable> timetables;
+	private List<DailyTimetable> timetables;	
 	
+	public Timetable(String name) {
+		this.name = name;
+		this.timetables = new ArrayList<>();
+	}
+
 	public Timetable(String name, List<DailyTimetable> timetables) {
 		this.name = name;
 		this.timetables = timetables;
@@ -34,6 +39,10 @@ public class Timetable {
 
 	public void setTimetables(List<DailyTimetable> timetables) {
 		this.timetables = timetables;
+	}
+	
+	public void addDailyTimetable(DailyTimetable dailyTimetable) {
+		getTimetables().add(dailyTimetable);
 	}
 	
 	public Optional<DailyTimetable> getTimetableDay(LocalDate date, Person person) {

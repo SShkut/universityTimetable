@@ -1,12 +1,18 @@
 package com.foxminded.university_timetable.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
 	
 	private String name;
-	private List<Course> prerequisits;
+	private List<Course> prerequisits;	
 	
+	public Course(String name) {
+		this.name = name;
+		this.prerequisits = new ArrayList<>();
+	}
+
 	public Course(String name, List<Course> prerequisits) {
 		this.name = name;
 		this.prerequisits = prerequisits;
@@ -58,4 +64,9 @@ public class Course {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}	
 }

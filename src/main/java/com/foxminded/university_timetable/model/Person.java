@@ -1,5 +1,6 @@
 package com.foxminded.university_timetable.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Person {
@@ -10,6 +11,15 @@ public abstract class Person {
 	private String phoneNumber;
 	private String email;
 	private List<Course> courses;	
+
+	public Person(String firstName, String lastName, String taxNumber, String phoneNumber, String email) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.taxNumber = taxNumber;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+		this.courses = new ArrayList<>();
+	}
 
 	public Person(String firstName, String lastName, String taxNumber, String phoneNumber, String email, List<Course> courses) {
 		this.firstName = firstName;
@@ -66,6 +76,10 @@ public abstract class Person {
 
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
+	}
+	
+	public void addCourse(Course course) {
+		this.courses.add(course);
 	}
 
 	@Override

@@ -122,4 +122,10 @@ public class TimeSlot {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		String newLine = System.lineSeparator();
+		return startTime + " - " + endTime + ": " + course + " " + teacher + " " + group + " " + room + newLine;
+	}	
 }
