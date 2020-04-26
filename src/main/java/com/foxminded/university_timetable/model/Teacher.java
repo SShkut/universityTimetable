@@ -5,7 +5,6 @@ import java.util.List;
 public class Teacher extends Person {
 
 	private String degree;
-	
 
 	public Teacher(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
 			String degree) {
@@ -16,6 +15,12 @@ public class Teacher extends Person {
 	public Teacher(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
 			List<Course> courses, String degree) {
 		super(firstName, lastName, taxNumber, phoneNumber, email, courses);
+		this.degree = degree;
+	}
+	
+	public Teacher(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email,
+			List<Course> courses, String degree) {
+		super(id, firstName, lastName, taxNumber, phoneNumber, email, courses);
 		this.degree = degree;
 	}
 

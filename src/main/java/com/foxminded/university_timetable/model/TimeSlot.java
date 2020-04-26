@@ -4,6 +4,7 @@ import java.time.LocalTime;
 
 public class TimeSlot {
 
+	private Long id;
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private Course course;
@@ -18,6 +19,25 @@ public class TimeSlot {
 		this.teacher = teacher;
 		this.group = group;
 		this.room = room;
+	}	
+
+	public TimeSlot(Long id, LocalTime startTime, LocalTime endTime, Course course, Teacher teacher, Group group,
+			Room room) {
+		this.id = id;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.course = course;
+		this.teacher = teacher;
+		this.group = group;
+		this.room = room;
+	}	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public LocalTime getStartTime() {
@@ -75,6 +95,7 @@ public class TimeSlot {
 		result = prime * result + ((course == null) ? 0 : course.hashCode());
 		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
 		result = prime * result + ((group == null) ? 0 : group.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((room == null) ? 0 : room.hashCode());
 		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
 		result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
@@ -104,6 +125,11 @@ public class TimeSlot {
 			if (other.group != null)
 				return false;
 		} else if (!group.equals(other.group))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (room == null) {
 			if (other.room != null)

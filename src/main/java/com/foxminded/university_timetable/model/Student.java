@@ -17,6 +17,12 @@ public class Student extends Person {
 		super(firstName, lastName, taxNumber, phoneNumber, email, courses);
 		this.studentCardNumber = studentCardNumber;
 	}
+	
+	public Student(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email, 
+			List<Course> courses, String studentCardNumber) {
+		super(id, firstName, lastName, taxNumber, phoneNumber, email, courses);
+		this.studentCardNumber = studentCardNumber;
+	}
 
 	public String getStudentCardNumber() {
 		return studentCardNumber;

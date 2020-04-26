@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 
 public class Timetable {
 	
+	private Long id;
 	private String name;
 	private List<DailyTimetable> timetables;	
 	
@@ -23,6 +24,20 @@ public class Timetable {
 	public Timetable(String name, List<DailyTimetable> timetables) {
 		this.name = name;
 		this.timetables = timetables;
+	}	
+
+	public Timetable(Long id, String name, List<DailyTimetable> timetables) {
+		this.id = id;
+		this.name = name;
+		this.timetables = timetables;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

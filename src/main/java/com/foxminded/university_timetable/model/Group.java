@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Group {
 
+	private Long id;
 	private String name;
 	private String major;
 	private String department;
@@ -27,6 +28,23 @@ public class Group {
 		this.students = students;
 	}	
 	
+	public Group(Long id, String name, String major, String department, Semester semester, List<Student> students) {
+		this.id = id;
+		this.name = name;
+		this.major = major;
+		this.department = department;
+		this.semester = semester;
+		this.students = students;
+	}	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -76,6 +94,7 @@ public class Group {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((department == null) ? 0 : department.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((major == null) ? 0 : major.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((semester == null) ? 0 : semester.hashCode());
@@ -96,6 +115,11 @@ public class Group {
 			if (other.department != null)
 				return false;
 		} else if (!department.equals(other.department))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (major == null) {
 			if (other.major != null)

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class DailyTimetable {
 	
+	private Long id;
 	private LocalDate date;
 	private List<TimeSlot> timeSlots;	
 
@@ -18,8 +19,22 @@ public class DailyTimetable {
 	public DailyTimetable(LocalDate date, List<TimeSlot> timeSlots) {
 		this.date = date;
 		this.timeSlots = timeSlots;
-	}
+	}	
 	
+	public DailyTimetable(Long id, LocalDate date, List<TimeSlot> timeSlots) {
+		this.id = id;
+		this.date = date;
+		this.timeSlots = timeSlots;
+	}	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public LocalDate getDate() {
 		return date;
 	}
@@ -45,6 +60,7 @@ public class DailyTimetable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((timeSlots == null) ? 0 : timeSlots.hashCode());
 		return result;
 	}
@@ -62,6 +78,11 @@ public class DailyTimetable {
 			if (other.date != null)
 				return false;
 		} else if (!date.equals(other.date))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (timeSlots == null) {
 			if (other.timeSlots != null)
