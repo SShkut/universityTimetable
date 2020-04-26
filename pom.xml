@@ -11,6 +11,8 @@
 	<spring-context.version>5.2.5.RELEASE</spring-context.version>
   	<spring-jdbc.versioin>5.2.5.RELEASE</spring-jdbc.versioin>
   	<postgresql.version>42.2.12</postgresql.version>
+  	<slf4j.version>1.7.30</slf4j.version>
+  	<spring-test.version>5.2.5.RELEASE</spring-test.version>
   	<junit.version>5.6.0</junit.version>
   	<dbunit.version>2.5.1</dbunit.version>
   	<h2.version>1.4.200</h2.version>  	
@@ -31,6 +33,23 @@
 	    <artifactId>postgresql</artifactId>
 	    <version>${postgresql.version}</version>
 	</dependency>
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-api</artifactId>
+	    <version>${slf4j.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-log4j12</artifactId>
+	    <version>${slf4j.version}</version>
+	    <scope>test</scope>
+	</dependency>	
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-test</artifactId>
+	    <version>${spring-test.version}</version>
+	    <scope>test</scope>
+	</dependency>	
 	<dependency>
   		<groupId>org.junit.jupiter</groupId>
   		<artifactId>junit-jupiter-engine</artifactId>

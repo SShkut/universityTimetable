@@ -7,22 +7,25 @@ public class Course {
 	
 	private Long id;
 	private String name;
-	private List<Course> prerequisits;	
+	private List<Course> prerequisites;	
 	
+	public Course() {
+	}
+
 	public Course(String name) {
 		this.name = name;
-		this.prerequisits = new ArrayList<>();
+		this.prerequisites = new ArrayList<>();
 	}
 
 	public Course(String name, List<Course> prerequisits) {
 		this.name = name;
-		this.prerequisits = prerequisits;
+		this.prerequisites = prerequisits;
 	}	
 	
 	public Course(Long id, String name, List<Course> prerequisits) {
 		this.id = id;
 		this.name = name;
-		this.prerequisits = prerequisits;
+		this.prerequisites = prerequisits;
 	}	
 
 	public Long getId() {
@@ -41,12 +44,12 @@ public class Course {
 		this.name = name;
 	}
 	
-	public List<Course> getPrerequisits() {
-		return prerequisits;
+	public List<Course> getPrerequisites() {
+		return prerequisites;
 	}
 	
-	public void setPrerequisits(List<Course> prerequisits) {
-		this.prerequisits = prerequisits;
+	public void setPrerequisits(List<Course> prerequisites) {
+		this.prerequisites = prerequisites;
 	}
 
 	@Override
@@ -55,7 +58,7 @@ public class Course {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((prerequisits == null) ? 0 : prerequisits.hashCode());
+		result = prime * result + ((prerequisites == null) ? 0 : prerequisites.hashCode());
 		return result;
 	}
 
@@ -78,10 +81,10 @@ public class Course {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (prerequisits == null) {
-			if (other.prerequisits != null)
+		if (prerequisites == null) {
+			if (other.prerequisites != null)
 				return false;
-		} else if (!prerequisits.equals(other.prerequisits))
+		} else if (!prerequisites.equals(other.prerequisites))
 			return false;
 		return true;
 	}

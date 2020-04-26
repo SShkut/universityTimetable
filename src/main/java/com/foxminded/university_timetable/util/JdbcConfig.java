@@ -3,26 +3,23 @@ package com.foxminded.university_timetable.util;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 @Configuration
-@ComponentScan("com.foxminded.university_timetable")
+//@ComponentScan("com.foxminded.university_timetable")
 @PropertySource(value = { "classpath:application.properties" })
-public class SpringJdbcConfig {
+public class JdbcConfig {
 	
 	@Autowired
 	private Environment environment;
 
-	@Bean("postgresDataSource")
+	@Bean(name="postgresDataSource")
 	public DataSource postgresDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
@@ -33,25 +30,11 @@ public class SpringJdbcConfig {
 		return dataSource;
 	}
 	
-	@Bean("testDataSource")
-	public DataSource embeddedDataSource() {
+	@Bean(name="embeddedDataSource")
+	public DataSource embeddedDataSource() {		 
 		return new EmbeddedDatabaseBuilder()
 				.setType(EmbeddedDatabaseType.H2)
-				.addScript("schema")
+				.addScript("classpath:/schema.sql")
 				.build();
-	}
-	
-	@Bean("postgresJdbcTemplate")
-	public JdbcTemplate jdbcTemplate(@Autowired @Qualifier("postgresDataSource") DataSource dataSource) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.setResultsMapCaseInsensitive(true);
-		return jdbcTemplate;
-	}
-	
-	@Bean("testJdbcTemplate")
-	public JdbcTemplate testJdbcTemplate(@Autowired @Qualifier("testDataSource") DataSource dataSource) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.setResultsMapCaseInsensitive(true);
-		return jdbcTemplate;
 	}
 }
