@@ -1,0 +1,7 @@
+<!ELEMENT dataset (courses*)>
+<!ELEMENT courses EMPTY>
+<!ATTLIST courses
+	id ID #REQUIRED
+	name CDATA #REQUIRED
+	ancestor IDREF #IMPLIED
+>

@@ -13,8 +13,11 @@ import com.foxminded.university_timetable.row_mapper.CourseRowMapper;
 
 public class CourseDao {
 	
-	private static final String FIND_BY_ID = "SELECT * FROM COURSES WHERE id = ?";
-	private static final String FIND_ALL= "SELECT * FROM COURSES";
+	private static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = ?";
+	private static final String FIND_ALL= "SELECT * FROM courses";
+	private static final String DELETE_BY_ID = "DELETE FROM courses WHERE id = ?";
+	private static final String SAVE = "INSERT INTO courses (name, ancestor) values(?, ?)";
+	private static final String UPDATE = "UPDATE courses SET name = ?, ancestor = ? WHERE id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
 	
@@ -33,5 +36,17 @@ public class CourseDao {
 	
 	public List<Course> findAll() {
 		return  jdbcTemplate.query(FIND_ALL, new CourseRowMapper());
+	}
+	
+	public void delteById(Long id) {
+		this.jdbcTemplate.update(DELETE_BY_ID, id);
+	}
+	
+	public void save(Course course) {
+		this.jdbcTemplate.update(SAVE, course.getName(), course.getAncestor());
+	}
+	
+	public void update(Course course) {
+		this.jdbcTemplate.update(UPDATE, course.getName(), course.getAncestor(), course.getId());
 	}
 }

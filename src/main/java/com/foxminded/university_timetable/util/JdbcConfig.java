@@ -12,15 +12,11 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 @Configuration
-//@ComponentScan("com.foxminded.university_timetable")
 @PropertySource(value = { "classpath:application.properties" })
 public class JdbcConfig {
-	
-	@Autowired
-	private Environment environment;
 
 	@Bean(name="postgresDataSource")
-	public DataSource postgresDataSource() {
+	public DataSource postgresDataSource(@Autowired Environment environment) {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
 		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
