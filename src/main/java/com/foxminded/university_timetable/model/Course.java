@@ -8,7 +8,7 @@ public class Course {
 	private Long id;
 	private String name;
 	private Long ancestor;
-	private List<Course> prerequisites;	
+	private List<Course> prerequisites;
 	
 	public Course() {
 	}
