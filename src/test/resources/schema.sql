@@ -13,8 +13,15 @@ DROP TABLE IF EXISTS teacher_course;
 CREATE TABLE courses (
 	id serial PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
-	ancestor INTEGER,
-	FOREIGN KEY (ancestor) REFERENCES courses(id) ON DELETE SET NULL
+);
+
+CREATE TABLE course_prerequisites (
+	course_id INTEGER,
+	ancestor_id INTEGER,
+	depth INTEGER,
+	FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+	FOREIGN KEY (ancestor_id) REFERENCES courses(id) ON DELETE CASCADE,
+	UNIQUE (course_id, ancestor_id)
 );
 
 CREATE TABLE semesters (

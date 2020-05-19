@@ -1,11 +1,18 @@
-<!ELEMENT dataset (courses*, semesters*, groups*, students*, student_course*, teachers*, teacher_course*,
-					rooms*, timetables*, daily_timetables*, time_slots*)>
+<!ELEMENT dataset (courses*, course_prerequisites*, semesters*, groups*, students*, student_course*, 
+					teachers*, teacher_course*, rooms*, timetables*, daily_timetables*, time_slots*)>
 
 <!ELEMENT courses EMPTY>
 <!ATTLIST courses
 	id ID #REQUIRED
 	name CDATA #REQUIRED
 	ancestor IDREF #IMPLIED
+>
+
+<!ELEMENT course_prerequisites>
+<!ATTLIST course_prerequisites
+	course_id IDREF #REQUIRED
+	ancestor_id IDREF #REQUIRED
+	depth CDATA #REQUIRED
 >
 
 <!ELEMENT semesters EMPTY>
