@@ -83,7 +83,7 @@ class GroupDaoTest {
 	
 	@Test
 	void givenGroupId_whenDelete_thenDeleteGroupWithGivenId() throws DatabaseUnitException, SQLException {		
-		groupDao.delteById(1L);
+		groupDao.deleteById(1L);
 		
 		assertEquals(getExpectedTable("groupsExpectedAfterDelete.xml", "groups"), getActualTable("groups"));	
 	}

@@ -48,7 +48,7 @@ public class GroupDao {
 		return  jdbcTemplate.query(FIND_ALL, new GroupRowMapper());
 	}
 	
-	public void delteById(Long id) {
+	public void deleteById(Long id) {
 		this.jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 	
