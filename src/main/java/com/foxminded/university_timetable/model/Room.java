@@ -8,6 +8,10 @@ public class Room {
 	private String sybmol;
 	private Integer capacity;
 	
+	public Room() {
+		
+	}
+	
 	public Room(String sybmol, Integer capacity) {
 		this.sybmol = sybmol;
 		this.capacity = capacity;
