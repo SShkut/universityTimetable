@@ -37,7 +37,7 @@ public class CourseDao {
 	}
 	
 	public List<Course> findAll() {
-		return  jdbcTemplate.query(FIND_ALL, new CourseRowMapper());
+		return  this.jdbcTemplate.query(FIND_ALL, new CourseRowMapper());
 	}
 	
 	public void delteById(Long id) {
