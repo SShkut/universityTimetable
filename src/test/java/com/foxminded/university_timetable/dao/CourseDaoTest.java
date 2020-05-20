@@ -84,30 +84,30 @@ class CourseDaoTest {
 	void givenCourseId_whenDelete_thenDeleteCourseWithGivenId() throws DatabaseUnitException, SQLException {		
 		courseDao.delteById(1L);
 		
-		assertEquals(getExpectedTable("coursesExpectedAfterDelete.xml"), getActualTable());	
+		assertEquals(getExpectedTable("coursesExpectedAfterDelete.xml", "courses"), getActualTable("courses"));	
 	}
 	
 	@Test
 	void givenNewCourse_whenSave_thenInsertCourse() throws DatabaseUnitException, SQLException {		
 		courseDao.save(new Course(5L, "Calculus", null));
 			
-		assertEquals(getExpectedTable("coursesExpectedAfterSave.xml"), getActualTable());
+		assertEquals(getExpectedTable("coursesExpectedAfterSave.xml", "courses"), getActualTable("courses"));
 	}
 	
 	@Test
 	void givenExistentCourse_whenUpdate_thenUpdateCourse() throws DatabaseUnitException, SQLException {		
 		courseDao.update(new Course(1L, "CS-2", null));
 		
-		assertEquals(getExpectedTable("coursesExpectedAfterUpdate.xml"), getActualTable());
+		assertEquals(getExpectedTable("coursesExpectedAfterUpdate.xml", "courses"), getActualTable("courses"));
 	}
 
-	private ITable getActualTable() throws DatabaseUnitException, SQLException {
+	private ITable getActualTable(String tableName) throws DatabaseUnitException, SQLException {
 		IDatabaseConnection conn = new DatabaseConnection(dataSource.getConnection());
-		return conn.createDataSet().getTable("courses");
+		return conn.createDataSet().getTable(tableName);
 	}
 	
-	private ITable getExpectedTable(String fileName) throws DataSetException {
+	private ITable getExpectedTable(String fileName, String tableName) throws DataSetException {
 		IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(this.getClass().getClassLoader().getResource(fileName));
-		return expectedDataSet.getTable("courses");
+		return expectedDataSet.getTable(tableName);
 	}
 }

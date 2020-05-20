@@ -17,7 +17,7 @@ public class CourseDao {
 	private static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = ?";
 	private static final String FIND_ALL= "SELECT * FROM courses";
 	private static final String DELETE_BY_ID = "DELETE FROM courses WHERE id = ?";
-	private static final String SAVE = "INSERT INTO courses (name) values(?)";
+	private static final String SAVE = "INSERT INTO courses (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE courses SET name = ? WHERE id = ?";
 	private static final String FIND_PREREQISITES_OF_COURSE = "";
 	
