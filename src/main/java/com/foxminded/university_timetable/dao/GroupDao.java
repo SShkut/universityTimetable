@@ -16,12 +16,18 @@ import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
 
 public class GroupDao {
 	
-	private static final String FIND_ALL= "SELECT * FROM groups";
-	private static final String FIND_BY_ID = "SELECT * FROM groups WHERE id = ?";
+	private static final String FIND_ALL= "SELECT g.id, g.name, g.major, g.department, g.semester_id, s.year_of_study, s.period "
+			+ "FROM groups g "
+			+ "JOIN semesters s ON s.id = g.semester_id";
+	private static final String FIND_BY_ID = "SELECT g.id, g.name, g.major, g.department, g.semester_id, s.year_of_study, s.period "
+			+ "FROM groups g "
+			+ "JOIN semesters s ON s.id = g.semester_id AND g.id = ?";
 	private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
-	private static final String SAVE = "INSERT INTO groups (name, major, department, semester) values(?, ?, ?, ?)";
-	private static final String UPDATE = "UPDATE groups SET name = ?, major = ?, department = ?, semester = ? WHERE id = ?";
-	private static final String FIND_STUDENTS_OF_GROUP = "SELECT * FROM students WHERE group_id = ?";
+	private static final String SAVE = "INSERT INTO groups (name, major, department, semester_id) values(?, ?, ?, ?)";
+	private static final String UPDATE = "UPDATE groups SET name = ?, major = ?, department = ?, semester_id = ? WHERE id = ?";
+	private static final String FIND_STUDENTS_OF_GROUP = "SELECT s.id, s.first_name, s.last_name, s.tax_number, s.phone_number, s.email, s.student_card_number "
+			+ "FROM students s "
+			+ "JOIN student_group sg ON s.id = sg.student_id and sg.group_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
 	
@@ -47,11 +53,11 @@ public class GroupDao {
 	}
 	
 	public void save(Group group) {
-		this.jdbcTemplate.update(SAVE, group.getName(), group.getMajor(), group.getDepartment(), group.getSemester());
+		this.jdbcTemplate.update(SAVE, group.getName(), group.getMajor(), group.getDepartment(), group.getSemester().getId());
 	}
 	
 	public void update(Group group) {
-		this.jdbcTemplate.update(UPDATE, group.getName(), group.getMajor(), group.getDepartment(), group.getSemester(), group.getId());
+		this.jdbcTemplate.update(UPDATE, group.getName(), group.getMajor(), group.getDepartment(), group.getSemester().getId(), group.getId());
 	}
 	
 	public List<Student> findStudentsOfGroup(Group group) {

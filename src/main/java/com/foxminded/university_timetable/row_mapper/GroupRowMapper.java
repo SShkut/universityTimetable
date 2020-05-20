@@ -13,14 +13,20 @@ public class GroupRowMapper implements RowMapper<Group> {
 	@Override
 	public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Group group = new Group();
+		Semester semester = new Semester();
 		if (rs.isBeforeFirst()) {
 			return null;
 		}
 		
-		group.setId(Long.valueOf(rs.getLong("id")));
+		group.setId(rs.getLong("id"));
 		group.setName(rs.getString("name"));
 		group.setDepartment(rs.getString("department"));
 		group.setMajor(rs.getString("major"));
+		semester.setId(Long.valueOf(rs.getLong("semester_id")));
+		semester.setYearOfStudy(rs.getInt("year_of_study"));
+		semester.setPeriod(rs.getString("period"));
+		group.setSemester(semester);
+		
 		return group;
 	}
 }
