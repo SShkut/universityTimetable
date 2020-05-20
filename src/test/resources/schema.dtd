@@ -1,4 +1,4 @@
-<!ELEMENT dataset (courses*, course_prerequisites*, semesters*, groups*, students*, student_course*, 
+<!ELEMENT dataset (courses*, course_prerequisites*, semesters*, groups*, students*, student_group*, student_course*, 
 					teachers*, teacher_course*, rooms*, timetables*, daily_timetables*, time_slots*)>
 
 <!ELEMENT courses EMPTY>
@@ -39,7 +39,12 @@
 	phone_number CDATA #IMPLIED
 	email CDATA #IMPLIED
 	student_card_number CDATA #IMPLIED
-	group_id IDREF #IMPLIED
+>
+
+<!ELEMENT student_group EMPTY>
+<!ATTLIST student_group
+	student_id IDREF #REQUIRED
+	group_id IDREF #REQUIRED
 >
 
 <!ELEMENT student_course EMPTY>

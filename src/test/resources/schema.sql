@@ -46,9 +46,15 @@ CREATE TABLE students (
 	tax_number VARCHAR(20) NOT NULL,
 	phone_number VARCHAR(11),
 	email VARCHAR(255),
-	student_card_number VARCHAR(20),
+	student_card_number VARCHAR(20)
+);
+
+CREATE TABLE student_group (
+	student_id INTEGER,
 	group_id INTEGER,
-	FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE SET NULL
+	FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+	FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE CASCADE,
+	UNIQUE (student_id, group_id)
 );
 
 CREATE TABLE student_course (
