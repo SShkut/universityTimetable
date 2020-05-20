@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dataset SYSTEM "schema.dtd">
+<dataset>
+	<semesters id="1" year_of_study="2020" period="summer"/> 
+	<semesters id="2" year_of_study="2020" period="winter"/> 
+	<semesters id="3" year_of_study="2021" period="winter"/> 
+</dataset>

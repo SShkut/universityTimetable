@@ -8,6 +8,10 @@ public class Semester {
 	private Integer yearOfStudy;
 	private String period;
 	
+	public Semester() {
+		
+	}
+	
 	public Semester(int yearOfStudy, String period) {
 		this.yearOfStudy = yearOfStudy;
 		this.period = period;
