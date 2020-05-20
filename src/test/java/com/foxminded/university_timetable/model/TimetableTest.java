@@ -22,11 +22,11 @@ class TimetableTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		Course cs111 = new Course("CS", null);
-		Course cs222 = new Course("ADT", null);
-		Course cs333 = new Course("POSA", null);
-		Course cs444 = new Course("Calculus I", null);
-		Course cs555 = new Course("Calculus II", Arrays.asList(cs444));
+		Course cs111 = new Course(1L, "CS", null);
+		Course cs222 = new Course(2L, "ADT", null);
+		Course cs333 = new Course(3L, "POSA", null);
+		Course cs444 = new Course(4L, "Calculus I", null);
+		Course cs555 = new Course(5L, "Calculus II", null);
 		
 		List<Course> adamCourses = Arrays.asList(cs111, cs222, cs333);
 		List<Course> teacherCourses = Arrays.asList(cs111, cs222, cs333, cs444);
@@ -48,7 +48,7 @@ class TimetableTest {
 
 	@Test
 	void givenStudentAndDate_whenGetTimetableDay_thenReturnOptionalTimetableForGivenDay() {
-		Course course = new Course("CS", null);
+		Course course = new Course(1L, "CS", null);
 		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
 		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);	
 		DailyTimetable expected = new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot));
@@ -78,7 +78,7 @@ class TimetableTest {
 
 	@Test
 	void givenTeacherAndDate_whenGetTimetableDay_thenReturnTimetableForGivenDay() {
-		Course course = new Course("CS", null);
+		Course course = new Course(1L, "CS", null);
 		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
 		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);
 		DailyTimetable expected = new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot));
@@ -117,7 +117,7 @@ class TimetableTest {
 	
 	@Test 
 	void givenStudentAndMonth_whenGetTimetableMonth_thenReturnTimetableForMonth() {
-		Course course = new Course("CS", null);
+		Course course = new Course(1L, "CS", null);
 		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
 		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);	
 		List<DailyTimetable> expected = Arrays.asList(new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot)));
@@ -129,7 +129,7 @@ class TimetableTest {
 	
 	@Test
 	void givenTeacherAndMonth_whenGetTimetableMonth_thenthenReturnTimetableForMonth() {
-		Course course = new Course("CS", null);
+		Course course = new Course(1L, "CS", null);
 		Group group = new Group("AA-11", "CS", "CS", new Semester(2020, "summer"), Arrays.asList(adamStudent));
 		TimeSlot expectedSlot = new TimeSlot(LocalTime.of(9, 0), LocalTime.of(10, 30), course, johnTeacher, group, null);
 		List<DailyTimetable> expected = Arrays.asList(new DailyTimetable(LocalDate.now(), Arrays.asList(expectedSlot)));
