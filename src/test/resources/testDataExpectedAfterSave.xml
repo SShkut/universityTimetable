@@ -4,37 +4,39 @@
 	<courses id="1" name="CS"/>
 	<courses id="2" name="Math"/>
 	<courses id="3" name="Physics"/>
-	<courses id="4" name="History"/>	
-		
-	<course_prerequisites course_id="1" ancestor_id="1" depth="0"/>
-	<course_prerequisites course_id="2" ancestor_id="2" depth="0"/>
-	<course_prerequisites course_id="2" ancestor_id="1" depth="1"/>
-	<course_prerequisites course_id="3" ancestor_id="2" depth="2"/>
-	<course_prerequisites course_id="4" ancestor_id="3" depth="3"/>
+	<courses id="4" name="History"/>
+	<courses id="5" name="Calculus"/>
 	
 	<semesters id="1" year_of_study="2020" period="summer"/> 
 	<semesters id="2" year_of_study="2020" period="winter"/> 
+	<semesters id="3" year_of_study="2021" period="winter"/>
 	
 	<groups id="1" name="cs-1" major="cs" department="cs" semester_id="1"/>
 	<groups id="2" name="cs-2" major="cs" department="cs" semester_id="1"/>
 	<groups id="3" name="cs-3" major="cs" department="cs" semester_id="2"/>
+	<groups id="4" name="cs-4" major="css" department="csg" semester_id="1"/>
 	
 	<students id="1" first_name="fn-1" last_name="ln-1" tax_number="123456789" phone_number="1234567890" email="ln-1@unv.com" student_card_number="cn-123"/>
 	<students id="2" first_name="fn-2" last_name="ln-2" tax_number="123456798" phone_number="1234567891" email="ln-2@unv.com" student_card_number="cn-124"/>
 	<students id="3" first_name="fn-3" last_name="ln-3" tax_number="123456987" phone_number="1234567892" email="ln-3@unv.com" student_card_number="cn-125"/>
 	<students id="4" first_name="fn-4" last_name="ln-4" tax_number="123459876" phone_number="1234567893" email="ln-4@unv.com" student_card_number="cn-126"/>
 	<students id="5" first_name="fn-5" last_name="ln-5" tax_number="123498765" phone_number="1234567894" email="ln-5@unv.com" student_card_number="cn-127"/>
+	<students id="6" first_name="fn-6" last_name="ln-6" tax_number="623456789" phone_number="6234567890" email="ln-6@unv.com" student_card_number="cn-623"/>
 	
 	<student_group student_id="1" group_id="1"/>
 	<student_group student_id="1" group_id="2"/>
 	<student_group student_id="2" group_id="1"/>
 	<student_group student_id="3" group_id="2"/>
 	<student_group student_id="4" group_id="2"/>
+	<student_group student_id="5" group_id="3"/>
 	
 	<teachers id="1" first_name="fnt-1" last_name="lnt-1" tax_number="t23456789" phone_number="t234567890" email="lnt-1@unv.com" degree="phD"/>
 	<teachers id="2" first_name="fnt-2" last_name="lnt-2" tax_number="t23456798" phone_number="t234567891" email="lnt-2@unv.com" degree="masters"/>
+	<teachers id="3" first_name="fnt-3" last_name="lnt-3" tax_number="tt3456789" phone_number="tt34567890" email="lnt-3@unv.com" degree="phD"/>
+	
 	
 	<teacher_course teacher_id="1" course_id="1"/>
+	<teacher_course teacher_id="1" course_id="2"/>
 	<teacher_course teacher_id="1" course_id="3"/>
 	<teacher_course teacher_id="2" course_id="3"/>
 	<teacher_course teacher_id="2" course_id="4"/>

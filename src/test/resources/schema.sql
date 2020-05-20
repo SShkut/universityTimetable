@@ -72,9 +72,7 @@ CREATE TABLE teachers (
 	tax_number VARCHAR(20) NOT NULL,
 	phone_number VARCHAR(11),
 	email VARCHAR(255),
-	degree VARCHAR(20),
-	group_id INTEGER,
-	FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE SET NULL
+	degree VARCHAR(20)
 );
 
 CREATE TABLE teacher_course (

@@ -85,21 +85,21 @@ class GroupDaoTest {
 	void givenGroupId_whenDelete_thenDeleteGroupWithGivenId() throws DatabaseUnitException, SQLException {		
 		groupDao.deleteById(1L);
 		
-		assertEquals(getExpectedTable("groupsExpectedAfterDelete.xml", "groups"), getActualTable("groups"));	
+		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "groups"), getActualTable("groups"));	
 	}
 	
 	@Test
 	void givenNewGroup_whenSave_thenInsertGroup() throws DatabaseUnitException, SQLException {		
 		groupDao.save(new Group(4L, "cs-4", "css", "csg", new Semester(1L, 2020, "summer"), null));
 			
-		assertEquals(getExpectedTable("groupsExpectedAfterSave.xml", "groups"), getActualTable("groups"));
+		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "groups"), getActualTable("groups"));
 	}
 	
 	@Test
 	void givenExistentGroup_whenUpdate_thenUpdateGroup() throws DatabaseUnitException, SQLException {		
 		groupDao.update(new Group(1L, "cs-4", "css", "csg", new Semester(2L, 2020, "winter"), null));
 		
-		assertEquals(getExpectedTable("groupsExpectedAfterUpdate.xml", "groups"), getActualTable("groups"));
+		assertEquals(getExpectedTable("testDataExpectedAfterUpdate.xml", "groups"), getActualTable("groups"));
 	}
 	
 	@Test

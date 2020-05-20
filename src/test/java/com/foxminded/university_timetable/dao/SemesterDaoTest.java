@@ -82,21 +82,21 @@ class SemesterDaoTest {
 	void givenSemesterId_whenDelete_thenDeleteSemesterWithGivenId() throws DatabaseUnitException, SQLException {		
 		semesterDao.deleteById(1L);
 		
-		assertEquals(getExpectedTable("semestersExpectedAfterDelete.xml", "semesters"), getActualTable("semesters"));	
+		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "semesters"), getActualTable("semesters"));	
 	}
 	
 	@Test
 	void givenNewSemester_whenSave_thenInsertSemester() throws DatabaseUnitException, SQLException {		
 		semesterDao.save(new Semester(3L, 2021, "winter"));
 			
-		assertEquals(getExpectedTable("semestersExpectedAfterSave.xml", "semesters"), getActualTable("semesters"));
+		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "semesters"), getActualTable("semesters"));
 	}
 	
 	@Test
 	void givenExistentSemester_whenUpdate_thenUpdateSemester() throws DatabaseUnitException, SQLException {		
 		semesterDao.update(new Semester(1L, 2019, "winter"));
 		
-		assertEquals(getExpectedTable("semestersExpectedAfterUpdate.xml", "semesters"), getActualTable("semesters"));
+		assertEquals(getExpectedTable("testDataExpectedAfterUpdate.xml", "semesters"), getActualTable("semesters"));
 	}
 
 	private ITable getActualTable(String tableName) throws DatabaseUnitException, SQLException {

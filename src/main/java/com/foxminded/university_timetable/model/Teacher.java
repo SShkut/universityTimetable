@@ -5,7 +5,11 @@ import java.util.Objects;
 
 public class Teacher extends Person {
 
-	private String degree;
+	private String degree;	
+
+	public Teacher() {
+		
+	}
 
 	public Teacher(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
 			String degree) {

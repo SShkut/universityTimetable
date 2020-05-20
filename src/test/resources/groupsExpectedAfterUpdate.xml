@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE dataset SYSTEM "schema.dtd">
-<dataset>
-	<groups id="1" name="cs-4" major="css" department="csg" semester_id="2"/>
-	<groups id="2" name="cs-2" major="cs" department="cs" semester_id="1"/>
-	<groups id="3" name="cs-3" major="cs" department="cs" semester_id="2"/>
-</dataset>

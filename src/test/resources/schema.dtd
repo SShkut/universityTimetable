@@ -62,7 +62,6 @@
 	phone_number CDATA #IMPLIED
 	email CDATA #IMPLIED
 	degree CDATA #IMPLIED
-	group_id IDREF #IMPLIED
 >
 
 <!ELEMENT teacher_course EMPTY>

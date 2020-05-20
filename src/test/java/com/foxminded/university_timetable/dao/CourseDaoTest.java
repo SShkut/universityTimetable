@@ -84,21 +84,21 @@ class CourseDaoTest {
 	void givenCourseId_whenDelete_thenDeleteCourseWithGivenId() throws DatabaseUnitException, SQLException {		
 		courseDao.delteById(1L);
 		
-		assertEquals(getExpectedTable("coursesExpectedAfterDelete.xml", "courses"), getActualTable("courses"));	
+		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "courses"), getActualTable("courses"));	
 	}
 	
 	@Test
 	void givenNewCourse_whenSave_thenInsertCourse() throws DatabaseUnitException, SQLException {		
 		courseDao.save(new Course(5L, "Calculus", null));
 			
-		assertEquals(getExpectedTable("coursesExpectedAfterSave.xml", "courses"), getActualTable("courses"));
+		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "courses"), getActualTable("courses"));
 	}
 	
 	@Test
 	void givenExistentCourse_whenUpdate_thenUpdateCourse() throws DatabaseUnitException, SQLException {		
 		courseDao.update(new Course(1L, "CS-2", null));
 		
-		assertEquals(getExpectedTable("coursesExpectedAfterUpdate.xml", "courses"), getActualTable("courses"));
+		assertEquals(getExpectedTable("testDataExpectedAfterUpdate.xml", "courses"), getActualTable("courses"));
 	}
 
 	private ITable getActualTable(String tableName) throws DatabaseUnitException, SQLException {

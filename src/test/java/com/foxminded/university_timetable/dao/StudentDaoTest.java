@@ -90,7 +90,7 @@ class StudentDaoTest {
 		
 		studentDao.save(studentForInsert);
 		
-		assertEquals(getExpectedTable("studentsExpectedAfterSave.xml", "students"), getActualTable("students"));
+		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "students"), getActualTable("students"));
 	}
 	
 	@Test
@@ -99,14 +99,14 @@ class StudentDaoTest {
 		
 		studentDao.update(studentForUpdate);
 		
-		assertEquals(getExpectedTable("studentsExpectedAfterUpdate.xml", "students"), getActualTable("students"));
+		assertEquals(getExpectedTable("testDataExpectedAfterUpdate.xml", "students"), getActualTable("students"));
 	}
 	
 	@Test
 	void givenStudentId_whenDeleteById_thenDeleteStudentWithGivenId() throws DatabaseUnitException, SQLException {
 		studentDao.deleteById(1L);
 		
-		assertEquals(getExpectedTable("studentsExpectedAfterDelete.xml", "students"), getActualTable("students"));
+		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "students"), getActualTable("students"));
 	}
 	
 	@Test
@@ -116,7 +116,7 @@ class StudentDaoTest {
 		
 		studentDao.addStudentToGroup(student, group);
 		
-		assertEquals(getExpectedTable("studentGroupExpectedAfterAddStudentToGroup.xml", "student_group"), getActualTable("student_group"));
+		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "student_group"), getActualTable("student_group"));
 	}
 	
 	@Test
@@ -126,7 +126,7 @@ class StudentDaoTest {
 		
 		studentDao.deleteStudentFromGroup(student, group);
 		
-		assertEquals(getExpectedTable("studentGroupExpectedAfterDeleteStudentFromGroup.xml", "student_group"), getActualTable("student_group"));
+		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "student_group"), getActualTable("student_group"));
 	}
 	
 	private ITable getActualTable(String tableName) throws DatabaseUnitException, SQLException {
