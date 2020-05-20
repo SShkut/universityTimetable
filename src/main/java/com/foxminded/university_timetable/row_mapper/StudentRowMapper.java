@@ -11,11 +11,11 @@ public class StudentRowMapper implements RowMapper<Student> {
 
 	@Override
 	public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Student student = new Student();
 		if (rs.isBeforeFirst()) {
 			return null;
 		}
 		
+		Student student = new Student();
 		student.setId(Long.valueOf(rs.getLong("id")));
 		student.setFirstName(rs.getString("first_name"));
 		student.setLastName(rs.getString("last_name"));
