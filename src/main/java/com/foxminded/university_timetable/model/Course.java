@@ -2,6 +2,7 @@ package com.foxminded.university_timetable.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Course {
 	
@@ -45,12 +46,7 @@ public class Course {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((prerequisites == null) ? 0 : prerequisites.hashCode());
-		return result;
+		return Objects.hash(id, name, prerequisites);
 	}
 
 	@Override
@@ -62,21 +58,7 @@ public class Course {
 		if (getClass() != obj.getClass())
 			return false;
 		Course other = (Course) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (prerequisites == null) {
-			if (other.prerequisites != null)
-				return false;
-		} else if (!prerequisites.equals(other.prerequisites))
-			return false;
-		return true;
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(prerequisites, other.prerequisites);
 	}
 }

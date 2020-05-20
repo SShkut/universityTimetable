@@ -94,4 +94,22 @@ public class Timetable {
 			});		
 		return result;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, timetables);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Timetable other = (Timetable) obj;
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(timetables, other.timetables);
+	}
 }

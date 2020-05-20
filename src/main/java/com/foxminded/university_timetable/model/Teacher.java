@@ -1,6 +1,7 @@
 package com.foxminded.university_timetable.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Teacher extends Person {
 
@@ -35,5 +36,25 @@ public class Teacher extends Person {
 	@Override
 	public String toString() {
 		return degree + " " + getFirstName() + " " + getLastName();
-	}	
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(degree);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Teacher other = (Teacher) obj;
+		return Objects.equals(degree, other.degree);
+	}
 }

@@ -3,7 +3,7 @@ package com.foxminded.university_timetable.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class DailyTimetable {
 	
@@ -57,12 +57,7 @@ public class DailyTimetable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((timeSlots == null) ? 0 : timeSlots.hashCode());
-		return result;
+		return Objects.hash(date, id, timeSlots);
 	}
 
 	@Override
@@ -74,27 +69,7 @@ public class DailyTimetable {
 		if (getClass() != obj.getClass())
 			return false;
 		DailyTimetable other = (DailyTimetable) obj;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (timeSlots == null) {
-			if (other.timeSlots != null)
-				return false;
-		} else if (!timeSlots.equals(other.timeSlots))
-			return false;
-		return true;
+		return Objects.equals(date, other.date) && Objects.equals(id, other.id)
+				&& Objects.equals(timeSlots, other.timeSlots);
 	}
-
-	@Override
-	public String toString() {
-		String newLine = System.lineSeparator();
-		return String.valueOf(date) + newLine + timeSlots.stream().map(TimeSlot::toString).collect(Collectors.joining());
-	}	
 }
