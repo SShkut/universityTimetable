@@ -1,5 +1,6 @@
 package com.foxminded.university_timetable.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +17,9 @@ public class CourseDao {
 	private static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = ?";
 	private static final String FIND_ALL= "SELECT * FROM courses";
 	private static final String DELETE_BY_ID = "DELETE FROM courses WHERE id = ?";
-	private static final String SAVE = "INSERT INTO courses (name, ancestor) values(?, ?)";
-	private static final String UPDATE = "UPDATE courses SET name = ?, ancestor = ? WHERE id = ?";
+	private static final String SAVE = "INSERT INTO courses (name) values(?)";
+	private static final String UPDATE = "UPDATE courses SET name = ? WHERE id = ?";
+	private static final String FIND_PREREQISITES_OF_COURSE = "";
 	
 	private final JdbcTemplate jdbcTemplate;
 	
@@ -43,10 +45,15 @@ public class CourseDao {
 	}
 	
 	public void save(Course course) {
-		this.jdbcTemplate.update(SAVE, course.getName(), course.getAncestor());
+		this.jdbcTemplate.update(SAVE, course.getName());
 	}
 	
 	public void update(Course course) {
-		this.jdbcTemplate.update(UPDATE, course.getName(), course.getAncestor(), course.getId());
+		this.jdbcTemplate.update(UPDATE, course.getName(), course.getId());
+	}
+	
+	public List<Course> findPrerequisitesOfCourse(Course course) {
+		
+		return new ArrayList<>();
 	}
 }

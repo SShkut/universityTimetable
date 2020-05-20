@@ -5,10 +5,9 @@
 <!ATTLIST courses
 	id ID #REQUIRED
 	name CDATA #REQUIRED
-	ancestor IDREF #IMPLIED
 >
 
-<!ELEMENT course_prerequisites>
+<!ELEMENT course_prerequisites EMPTY>
 <!ATTLIST course_prerequisites
 	course_id IDREF #REQUIRED
 	ancestor_id IDREF #REQUIRED

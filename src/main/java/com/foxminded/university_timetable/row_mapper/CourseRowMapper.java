@@ -18,10 +18,6 @@ public class CourseRowMapper implements RowMapper<Course> {
 		
 		course.setId(Long.valueOf(rs.getLong("id")));
 		course.setName(rs.getString("name"));
-		Long ancestor = rs.getLong("ancestor");
-		if (!ancestor.equals(0L)) {
-			course.setAncestor(rs.getLong("ancestor"));
-		}
 		return course;
 	}
 }

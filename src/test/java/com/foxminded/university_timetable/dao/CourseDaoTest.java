@@ -4,7 +4,7 @@ import static org.dbunit.Assertion.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,8 +50,8 @@ class CourseDaoTest {
 	}
 
 	@Test
-	void givenId_whenFindById_thenReturnOptionalOfCourse() {
-		Optional<Course> expected = Optional.of(new Course(2L, "Math", 1L, null));
+	void givenExistentCourseId_whenFindById_thenReturnOptionalOfCourse() {
+		Optional<Course> expected = Optional.of(new Course(2L, "Math", null));
 		
 		Optional<Course> actual = courseDao.findById(2L);		
 		
@@ -59,7 +59,7 @@ class CourseDaoTest {
 	}
 
 	@Test
-	void givenNonExistent_whenFindById_thenRetrunEmptyOptional() {
+	void givenNonExistentCourseId_whenFindById_thenRetrunEmptyOptional() {
 		Optional<Course> expected = Optional.empty();
 		
 		Optional<Course> actual = courseDao.findById(0L);
@@ -69,7 +69,11 @@ class CourseDaoTest {
 	
 	@Test
 	void whenFindAll_thenReturnListOfAllCourses() {
-		List<Course> expected = Arrays.asList(new Course(1L, "CS", null, null), new Course(2L, "Math", 1L, null));
+		List<Course> expected = new ArrayList<>();
+		expected.add(new Course(1L, "CS",  null));
+		expected.add(new Course(2L, "Math", null));
+		expected.add(new Course(3L, "Physics", null));
+		expected.add(new Course(4L, "History", null));
 		
 		List<Course> actual = courseDao.findAll();
 		
@@ -85,14 +89,14 @@ class CourseDaoTest {
 	
 	@Test
 	void givenNewCourse_whenSave_thenInsertCourse() throws DatabaseUnitException, SQLException {		
-		courseDao.save(new Course(3L, "Physics", null, null));
+		courseDao.save(new Course(5L, "Calculus", null));
 			
 		assertEquals(getExpectedTable("coursesExpectedAfterSave.xml"), getActualTable());
 	}
 	
 	@Test
-	void givenExistenCourse_whenSave_thenUpdateCourse() throws DatabaseUnitException, SQLException {		
-		courseDao.update(new Course(1L, "CS-2", null, null));
+	void givenExistentCourse_whenUpdate_thenUpdateCourse() throws DatabaseUnitException, SQLException {		
+		courseDao.update(new Course(1L, "CS-2", null));
 		
 		assertEquals(getExpectedTable("coursesExpectedAfterUpdate.xml"), getActualTable());
 	}

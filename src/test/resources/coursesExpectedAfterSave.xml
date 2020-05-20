@@ -2,6 +2,8 @@
 <!DOCTYPE dataset SYSTEM "schema.dtd">
 <dataset>
 	<courses id="1" name="CS"/>
-	<courses id="2" name="Math" ancestor="1"/>
+	<courses id="2" name="Math"/>
 	<courses id="3" name="Physics"/>
+	<courses id="4" name="History"/>
+	<courses id="5" name="Calculus"/>
 </dataset>

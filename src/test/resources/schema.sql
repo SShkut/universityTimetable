@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS teacher_course;
 
 CREATE TABLE courses (
 	id serial PRIMARY KEY,
-	name VARCHAR(255) NOT NULL,
+	name VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE course_prerequisites (

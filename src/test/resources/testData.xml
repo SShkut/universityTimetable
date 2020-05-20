@@ -2,5 +2,13 @@
 <!DOCTYPE dataset SYSTEM "schema.dtd">
 <dataset>
 	<courses id="1" name="CS"/>
-	<courses id="2" name="Math" ancestor="1"/>
+	<courses id="2" name="Math"/>
+	<courses id="3" name="Physics"/>
+	<courses id="4" name="History"/>	
+		
+	<course_prerequisites course_id="1" ancestor_id="1" depth="0"/>
+	<course_prerequisites course_id="2" ancestor_id="2" depth="0"/>
+	<course_prerequisites course_id="2" ancestor_id="1" depth="1"/>
+	<course_prerequisites course_id="3" ancestor_id="2" depth="2"/>
+	<course_prerequisites course_id="4" ancestor_id="3" depth="3"/>
 </dataset>
