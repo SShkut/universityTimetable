@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
@@ -21,6 +22,8 @@ public class StudentDao {
 	private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
 	private static final String ADD_STUDENT_TO_GROUP = "INSERT INTO student_group (student_id, group_id) values (?, ?)";
 	private static final String DELETE_STUDENT_FROM_GROUP = "DELETE FROM student_group WHERE student_id = ? and group_id = ?";
+	private static final String ENROLL_COURSE = "INSERT INTO student_course (student_id, course_id) values (?, ?)";
+	private static final String LEAVE_COURSE = "DELETE FROM student_course WHERE student_id = ? AND course_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
 	
@@ -61,5 +64,13 @@ public class StudentDao {
 	
 	public void deleteStudentFromGroup(Student student, Group group) {
 		this.jdbcTemplate.update(DELETE_STUDENT_FROM_GROUP, student.getId(), group.getId());
+	}
+	
+	public void addStudentToCourse(Student student, Course course) {
+		this.jdbcTemplate.update(ENROLL_COURSE, student.getId(), course.getId());
+	}
+	
+	public void deleteStudentFromCourse(Student student, Course course) {
+		this.jdbcTemplate.update(LEAVE_COURSE, student.getId(), course.getId());
 	}
 }

@@ -25,6 +25,10 @@
 	<teacher_course teacher_id="1" course_id="3"/>
 	<teacher_course teacher_id="2" course_id="3"/>
 	<teacher_course teacher_id="2" course_id="4"/>
+	
+	<student_course student_id="1" course_id="1"/>
+	<student_course student_id="2" course_id="2"/>
+	<student_course student_id="2" course_id="3"/>
 
 	<rooms id="2" symbol="b-1" capacity="70"/>
 </dataset>

@@ -20,6 +20,7 @@ public class CourseDao {
 	private static final String SAVE = "INSERT INTO courses (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE courses SET name = ? WHERE id = ?";
 	private static final String FIND_PREREQISITES_OF_COURSE = "";
+	private static final String FIND_STUDENTS_OF_COURSE = "";
 	
 	private final JdbcTemplate jdbcTemplate;
 	

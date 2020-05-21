@@ -1,5 +1,5 @@
-<!ELEMENT dataset (courses*, course_prerequisites*, semesters*, groups*, students*, student_group*, student_course*, 
-					teachers*, teacher_course*, rooms*, timetables*, daily_timetables*, time_slots*)>
+<!ELEMENT dataset (courses*, course_prerequisites*, semesters*, groups*, students*, student_group*, 
+					teachers*, teacher_course*, student_course*, rooms*, timetables*, daily_timetables*, time_slots*)>
 
 <!ELEMENT courses EMPTY>
 <!ATTLIST courses
@@ -47,12 +47,6 @@
 	group_id IDREF #REQUIRED
 >
 
-<!ELEMENT student_course EMPTY>
-<!ATTLIST student_course
-	student_id IDREF #REQUIRED
-	course_id IDREF #REQUIRED
->
-
 <!ELEMENT teachers EMPTY>
 <!ATTLIST teachers
 	id ID #REQUIRED
@@ -67,6 +61,12 @@
 <!ELEMENT teacher_course EMPTY>
 <!ATTLIST teacher_course
 	teacher_id IDREF #REQUIRED
+	course_id IDREF #REQUIRED
+>
+
+<!ELEMENT student_course EMPTY>
+<!ATTLIST student_course
+	student_id IDREF #REQUIRED
 	course_id IDREF #REQUIRED
 >
 

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Semester;
 import com.foxminded.university_timetable.model.Student;
@@ -127,6 +128,26 @@ class StudentDaoTest {
 		studentDao.deleteStudentFromGroup(student, group);
 		
 		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "student_group"), getActualTable("student_group"));
+	}
+	
+	@Test
+	void givenStudentAndCourse_whenAddStudentToCourse_thenEnrollCourse() throws DatabaseUnitException, SQLException {
+		Student student = new Student(3L, "fn-3", "ln-3", "123456987", "1234567892", "ln-3@unv.com", null, "cn-125");
+		Course course =new Course(1L, "Math", null);
+		
+		studentDao.addStudentToCourse(student, course);
+		
+		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "student_course"), getActualTable("student_course"));
+	}
+	
+	@Test
+	void givenStudentAndCourse_whenDeleteStudentFromCourse_thenLeaveCourse() throws DatabaseUnitException, SQLException {
+		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123");
+		Course course = new Course(2L, "CS", null);
+		
+		studentDao.deleteStudentFromCourse(student, course);
+		
+		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "student_course"), getActualTable("student_course"));
 	}
 	
 	private ITable getActualTable(String tableName) throws DatabaseUnitException, SQLException {
