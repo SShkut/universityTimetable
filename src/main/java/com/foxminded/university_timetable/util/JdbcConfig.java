@@ -25,12 +25,4 @@ public class JdbcConfig {
 		
 		return dataSource;
 	}
-	
-	@Bean(name="embeddedDataSource")
-	public DataSource embeddedDataSource() {		 
-		return new EmbeddedDatabaseBuilder()
-				.setType(EmbeddedDatabaseType.H2)
-				.addScript("classpath:/schema.sql")
-				.build();
-	}
 }

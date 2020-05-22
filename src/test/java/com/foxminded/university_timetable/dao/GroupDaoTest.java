@@ -1,6 +1,5 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.dbunit.Assertion.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
@@ -8,22 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
-import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseUnitException;
-import org.dbunit.IDatabaseTester;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -37,25 +28,24 @@ import com.foxminded.university_timetable.util.JdbcConfig;
 class GroupDaoTest {
 
 	private GroupDao groupDao;
-	
-	@Autowired
-	@Qualifier("embeddedDataSource")
-	private DataSource dataSource;
+	private EmbeddedDatabase db;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		IDatabaseTester tester = new DataSourceDatabaseTester(dataSource);
-		IDataSet dataSet = new FlatXmlDataSetBuilder().build(this.getClass().getClassLoader().getResource("testData.xml"));
-		tester.setDataSet(dataSet);
-		tester.onSetup();
-		groupDao = new GroupDao(dataSource);
+		db = new EmbeddedDatabaseBuilder()
+				.setType(EmbeddedDatabaseType.H2)
+				.addScript("classpath:/schema.sql")
+				.addScript("classpath:/data.sql")
+				.build();
+		groupDao = new GroupDao(db);
 	}
 
 	@Test
 	void givenExistentGroupId_whenFindById_thenReturnOptionalOfGroup() {
-		Optional<Group> expected = Optional.of(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
+		Group group = new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null);
+		Optional<Group> expected = Optional.of(group);
 		
-		Optional<Group> actual = groupDao.findById(2L);		
+		Optional<Group> actual = groupDao.findById(group.getId());		
 		
 		assertEquals(expected, actual);
 	}
@@ -82,24 +72,37 @@ class GroupDaoTest {
 	}
 	
 	@Test
-	void givenGroupId_whenDelete_thenDeleteGroupWithGivenId() throws DatabaseUnitException, SQLException {		
+	void givenGroupId_whenDelete_thenDeleteGroupWithGivenId() throws DatabaseUnitException, SQLException {
+		List<Group> expected = new ArrayList<>();
+		expected.add(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
+		expected.add(new Group(3L, "cs-3", "cs", "cs", new Semester(2L, 2020, "winter"), null));
+		
 		groupDao.deleteById(1L);
 		
-		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "groups"), getActualTable("groups"));	
+		List<Group> actual = groupDao.findAll();
+		assertEquals(expected, actual);
 	}
 	
 	@Test
-	void givenNewGroup_whenSave_thenInsertGroup() throws DatabaseUnitException, SQLException {		
-		groupDao.save(new Group(4L, "cs-4", "css", "csg", new Semester(1L, 2020, "summer"), null));
-			
-		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "groups"), getActualTable("groups"));
-	}
-	
-	@Test
-	void givenExistentGroup_whenUpdate_thenUpdateGroup() throws DatabaseUnitException, SQLException {		
-		groupDao.update(new Group(1L, "cs-4", "css", "csg", new Semester(2L, 2020, "winter"), null));
+	void givenNewGroup_whenSave_thenInsertGroup() throws DatabaseUnitException, SQLException {
+		Group group = new Group(4L, "cs-4", "css", "csg", new Semester(1L, 2020, "summer"), null);
+		Optional<Group> expected = Optional.of(group);
 		
-		assertEquals(getExpectedTable("testDataExpectedAfterUpdate.xml", "groups"), getActualTable("groups"));
+		groupDao.save(group);
+			
+		Optional<Group> actual = groupDao.findById(group.getId());
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenExistentGroup_whenUpdate_thenUpdateGroup() throws DatabaseUnitException, SQLException {
+		Group group = new Group(1L, "cs-4", "css", "csg", new Semester(2L, 2020, "winter"), null);
+		Optional<Group> expected = Optional.of(group);
+		
+		groupDao.update(group);
+		
+		Optional<Group> actual = groupDao.findById(group.getId());
+		assertEquals(expected, actual);
 	}
 	
 	@Test
@@ -113,15 +116,9 @@ class GroupDaoTest {
 		
 		assertEquals(expected, actual);
 	}
-
-	private ITable getActualTable(String tableName) throws DatabaseUnitException, SQLException {
-		IDatabaseConnection conn = new DatabaseConnection(dataSource.getConnection());
-		return conn.createDataSet().getTable(tableName);
-	}
 	
-	private ITable getExpectedTable(String fileName, String tableName) throws DataSetException {
-		IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(this.getClass().getClassLoader().getResource(fileName));
-		return expectedDataSet.getTable(tableName);
+	@AfterEach
+	public void tearDown() {
+		db.shutdown();
 	}
-
 }

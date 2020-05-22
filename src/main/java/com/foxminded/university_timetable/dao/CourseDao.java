@@ -10,7 +10,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.foxminded.university_timetable.model.Course;
+import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.row_mapper.CourseRowMapper;
+import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
 
 public class CourseDao {
 	
@@ -20,7 +22,9 @@ public class CourseDao {
 	private static final String SAVE = "INSERT INTO courses (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE courses SET name = ? WHERE id = ?";
 	private static final String FIND_PREREQISITES_OF_COURSE = "";
-	private static final String FIND_STUDENTS_OF_COURSE = "";
+	private static final String FIND_STUDENTS_OF_COURSE = "SELECT s.id, s.first_name, s.last_name, s.tax_number, s.phone_number, s.email, s.student_card_number "
+			+ "FROM students s "
+			+ "JOIN student_course sc ON sc.student_id = s.id AND sc.course_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
 	
@@ -56,5 +60,9 @@ public class CourseDao {
 	public List<Course> findPrerequisitesOfCourse(Course course) {
 		
 		return new ArrayList<>();
+	}
+	
+	public List<Student> findStudentsOfCourse(Course course) {
+		return this.jdbcTemplate.query(FIND_STUDENTS_OF_COURSE, new Object[] {course.getId()}, new StudentRowMapper());
 	}
 }

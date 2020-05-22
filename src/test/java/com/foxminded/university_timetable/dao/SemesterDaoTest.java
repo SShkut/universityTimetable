@@ -1,6 +1,5 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.dbunit.Assertion.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
@@ -8,22 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
-import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseUnitException;
-import org.dbunit.IDatabaseTester;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -35,25 +26,24 @@ import com.foxminded.university_timetable.util.JdbcConfig;
 class SemesterDaoTest {
 	
 	private SemesterDao semesterDao;
-	
-	@Autowired
-	@Qualifier("embeddedDataSource")
-	private DataSource dataSource;
+	private EmbeddedDatabase db;
 
 	@BeforeEach
-	void setUp() throws Exception {
-		IDatabaseTester tester = new DataSourceDatabaseTester(dataSource);
-		IDataSet dataSet = new FlatXmlDataSetBuilder().build(this.getClass().getClassLoader().getResource("testData.xml"));
-		tester.setDataSet(dataSet);
-		tester.onSetup();
-		semesterDao = new SemesterDao(dataSource);
+	void setUp() {
+		db = new EmbeddedDatabaseBuilder()
+				.setType(EmbeddedDatabaseType.H2)
+				.addScript("classpath:/schema.sql")
+				.addScript("classpath:/data.sql")
+				.build();
+		semesterDao = new SemesterDao(db);
 	}
 
 	@Test
 	void givenExistentSemesterId_whenFindById_thenReturnOptionalOfSemester() {
-		Optional<Semester> expected = Optional.of(new Semester(2L, 2020, "winter"));
+		Semester semester = new Semester(2L, 2020, "winter");
+		Optional<Semester> expected = Optional.of(semester);
 		
-		Optional<Semester> actual = semesterDao.findById(2L);		
+		Optional<Semester> actual = semesterDao.findById(semester.getId());		
 		
 		assertEquals(expected, actual);
 	}
@@ -79,33 +69,40 @@ class SemesterDaoTest {
 	}
 	
 	@Test
-	void givenSemesterId_whenDelete_thenDeleteSemesterWithGivenId() throws DatabaseUnitException, SQLException {		
+	void givenSemester_whenDelete_thenDeleteSemesterWithGivenId() throws DatabaseUnitException, SQLException {
+		List<Semester> expected = new ArrayList<>();
+		expected.add(new Semester(2L, 2020, "winter"));
+		
 		semesterDao.deleteById(1L);
 		
-		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "semesters"), getActualTable("semesters"));	
+		List<Semester> actual = semesterDao.findAll();
+		assertEquals(expected, actual);	
 	}
 	
 	@Test
 	void givenNewSemester_whenSave_thenInsertSemester() throws DatabaseUnitException, SQLException {		
+		Semester semester = new Semester(3L, 2021, "winter");
+		Optional<Semester> expected = Optional.of(semester);
+		
 		semesterDao.save(new Semester(3L, 2021, "winter"));
 			
-		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "semesters"), getActualTable("semesters"));
+		Optional<Semester> actual = semesterDao.findById(semester.getId());
+		assertEquals(expected, actual);	
 	}
 	
 	@Test
-	void givenExistentSemester_whenUpdate_thenUpdateSemester() throws DatabaseUnitException, SQLException {		
-		semesterDao.update(new Semester(1L, 2019, "winter"));
+	void givenExistentSemester_whenUpdate_thenUpdateSemester() throws DatabaseUnitException, SQLException {	
+		Semester semester = new Semester(1L, 2019, "winter");
+		Optional<Semester> expected = Optional.of(semester);
 		
-		assertEquals(getExpectedTable("testDataExpectedAfterUpdate.xml", "semesters"), getActualTable("semesters"));
-	}
-
-	private ITable getActualTable(String tableName) throws DatabaseUnitException, SQLException {
-		IDatabaseConnection conn = new DatabaseConnection(dataSource.getConnection());
-		return conn.createDataSet().getTable(tableName);
+		semesterDao.update(semester);
+		
+		Optional<Semester> actual = semesterDao.findById(semester.getId());
+		assertEquals(expected, actual);
 	}
 	
-	private ITable getExpectedTable(String fileName, String tableName) throws DataSetException {
-		IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(this.getClass().getClassLoader().getResource(fileName));
-		return expectedDataSet.getTable(tableName);
+	@AfterEach
+	public void tearDown() {
+		db.shutdown();
 	}
 }

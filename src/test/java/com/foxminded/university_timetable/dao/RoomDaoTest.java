@@ -1,6 +1,5 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.dbunit.Assertion.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.SQLException;
@@ -8,22 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
-import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.DatabaseUnitException;
-import org.dbunit.IDatabaseTester;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -35,23 +26,22 @@ import com.foxminded.university_timetable.util.JdbcConfig;
 class RoomDaoTest {
 	
 	private RoomDao roomDao;
-	
-	@Autowired
-	@Qualifier("embeddedDataSource")
-	private DataSource dataSource;
+	private EmbeddedDatabase db;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		IDatabaseTester tester = new DataSourceDatabaseTester(dataSource);
-		IDataSet dataSet = new FlatXmlDataSetBuilder().build(this.getClass().getClassLoader().getResource("testData.xml"));
-		tester.setDataSet(dataSet);
-		tester.onSetup();
-		roomDao = new RoomDao(dataSource);
+		db = new EmbeddedDatabaseBuilder()
+				.setType(EmbeddedDatabaseType.H2)
+				.addScript("classpath:/schema.sql")
+				.addScript("classpath:/data.sql")
+				.build();
+		roomDao = new RoomDao(db);
 	}
 	
 	@Test
 	void givenExistentRoomId_whenFindById_thenReturnOptionalOfRoom() {
-		Optional<Room> expected = Optional.of(new Room(2L, "b-1", 70));
+		Room room = new Room(2L, "b-1", 70);
+		Optional<Room> expected = Optional.of(room);
 		
 		Optional<Room> actual = roomDao.findById(2L);		
 		
@@ -79,33 +69,40 @@ class RoomDaoTest {
 	}
 	
 	@Test
-	void givenRoomId_whenDelete_thenDeleteRoomWithGivenId() throws DatabaseUnitException, SQLException {		
+	void givenRoomId_whenDelete_thenDeleteRoomWithGivenId() throws DatabaseUnitException, SQLException {
+		List<Room> expected = new ArrayList<>();
+		expected.add(new Room(2L, "b-1", 70));
+		
 		roomDao.deleteById(1L);
 		
-		assertEquals(getExpectedTable("testDataExpectedAfterDelete.xml", "rooms"), getActualTable("rooms"));	
+		List<Room> actual = roomDao.findAll();
+		assertEquals(expected, actual);
 	}
 	
 	@Test
-	void givenNewRoom_whenSave_thenInsertRoom() throws DatabaseUnitException, SQLException {		
-		roomDao.save(new Room(3L, "c-1", 60));
-			
-		assertEquals(getExpectedTable("testDataExpectedAfterSave.xml", "rooms"), getActualTable("rooms"));
+	void givenNewRoom_whenSave_thenInsertRoom() throws DatabaseUnitException, SQLException {
+		Room room = new Room(3L, "c-1", 60);
+		Optional<Room> expected = Optional.of(room);
+		
+		roomDao.save(room);
+		
+		Optional<Room> actual = roomDao.findById(room.getId());
+		assertEquals(expected, actual);
 	}
 	
 	@Test
-	void givenExistentRoom_whenUpdate_thenUpdateRoom() throws DatabaseUnitException, SQLException {		
+	void givenExistentRoom_whenUpdate_thenUpdateRoom() throws DatabaseUnitException, SQLException {
+		Room room = new Room(1L, "a-2", 90);
+		Optional<Room> expected = Optional.of(room);
+		
 		roomDao.update(new Room(1L, "a-2", 90));
 		
-		assertEquals(getExpectedTable("testDataExpectedAfterUpdate.xml", "rooms"), getActualTable("rooms"));
-	}
-
-	private ITable getActualTable(String tableName) throws DatabaseUnitException, SQLException {
-		IDatabaseConnection conn = new DatabaseConnection(dataSource.getConnection());
-		return conn.createDataSet().getTable(tableName);
+		Optional<Room> actual = roomDao.findById(room.getId());
+		assertEquals(expected, actual);
 	}
 	
-	private ITable getExpectedTable(String fileName, String tableName) throws DataSetException {
-		IDataSet expectedDataSet = new FlatXmlDataSetBuilder().build(this.getClass().getClassLoader().getResource(fileName));
-		return expectedDataSet.getTable(tableName);
+	@AfterEach
+	public void tearDown() {
+		db.shutdown();
 	}
 }

@@ -27,7 +27,7 @@ public class GroupDao {
 	private static final String UPDATE = "UPDATE groups SET name = ?, major = ?, department = ?, semester_id = ? WHERE id = ?";
 	private static final String FIND_STUDENTS_OF_GROUP = "SELECT s.id, s.first_name, s.last_name, s.tax_number, s.phone_number, s.email, s.student_card_number "
 			+ "FROM students s "
-			+ "JOIN student_group sg ON s.id = sg.student_id and sg.group_id = ?";
+			+ "JOIN student_group sg ON s.id = sg.student_id AND sg.group_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
 	

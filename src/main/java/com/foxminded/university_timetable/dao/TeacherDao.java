@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Teacher;
+import com.foxminded.university_timetable.row_mapper.CourseRowMapper;
 import com.foxminded.university_timetable.row_mapper.TeacherRowMapper;
 
 public class TeacherDao {
@@ -21,6 +22,9 @@ public class TeacherDao {
 	private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
 	private static final String ADD_TEACHER_QUALIFICATION = "INSERT INTO teacher_course (teacher_id, course_id) VALUES (?, ?)";
 	private static final String DELETE_TEACHER_QUALIFICATION = "DELETE FROM teacher_course WHERE teacher_id = ? AND course_id = ?";
+	private static final String FIND_ALL_TEACHER_QUALIFICATIONS = "SELECT c.id, c.name "
+			+ "FROM courses c "
+			+ "JOIN teacher_course tc ON c.id = tc.course_id AND tc.teacher_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
 	
@@ -63,4 +67,7 @@ public class TeacherDao {
 		this.jdbcTemplate.update(DELETE_TEACHER_QUALIFICATION, teacher.getId(), course.getId());
 	}
 
+	public List<Course> findAllTeacherQualifications(Teacher teacher) {
+		return this.jdbcTemplate.query(FIND_ALL_TEACHER_QUALIFICATIONS, new Object[] {teacher.getId()}, new CourseRowMapper());
+	}
 }
