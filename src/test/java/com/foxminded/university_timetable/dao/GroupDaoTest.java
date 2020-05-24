@@ -51,7 +51,7 @@ class GroupDaoTest {
 	}
 
 	@Test
-	void givenNonExistentGroupId_whenFindById_thenRetrunEmptyOptional() {
+	void givenNonExistentGroupId_whenFindById_thenReturnEmptyOptional() {
 		Optional<Group> expected = Optional.empty();
 		
 		Optional<Group> actual = groupDao.findById(0L);

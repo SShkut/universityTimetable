@@ -49,7 +49,7 @@ class SemesterDaoTest {
 	}
 
 	@Test
-	void givenNonExistentSemesterId_whenFindById_thenRetrunEmptyOptional() {
+	void givenNonExistentSemesterId_whenFindById_thenReturnEmptyOptional() {
 		Optional<Semester> expected = Optional.empty();
 		
 		Optional<Semester> actual = semesterDao.findById(0L);

@@ -44,7 +44,7 @@ class CourseDaoTest {
 		Course course = new Course(2L, "Math", null);
 		Optional<Course> expected = Optional.of(course);
 		
-		Optional<Course> actual = courseDao.findById(2L);		
+		Optional<Course> actual = courseDao.findById(course.getId());		
 		
 		assertEquals(expected, actual);
 	}
