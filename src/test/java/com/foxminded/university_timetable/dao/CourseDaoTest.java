@@ -8,36 +8,25 @@ import java.util.List;
 import java.util.Optional;
 
 import org.dbunit.DatabaseUnitException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.foxminded.university_timetable.config.TestJdbcConfig;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Student;
-import com.foxminded.university_timetable.util.JdbcConfig;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {JdbcConfig.class})
+@ContextConfiguration(classes = {TestJdbcConfig.class})
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class CourseDaoTest {
 	
+	@Autowired
 	private CourseDao courseDao;
-	private EmbeddedDatabase db;
-	
-	@BeforeEach
-	void setUp() {
-		db = new EmbeddedDatabaseBuilder()
-				.setType(EmbeddedDatabaseType.H2)
-				.addScript("classpath:/schema.sql")
-				.addScript("classpath:/data.sql")
-				.build();
-		courseDao = new CourseDao(db);
-	}
 
 	@Test
 	void givenExistentCourseId_whenFindById_thenReturnOptionalOfCourse() {
@@ -130,10 +119,5 @@ class CourseDaoTest {
 		List<Student> actual = courseDao.findStudentsOfCourse(course);
 		
 		assertEquals(expected, actual);
-	}
-	
-	@AfterEach
-	public void tearDown() {
-		db.shutdown();
 	}
 }

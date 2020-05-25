@@ -3,14 +3,15 @@ package com.foxminded.university_timetable.dao;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Semester;
 import com.foxminded.university_timetable.row_mapper.SemesterRowMapper;
 
+@Repository
 public class SemesterDao {
 	
 	private static final String FIND_ALL = "SELECT * FROM semesters";
@@ -19,10 +20,11 @@ public class SemesterDao {
 	private static final String UPDATE = "UPDATE semesters SET year_of_study = ?, period = ? WHERE id = ?";
 	private static final String DELETE_BY_ID = "DELETE FROM semesters WHERE id = ?";
 	
+	@Autowired
 	private final JdbcTemplate jdbcTemplate;
 	
-	public SemesterDao(DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
+	public SemesterDao(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 	
 	public Optional<Semester> findById(Long id) {

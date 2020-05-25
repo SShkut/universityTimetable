@@ -8,37 +8,26 @@ import java.util.List;
 import java.util.Optional;
 
 import org.dbunit.DatabaseUnitException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.foxminded.university_timetable.config.TestJdbcConfig;
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Semester;
 import com.foxminded.university_timetable.model.Student;
-import com.foxminded.university_timetable.util.JdbcConfig;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {JdbcConfig.class})
+@ContextConfiguration(classes = {TestJdbcConfig.class})
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class GroupDaoTest {
 
+	@Autowired
 	private GroupDao groupDao;
-	private EmbeddedDatabase db;
-	
-	@BeforeEach
-	void setUp() throws Exception {
-		db = new EmbeddedDatabaseBuilder()
-				.setType(EmbeddedDatabaseType.H2)
-				.addScript("classpath:/schema.sql")
-				.addScript("classpath:/data.sql")
-				.build();
-		groupDao = new GroupDao(db);
-	}
 
 	@Test
 	void givenExistentGroupId_whenFindById_thenReturnOptionalOfGroup() {
@@ -115,10 +104,5 @@ class GroupDaoTest {
 		List<Student> actual = groupDao.findStudentsOfGroup(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
 		
 		assertEquals(expected, actual);
-	}
-	
-	@AfterEach
-	public void tearDown() {
-		db.shutdown();
 	}
 }

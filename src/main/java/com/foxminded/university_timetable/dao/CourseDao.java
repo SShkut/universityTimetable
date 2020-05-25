@@ -3,16 +3,17 @@ package com.foxminded.university_timetable.dao;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.row_mapper.CourseRowMapper;
 import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
 
+@Repository
 public class CourseDao {
 	
 	private static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = ?";
@@ -37,9 +38,10 @@ public class CourseDao {
 	
 	private final JdbcTemplate jdbcTemplate;
 	
-	public CourseDao(DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}	
+	@Autowired
+	public CourseDao(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 	
 	public Optional<Course> findById(Long id) {
 		try {

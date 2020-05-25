@@ -8,38 +8,33 @@ import java.util.List;
 import java.util.Optional;
 
 import org.dbunit.DatabaseUnitException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.foxminded.university_timetable.config.TestJdbcConfig;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Semester;
 import com.foxminded.university_timetable.model.Student;
-import com.foxminded.university_timetable.util.JdbcConfig;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {JdbcConfig.class})
+@ContextConfiguration(classes = {TestJdbcConfig.class})
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class StudentDaoTest {
 	
+	@Autowired
 	private StudentDao studentDao;
-	private EmbeddedDatabase db;
-
-	@BeforeEach
-	void setUp() throws Exception {
-		db = new EmbeddedDatabaseBuilder()
-				.setType(EmbeddedDatabaseType.H2)
-				.addScript("classpath:/schema.sql")
-				.addScript("classpath:/data.sql")
-				.build();
-		studentDao = new StudentDao(db);
-	}
+	
+	@Autowired
+	private CourseDao courseDao;
+	
+	@Autowired
+	private GroupDao groupDao;
 
 	@Test
 	void givenExistentStudentId_whenFindById_thenReturnOptionalOfStudent() {
@@ -119,7 +114,6 @@ class StudentDaoTest {
 		
 		studentDao.addStudentToGroup(student, group);
 		
-		GroupDao groupDao = new GroupDao(db);
 		List<Student> actual = groupDao.findStudentsOfGroup(group);
 		assertEquals(expected, actual);
 	}
@@ -133,7 +127,6 @@ class StudentDaoTest {
 		
 		studentDao.deleteStudentFromGroup(student, group);
 		
-		GroupDao groupDao = new GroupDao(db);
 		List<Student> actual = groupDao.findStudentsOfGroup(group);
 		assertEquals(expected, actual);
 	}
@@ -148,7 +141,6 @@ class StudentDaoTest {
 		
 		studentDao.addStudentToCourse(student, course);
 		
-		CourseDao courseDao = new CourseDao(db);
 		List<Student> actual = courseDao.findStudentsOfCourse(course);
 		assertEquals(expected, actual);
 	}
@@ -161,14 +153,8 @@ class StudentDaoTest {
 		expected.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
 		
 		studentDao.deleteStudentFromCourse(student, course);
-		
-		CourseDao courseDao = new CourseDao(db);
+
 		List<Student> actual = courseDao.findStudentsOfCourse(course);
 		assertEquals(expected, actual);
-	}
-	
-	@AfterEach
-	public void tearDown() {
-		db.shutdown();
 	}
 }

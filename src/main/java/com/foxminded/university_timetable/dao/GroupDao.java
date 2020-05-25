@@ -3,17 +3,17 @@ package com.foxminded.university_timetable.dao;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.row_mapper.GroupRowMapper;
 import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
-;
 
+@Repository
 public class GroupDao {
 	
 	private static final String FIND_ALL= "SELECT g.id, g.name, g.major, g.department, g.semester_id, s.year_of_study, s.period "
@@ -31,8 +31,9 @@ public class GroupDao {
 	
 	private final JdbcTemplate jdbcTemplate;
 	
-	public GroupDao(DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
+	@Autowired
+	public GroupDao(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 	
 	public Optional<Group> findById(Long id) {
