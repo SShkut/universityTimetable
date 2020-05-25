@@ -2,14 +2,14 @@ INSERT INTO courses (id, name) VALUES
 	(1, 'CS'),
 	(2, 'Math'),
 	(3, 'Physics'),
-	(4, 'History');
+	(4, 'History'),
+    (5, 'Chemistry');
 	
-INSERT INTO course_prerequisites (course_id, ancestor_id, depth) VALUES
-	(1, 1, 0),
-	(2, 2, 0),
-	(2, 1, 1),
-	(3, 2, 2),
-	(4, 3, 3);
+INSERT INTO course_hierarchy (course_id, prerequisite_id) VALUES
+	(1, 2),
+	(1, 4),
+    (2, 5),
+    (3, 5);
 	
 INSERT INTO semesters (id, year_of_study, period) VALUES
 	(1, 2020, 'summer'),

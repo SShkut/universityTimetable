@@ -42,6 +42,10 @@ public class Course {
 
 	public List<Course> getPrerequisites() {
 		return prerequisites;
+	}	
+
+	public void setPrerequisites(List<Course> prerequisites) {
+		this.prerequisites = prerequisites;
 	}
 
 	@Override

@@ -65,6 +65,7 @@ class CourseDaoTest {
 		expected.add(new Course(2L, "Math", null));
 		expected.add(new Course(3L, "Physics", null));
 		expected.add(new Course(4L, "History", null));
+		expected.add(new Course(5L, "Chemistry", null));
 		
 		List<Course> actual = courseDao.findAll();
 		
@@ -77,6 +78,7 @@ class CourseDaoTest {
 		expected.add(new Course(2L, "Math", null));
 		expected.add(new Course(3L, "Physics", null));
 		expected.add(new Course(4L, "History", null));
+		expected.add(new Course(5L, "Chemistry", null));
 		
 		courseDao.delteById(1L);
 		
@@ -86,7 +88,7 @@ class CourseDaoTest {
 	
 	@Test
 	void givenNewCourse_whenSave_thenInsertCourse() throws DatabaseUnitException, SQLException {
-		Course course = new Course(5L, "Calculus", null);
+		Course course = new Course(6L, "Calculus", null);
 		Optional<Course> expected = Optional.of(course);
 		
 		courseDao.save(course);
@@ -103,6 +105,19 @@ class CourseDaoTest {
 		courseDao.update(new Course(1L, "CS-2", null));
 		
 		Optional<Course> actual = courseDao.findById(course.getId());
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenCourse_whenFindPrerequisitesOfCourse_thenReturnCoursePrerequisites() {
+		Course course = new Course(1L, "CS", null);
+		List<Course> expected = new ArrayList<>();
+		expected.add(new Course(2L, "Math", null));
+		expected.add(new Course(4L, "History", null));
+		expected.add(new Course(5L, "Chemistry", null));
+		
+		List<Course> actual = courseDao.findPrerequisitesOfCourse(course);
+		
 		assertEquals(expected, actual);
 	}
 	

@@ -45,7 +45,7 @@ public class GroupDao {
 	}
 	
 	public List<Group> findAll() {
-		return  jdbcTemplate.query(FIND_ALL, new GroupRowMapper());
+		return  this.jdbcTemplate.query(FIND_ALL, new GroupRowMapper());
 	}
 	
 	public void deleteById(Long id) {

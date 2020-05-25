@@ -3,13 +3,12 @@ CREATE TABLE courses (
 	name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE course_prerequisites (
+CREATE TABLE course_hierarchy (
 	course_id INTEGER,
-	ancestor_id INTEGER,
-	depth INTEGER,
+	prerequisite_id INTEGER,
 	FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-	FOREIGN KEY (ancestor_id) REFERENCES courses(id) ON DELETE CASCADE,
-	UNIQUE (course_id, ancestor_id)
+	FOREIGN KEY (prerequisite_id) REFERENCES courses(id) ON DELETE CASCADE,
+	UNIQUE (course_id, prerequisite_id)
 );
 
 CREATE TABLE semesters (
