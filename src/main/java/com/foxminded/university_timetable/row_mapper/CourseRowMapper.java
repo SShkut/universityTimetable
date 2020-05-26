@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import com.foxminded.university_timetable.model.Course;
 
+@Component
 public class CourseRowMapper implements RowMapper<Course> {
 
 	@Override
@@ -18,6 +20,7 @@ public class CourseRowMapper implements RowMapper<Course> {
 		Course course = new Course();
 		course.setId(Long.valueOf(rs.getLong("id")));
 		course.setName(rs.getString("name"));
+			
 		return course;
 	}
 }

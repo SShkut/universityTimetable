@@ -16,12 +16,8 @@ import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
 @Repository
 public class GroupDao {
 	
-	private static final String FIND_ALL= "SELECT g.id, g.name, g.major, g.department, g.semester_id, s.year_of_study, s.period "
-			+ "FROM groups g "
-			+ "JOIN semesters s ON s.id = g.semester_id";
-	private static final String FIND_BY_ID = "SELECT g.id, g.name, g.major, g.department, g.semester_id, s.year_of_study, s.period "
-			+ "FROM groups g "
-			+ "JOIN semesters s ON s.id = g.semester_id AND g.id = ?";
+	private static final String FIND_ALL= "SELECT * FROM groups";
+	private static final String FIND_BY_ID = "SELECT * FROM groups WHERE id = ?";
 	private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
 	private static final String SAVE = "INSERT INTO groups (name, major, department, semester_id) values(?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE groups SET name = ?, major = ?, department = ?, semester_id = ? WHERE id = ?";
@@ -30,15 +26,21 @@ public class GroupDao {
 			+ "JOIN student_group sg ON s.id = sg.student_id AND sg.group_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
+	private final GroupRowMapper groupRowMapper;
+	private final StudentRowMapper studentRowMapper;
 	
 	@Autowired
-	public GroupDao(JdbcTemplate jdbcTemplate) {
+	public GroupDao(JdbcTemplate jdbcTemplate, GroupRowMapper groupRowMapper, StudentRowMapper studentRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.groupRowMapper = groupRowMapper;
+		this.studentRowMapper = studentRowMapper;
 	}
 	
 	public Optional<Group> findById(Long id) {
 		try {
-			Group group = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, new GroupRowMapper());
+			Group group = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, groupRowMapper);
+			List<Student> students = findStudentsOfGroup(group);
+			group.setStudents(students);
 			return Optional.of(group);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -46,7 +48,7 @@ public class GroupDao {
 	}
 	
 	public List<Group> findAll() {
-		return  this.jdbcTemplate.query(FIND_ALL, new GroupRowMapper());
+		return  this.jdbcTemplate.query(FIND_ALL, groupRowMapper);
 	}
 	
 	public void deleteById(Long id) {
@@ -62,6 +64,6 @@ public class GroupDao {
 	}
 	
 	public List<Student> findStudentsOfGroup(Group group) {
-		return this.jdbcTemplate.query(FIND_STUDENTS_OF_GROUP, new Object[] {group.getId()}, new StudentRowMapper());
+		return this.jdbcTemplate.query(FIND_STUDENTS_OF_GROUP, new Object[] {group.getId()}, studentRowMapper);
 	}
 }

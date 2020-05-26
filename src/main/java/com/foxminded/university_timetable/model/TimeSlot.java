@@ -13,6 +13,10 @@ public class TimeSlot {
 	private Group group;
 	private Room room;
 	
+	public TimeSlot() {
+		
+	}
+	
 	public TimeSlot(LocalTime startTime, LocalTime endTime, Course course, Teacher teacher, Group group, Room room) {
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -31,7 +35,7 @@ public class TimeSlot {
 		this.teacher = teacher;
 		this.group = group;
 		this.room = room;
-	}	
+	}
 
 	public Long getId() {
 		return id;
@@ -103,9 +107,8 @@ public class TimeSlot {
 		if (getClass() != obj.getClass())
 			return false;
 		TimeSlot other = (TimeSlot) obj;
-		return Objects.equals(course, other.course) && Objects.equals(endTime, other.endTime)
-				&& Objects.equals(group, other.group) && Objects.equals(id, other.id)
-				&& Objects.equals(room, other.room) && Objects.equals(startTime, other.startTime)
-				&& Objects.equals(teacher, other.teacher);
-	}
+		return Objects.equals(course, other.course) && Objects.equals(endTime, other.endTime) 
+				&& Objects.equals(group, other.group) && Objects.equals(id, other.id) && Objects.equals(room, other.room)
+				&& Objects.equals(startTime, other.startTime) && Objects.equals(teacher, other.teacher);
+	}	
 }

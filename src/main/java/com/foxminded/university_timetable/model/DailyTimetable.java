@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,9 +10,7 @@ public class DailyTimetable {
 	private LocalDate date;
 	private List<TimeSlot> timeSlots;	
 
-	public DailyTimetable(LocalDate date) {
-		this.date = date;
-		this.timeSlots = new ArrayList<>();
+	public DailyTimetable() {
 	}
 
 	public DailyTimetable(LocalDate date, List<TimeSlot> timeSlots) {
@@ -25,7 +22,7 @@ public class DailyTimetable {
 		this.id = id;
 		this.date = date;
 		this.timeSlots = timeSlots;
-	}	
+	}
 
 	public Long getId() {
 		return id;
@@ -38,21 +35,21 @@ public class DailyTimetable {
 	public LocalDate getDate() {
 		return date;
 	}
-	
+
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
+
 	public List<TimeSlot> getTimeSlots() {
 		return timeSlots;
 	}
-	
+
 	public void setTimeSlots(List<TimeSlot> timeSlots) {
 		this.timeSlots = timeSlots;
 	}
 	
 	public void addTimeSlot(TimeSlot timeSlot) {
-		getTimeSlots().add(timeSlot);
+		this.getTimeSlots().add(timeSlot);
 	}
 
 	@Override

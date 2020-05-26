@@ -18,18 +18,20 @@ public class SemesterDao {
 	private static final String FIND_BY_ID = "SELECT * FROM semesters WHERE id = ?";
 	private static final String SAVE = "INSERT INTO semesters (year_of_study, period) values (?, ?)";
 	private static final String UPDATE = "UPDATE semesters SET year_of_study = ?, period = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM semesters WHERE id = ?";
+	private static final String DELETE_BY_ID = "DELETE FROM semesters WHERE id = ?";	
+
+	private final JdbcTemplate jdbcTemplate;
+	private final SemesterRowMapper semesterRowMapper;
 	
 	@Autowired
-	private final JdbcTemplate jdbcTemplate;
-	
-	public SemesterDao(JdbcTemplate jdbcTemplate) {
+	public SemesterDao(JdbcTemplate jdbcTemplate, SemesterRowMapper semesterRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.semesterRowMapper = semesterRowMapper;
 	}
 	
 	public Optional<Semester> findById(Long id) {
 		try {
-			Semester semester = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, new SemesterRowMapper());
+			Semester semester = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, semesterRowMapper);
 			return Optional.of(semester);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -37,7 +39,7 @@ public class SemesterDao {
 	}
 	
 	public List<Semester> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, new SemesterRowMapper());
+		return this.jdbcTemplate.query(FIND_ALL, semesterRowMapper);
 	}
 	
 	public void save(Semester semester) {

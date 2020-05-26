@@ -35,10 +35,24 @@ class StudentDaoTest {
 	
 	@Autowired
 	private GroupDao groupDao;
+	
+	@Test
+	void givenStudent_whenFindAllStudentCourses_thenReturnListOfStudentCourses() {
+		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123");
+		List<Course> expected = new ArrayList<>();
+		expected.add(new Course(1L, "CS", null));
+		expected.add(new Course(2L, "Math", null));
+		
+		List<Course> actual = studentDao.findAllStudentCourses(student);
+		
+		assertEquals(expected, actual);
+	}
 
 	@Test
 	void givenExistentStudentId_whenFindById_thenReturnOptionalOfStudent() {
 		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123");
+		List<Course> courses = studentDao.findAllStudentCourses(student);
+		student.setCourses(courses);
 		Optional<Student> expected = Optional.of(student);
 		
 		Optional<Student> actual = studentDao.findById(student.getId());
@@ -72,6 +86,8 @@ class StudentDaoTest {
 	@Test
 	void givenStudent_whenSave_thenInsertStudent() throws DatabaseUnitException, SQLException {
 		Student student = new Student(6L, "fn-6", "ln-6", "623456789", "6234567890", "ln-6@unv.com", null, "cn-623");
+		List<Course> courses = studentDao.findAllStudentCourses(student);
+		student.setCourses(courses);
 		Optional<Student> expected = Optional.of(student);
 		
 		studentDao.save(student);
@@ -83,6 +99,8 @@ class StudentDaoTest {
 	@Test
 	void givenStudent_whenUpdate_thenUpdateStudent() throws DatabaseUnitException, SQLException {
 		Student student = new Student(1L, "fn-11", "ln-11", "223456789", "2234567890", "ln-11@unv.com", null, "cn-1231");
+		List<Course> courses = studentDao.findAllStudentCourses(student);
+		student.setCourses(courses);
 		Optional<Student> expected = Optional.of(student);
 		
 		studentDao.update(student);

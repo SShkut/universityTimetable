@@ -20,15 +20,17 @@ public class RoomDao {
 	private static final String DELETE_BY_ID = "DELETE FROM rooms WHERE id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
+	private final RoomRowMapper roomRowMapper;
 	
 	@Autowired
-	public RoomDao(JdbcTemplate jdbcTemplate) {
+	public RoomDao(JdbcTemplate jdbcTemplate, RoomRowMapper roomRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.roomRowMapper = roomRowMapper;
 	}
 	
 	public Optional<Room> findById(Long id) {
 		try {
-			Room room = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, new RoomRowMapper());
+			Room room = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, roomRowMapper);
 			return Optional.of(room);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -36,7 +38,7 @@ public class RoomDao {
 	}
 	
 	public List<Room> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, new RoomRowMapper());
+		return this.jdbcTemplate.query(FIND_ALL, roomRowMapper);
 	}
 	
 	public void save(Room room) {

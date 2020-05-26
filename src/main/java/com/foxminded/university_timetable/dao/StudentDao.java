@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Student;
+import com.foxminded.university_timetable.row_mapper.CourseRowMapper;
 import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
 
 @Repository
@@ -25,17 +26,26 @@ public class StudentDao {
 	private static final String DELETE_STUDENT_FROM_GROUP = "DELETE FROM student_group WHERE student_id = ? and group_id = ?";
 	private static final String ENROLL_COURSE = "INSERT INTO student_course (student_id, course_id) values (?, ?)";
 	private static final String LEAVE_COURSE = "DELETE FROM student_course WHERE student_id = ? AND course_id = ?";
+	private static final String FIND_ALL_STUDENT_COURSES = "SELECT c.id, c.name "
+			+ "FROM courses c "
+			+ "JOIN student_course sc ON c.id = sc.course_id AND sc.student_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
+	private final StudentRowMapper studentRowMapper;
+	private final CourseRowMapper courseRowMapper;
 	
 	@Autowired
-	public StudentDao(JdbcTemplate jdbcTemplate) {
+	public StudentDao(JdbcTemplate jdbcTemplate, StudentRowMapper studentRowMapper, CourseRowMapper courseRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.studentRowMapper = studentRowMapper;
+		this.courseRowMapper = courseRowMapper;
 	}
 	
 	public Optional<Student> findById(Long id) {
 		try {
-			Student student = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, new StudentRowMapper());
+			Student student = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, studentRowMapper);
+			List<Course> courses = findAllStudentCourses(student);
+			student.setCourses(courses);
 			return Optional.of(student);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -43,7 +53,7 @@ public class StudentDao {
 	}
 	
 	public List<Student> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, new StudentRowMapper());
+		return this.jdbcTemplate.query(FIND_ALL, studentRowMapper);
 	}
 	
 	public void save(Student student) {
@@ -74,5 +84,9 @@ public class StudentDao {
 	
 	public void deleteStudentFromCourse(Student student, Course course) {
 		this.jdbcTemplate.update(LEAVE_COURSE, student.getId(), course.getId());
+	}
+	
+	public List<Course> findAllStudentCourses(Student student) {
+		return this.jdbcTemplate.query(FIND_ALL_STUDENT_COURSES, new Object[] {student.getId()}, courseRowMapper);
 	}
 }

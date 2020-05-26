@@ -29,8 +29,38 @@ class TeacherDaoTest {
 	private TeacherDao teacherDao;
 	
 	@Test
+	void givenTeacherAndCourse_whenAddTeacherQualification_thenAddQualificationToTeacher() throws DatabaseUnitException, SQLException {
+		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", null, "phD");
+		Course course = new Course(2L, "Math", null);
+		List<Course> expected = new ArrayList<>();
+		expected.add(new Course(1L, "CS", null));
+		expected.add(new Course(2L, "Math", null));
+		expected.add(new Course(3L, "Physics", null));
+		
+		teacherDao.addTeacherQualification(teacher, course);
+		
+		List<Course> actual = teacherDao.findAllTeacherQualifications(teacher);		
+		assertEquals(expected, actual);		
+	}
+	
+	@Test
+	void givenTeacherAndCourse_whenDeleteTeacherQualification_thenRemoveTeacherQualification() throws DatabaseUnitException, SQLException {
+		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", null, "phD");
+		Course course = new Course(1L, "CS", null);
+		List<Course> expected = new ArrayList<>();
+		expected.add(new Course(3L, "Physics", null));
+		
+		teacherDao.deleteTeacherQualification(teacher, course);
+		
+		List<Course> actual = teacherDao.findAllTeacherQualifications(teacher);		
+		assertEquals(expected, actual);	
+	}
+	
+	@Test
 	void givenExistentTeacjertId_whenFindById_thenReturnOptionalOfTeacher() {
 		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", null, "phD");
+		List<Course> qualification = teacherDao.findAllTeacherQualifications(teacher);
+		teacher.setCourses(qualification);
 		Optional<Teacher> expected = Optional.of(teacher);
 		
 		Optional<Teacher> actual = teacherDao.findById(teacher.getId());
@@ -61,7 +91,7 @@ class TeacherDaoTest {
 	
 	@Test
 	void givenTeacher_whenSave_thenInsertTeacher() throws DatabaseUnitException, SQLException {
-		Teacher teacher = new Teacher(3L, "fnt-3", "lnt-3", "343456789", "6634567890", "lnt-3@unv.com", null, "phD");
+		Teacher teacher = new Teacher(3L, "fnt-3", "lnt-3", "343456789", "6634567890", "lnt-3@unv.com", new ArrayList<>(), "phD");
 		Optional<Teacher> expected = Optional.of(teacher);
 		
 		teacherDao.save(teacher);
@@ -72,7 +102,9 @@ class TeacherDaoTest {
 	
 	@Test
 	void givenTeacher_whenUpdate_thenUpdateTeacher() throws DatabaseUnitException, SQLException {
-		Teacher teacher = new Teacher(1L, "fnt-11", "lnt-11", "323456789", "6234567890", "lns-11@unv.com", null, "bs");
+		Teacher teacher = new Teacher(1L, "fnt-11", "lnt-11", "323456789", "6234567890", "lns-11@unv.com", new ArrayList<>(), "bs");
+		List<Course> qualification = teacherDao.findAllTeacherQualifications(teacher);
+		teacher.setCourses(qualification);
 		Optional<Teacher> expected = Optional.of(teacher);
 		
 		teacherDao.update(teacher);
@@ -84,7 +116,8 @@ class TeacherDaoTest {
 	@Test
 	void givenTeacherId_whenDeleteById_thenDeleteTeacherWithGivenId() throws DatabaseUnitException, SQLException {
 		List<Teacher> expected = new ArrayList<>();
-		expected.add(new Teacher(2L, "fnt-2", "lnt-2", "323456798", "5234567891", "lnt-2@unv.com", null, "masters"));
+		Teacher teacher = new Teacher(2L, "fnt-2", "lnt-2", "323456798", "5234567891", "lnt-2@unv.com", null, "masters");
+		expected.add(teacher);
 		
 		teacherDao.deleteById(1L);
 		
@@ -103,32 +136,5 @@ class TeacherDaoTest {
 		
 		assertEquals(expected, actual);
 	}
-	
-	@Test
-	void givenTeacherAndCourse_whenAddTeacherQualification_thenAddQualificationToTeacher() throws DatabaseUnitException, SQLException {
-		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", null, "phD");
-		Course course = new Course(2L, "Math", null);
-		List<Course> expected = new ArrayList<>();
-		expected.add(new Course(1L, "CS", null));
-		expected.add(new Course(2L, "Math", null));
-		expected.add(new Course(3L, "Physics", null));
-		
-		teacherDao.addTeacherQualification(teacher, course);
-		
-		List<Course> actual = teacherDao.findAllTeacherQualifications(teacher);		
-		assertEquals(expected, actual);		
-	}
-	
-	@Test
-	void givenTeacherAndCourse_whenDeleteTeacherQualification_thenRemoveTeacherQualification() throws DatabaseUnitException, SQLException {
-		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", null, "phD");
-		Course course = new Course(1L, "CS", null);
-		List<Course> expected = new ArrayList<>();
-		expected.add(new Course(3L, "Physics", null));
-		
-		teacherDao.deleteTeacherQualification(teacher, course);
-		
-		List<Course> actual = teacherDao.findAllTeacherQualifications(teacher);		
-		assertEquals(expected, actual);	
-	}
+
 }

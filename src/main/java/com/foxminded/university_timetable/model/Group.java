@@ -1,6 +1,5 @@
 package com.foxminded.university_timetable.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,15 +13,6 @@ public class Group {
 	private List<Student> students;
 	
 	public Group() {
-		this.students = new ArrayList<>();
-	}
-	
-	public Group(String name, String major, String department, Semester semester) {
-		this.name = name;
-		this.major = major;
-		this.department = department;
-		this.semester = semester;
-		this.students = new ArrayList<>();
 	}
 
 	public Group(String name, String major, String department, Semester semester, List<Student> students) {
@@ -96,7 +86,7 @@ public class Group {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(department, id, major, name, semester);
+		return Objects.hash(department, id, major, name, semester, students);
 	}
 
 	@Override
@@ -110,6 +100,6 @@ public class Group {
 		Group other = (Group) obj;
 		return Objects.equals(department, other.department) && Objects.equals(id, other.id)
 				&& Objects.equals(major, other.major) && Objects.equals(name, other.name)
-				&& Objects.equals(semester, other.semester);
+				&& Objects.equals(semester, other.semester) && Objects.equals(students, other.students);
 	}
 }

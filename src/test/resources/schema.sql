@@ -81,7 +81,7 @@ CREATE TABLE timetables (
 	name VARCHAR(255)
 );
 
-CREATE TABLE daily_timetalbes (
+CREATE TABLE daily_timetables (
 	id serial PRIMARY KEY,
 	date DATE,
 	timetable_id INTEGER,
@@ -90,16 +90,16 @@ CREATE TABLE daily_timetalbes (
 
 CREATE TABLE time_slots (
 	id serial PRIMARY KEY,
-	start_time TIMESTAMP NOT NULL,
-	end_time TIMESTAMP NOT NULL,
+	start_time TIME NOT NULL,
+	end_time TIME NOT NULL,
 	course_id INTEGER,
 	teacher_id INTEGER,
 	group_id INTEGER,
 	room_id INTEGER,
-	daily_timetalbe_id INTEGER,
+	daily_timetable_id INTEGER,
 	FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL,
 	FOREIGN KEY (teacher_id) REFERENCES teachers(id) ON DELETE SET NULL,
 	FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE SET NULL,
 	FOREIGN KEY (room_id) REFERENCES rooms(id) ON DELETE SET NULL,
-	FOREIGN KEY (daily_timetalbe_id) REFERENCES daily_timetalbes(id) ON DELETE SET NULL
+	FOREIGN KEY (daily_timetable_id) REFERENCES daily_timetables(id) ON DELETE SET NULL
 );

@@ -11,12 +11,6 @@ public class Student extends Person {
 		
 	}
 
-	public Student(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
-			String studentCardNumber) {
-		super(firstName, lastName, taxNumber, phoneNumber, email);
-		this.studentCardNumber = studentCardNumber;
-	}
-
 	public Student(String firstName, String lastName, String taxNumber, String phoneNumber, String email, 
 			List<Course> courses, String studentCardNumber) {
 		super(firstName, lastName, taxNumber, phoneNumber, email, courses);

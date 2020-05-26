@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import com.foxminded.university_timetable.model.Room;
 
+@Component
 public class RoomRowMapper implements RowMapper<Room> {
 
 	@Override
@@ -19,6 +21,7 @@ public class RoomRowMapper implements RowMapper<Room> {
 		room.setId(rs.getLong("id"));
 		room.setSybmol(rs.getString("symbol"));
 		room.setCapacity(rs.getInt("capacity"));
+		
 		return room;
 	}
 }

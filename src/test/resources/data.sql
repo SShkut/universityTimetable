@@ -53,3 +53,20 @@ INSERT INTO student_course (student_id, course_id) VALUES
 INSERT INTO rooms (id, symbol, capacity) VALUES
 	(1, 'a-1', 100),
 	(2, 'b-1', 70);
+	
+INSERT INTO timetables (id, name) VALUES
+	(1, 'actual'),
+	(2, 'archived');
+	
+INSERT INTO daily_timetables (id, date, timetable_id) VALUES
+	(1, PARSEDATETIME('12.02.2020', 'dd.MM.yyyy'), 1),
+	(2, PARSEDATETIME('13.02.2020', 'dd.MM.yyyy'), 2);
+	
+INSERT INTO time_slots(id, start_time, end_time, course_id, teacher_id, group_id, room_id, daily_timetable_id) VALUES
+	(1, PARSEDATETIME('9:00', 'HH:mm'), PARSEDATETIME('9:30', 'HH:mm'), 1, 1, 1, 1, 1),
+	(2, PARSEDATETIME('9:00', 'HH:mm'), PARSEDATETIME('9:30', 'HH:mm'), 2, 2, 2, 2, 1),
+	(3, PARSEDATETIME('9:00', 'HH:mm'), PARSEDATETIME('11:50', 'HH:mm'), 1, 1, 1, 1, 1),
+	(4, PARSEDATETIME('9:00', 'HH:mm'), PARSEDATETIME('11:50', 'HH:mm'), 2, 2, 2, 2, 1),
+	(5, PARSEDATETIME('9:00', 'HH:mm'), PARSEDATETIME('9:30', 'HH:mm'), 3, 1, 1, 1, 2),
+	(6, PARSEDATETIME('9:00', 'HH:mm'), PARSEDATETIME('9:30', 'HH:mm'), 4, 2, 2, 2, 2);
+	

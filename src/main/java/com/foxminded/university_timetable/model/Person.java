@@ -15,16 +15,6 @@ public abstract class Person {
 	private List<Course> courses;
 	
 	public Person() {
-		courses = new ArrayList<>();
-	}
-
-	public Person(String firstName, String lastName, String taxNumber, String phoneNumber, String email) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.taxNumber = taxNumber;
-		this.phoneNumber = phoneNumber;
-		this.email = email;
-		this.courses = new ArrayList<>();
 	}
 
 	public Person(String firstName, String lastName, String taxNumber, String phoneNumber, String email, List<Course> courses) {
@@ -109,7 +99,7 @@ public abstract class Person {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(email, firstName, id, lastName, phoneNumber, taxNumber);
+		return Objects.hash(courses, email, firstName, id, lastName, phoneNumber, taxNumber);
 	}
 
 	@Override
@@ -121,9 +111,9 @@ public abstract class Person {
 		if (getClass() != obj.getClass())
 			return false;
 		Person other = (Person) obj;
-		return Objects.equals(email, other.email) && Objects.equals(firstName, other.firstName)
-				&& Objects.equals(id, other.id) && Objects.equals(lastName, other.lastName)
-				&& Objects.equals(phoneNumber, other.phoneNumber) && Objects.equals(taxNumber, other.taxNumber);
+		return Objects.equals(courses, other.courses) && Objects.equals(email, other.email)
+				&& Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id)
+				&& Objects.equals(lastName, other.lastName) && Objects.equals(phoneNumber, other.phoneNumber)
+				&& Objects.equals(taxNumber, other.taxNumber);
 	}
-
 }

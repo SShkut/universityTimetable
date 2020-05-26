@@ -28,15 +28,21 @@ public class TeacherDao {
 			+ "JOIN teacher_course tc ON c.id = tc.course_id AND tc.teacher_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
+	private final CourseRowMapper courseRowMapper;
+	private final TeacherRowMapper teacherRowMapper;
 	
 	@Autowired
-	public TeacherDao(JdbcTemplate jdbcTemplate) {
+	public TeacherDao(JdbcTemplate jdbcTemplate, CourseRowMapper courseRowMapper, TeacherRowMapper teacherRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.courseRowMapper = courseRowMapper;
+		this.teacherRowMapper = teacherRowMapper;
 	}
 	
 	public Optional<Teacher> findById(Long id) {
 		try {
-			Teacher teacher = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, new TeacherRowMapper());
+			Teacher teacher = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, teacherRowMapper);
+			List<Course> qualification = findAllTeacherQualifications(teacher);
+			teacher.setCourses(qualification);
 			return Optional.of(teacher);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -44,7 +50,7 @@ public class TeacherDao {
 	}
 	
 	public List<Teacher> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, new TeacherRowMapper());
+		return this.jdbcTemplate.query(FIND_ALL, teacherRowMapper);
 	}
 	
 	public void save(Teacher teahcer) {
@@ -70,6 +76,6 @@ public class TeacherDao {
 	}
 
 	public List<Course> findAllTeacherQualifications(Teacher teacher) {
-		return this.jdbcTemplate.query(FIND_ALL_TEACHER_QUALIFICATIONS, new Object[] {teacher.getId()}, new CourseRowMapper());
+		return this.jdbcTemplate.query(FIND_ALL_TEACHER_QUALIFICATIONS, new Object[] {teacher.getId()}, courseRowMapper);
 	}
 }

@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
-@ComponentScan("com.foxminded.university_timetable.dao")
+@ComponentScan("com.foxminded.university_timetable")
 @PropertySource(value = { "classpath:application.properties" })
 public class JdbcConfig {
 
@@ -28,7 +28,7 @@ public class JdbcConfig {
 	}
 	
 	@Bean
-	public JdbcTemplate postgresJdbcTemplate(@Autowired DataSource dataSource) {
+	public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		jdbcTemplate.setDataSource(dataSource);
 		return jdbcTemplate;

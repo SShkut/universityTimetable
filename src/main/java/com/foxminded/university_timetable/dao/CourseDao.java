@@ -37,15 +37,21 @@ public class CourseDao {
 			+ "JOIN student_course sc ON sc.student_id = s.id AND sc.course_id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
+	private final CourseRowMapper courseRowMapper;
+	private final StudentRowMapper studentRowMapper;
 	
 	@Autowired
-	public CourseDao(JdbcTemplate jdbcTemplate) {
+	public CourseDao(JdbcTemplate jdbcTemplate, CourseRowMapper courseRowMapper,  StudentRowMapper studentRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.courseRowMapper = courseRowMapper;
+		this.studentRowMapper = studentRowMapper;
 	}
 	
 	public Optional<Course> findById(Long id) {
 		try {
-			Course course = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, new CourseRowMapper());
+			Course course = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] {id}, courseRowMapper);
+			List<Course> prerequisites = findPrerequisitesOfCourse(course);
+			course.setPrerequisites(prerequisites);
 			return Optional.of(course);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -53,7 +59,7 @@ public class CourseDao {
 	}
 	
 	public List<Course> findAll() {
-		return  this.jdbcTemplate.query(FIND_ALL, new CourseRowMapper());
+		return  this.jdbcTemplate.query(FIND_ALL, courseRowMapper);
 	}
 	
 	public void delteById(Long id) {
@@ -69,10 +75,10 @@ public class CourseDao {
 	}	
 	
 	public List<Course> findPrerequisitesOfCourse(Course course) {
-		return this.jdbcTemplate.query(FIND_PREREQUISITES_OF_COURSE, new Object[] {course.getId()}, new CourseRowMapper());
+		return this.jdbcTemplate.query(FIND_PREREQUISITES_OF_COURSE, new Object[] {course.getId()}, courseRowMapper);
 	}
 	
 	public List<Student> findStudentsOfCourse(Course course) {
-		return this.jdbcTemplate.query(FIND_STUDENTS_OF_COURSE, new Object[] {course.getId()}, new StudentRowMapper());
+		return this.jdbcTemplate.query(FIND_STUDENTS_OF_COURSE, new Object[] {course.getId()}, studentRowMapper);
 	}
 }

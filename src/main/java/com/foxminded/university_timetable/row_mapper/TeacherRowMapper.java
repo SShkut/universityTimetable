@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import com.foxminded.university_timetable.model.Teacher;
 
+@Component
 public class TeacherRowMapper implements RowMapper<Teacher> {
 
 	@Override

@@ -14,22 +14,20 @@ public class Timetable {
 	
 	private Long id;
 	private String name;
-	private List<DailyTimetable> timetables;	
+	private List<DailyTimetable> dailyTimetables;
 	
-	public Timetable(String name) {
-		this.name = name;
-		this.timetables = new ArrayList<>();
+	public Timetable() {	
 	}
 
 	public Timetable(String name, List<DailyTimetable> timetables) {
 		this.name = name;
-		this.timetables = timetables;
+		this.dailyTimetables = timetables;
 	}	
 
 	public Timetable(Long id, String name, List<DailyTimetable> timetables) {
 		this.id = id;
 		this.name = name;
-		this.timetables = timetables;
+		this.dailyTimetables = timetables;
 	}
 
 	public Long getId() {
@@ -48,20 +46,38 @@ public class Timetable {
 		this.name = name;
 	}
 
-	public List<DailyTimetable> getTimetables() {
-		return timetables;
+	public List<DailyTimetable> getDailyTimetables() {
+		return dailyTimetables;
 	}
 
-	public void setTimetables(List<DailyTimetable> timetables) {
-		this.timetables = timetables;
+	public void setDailyTimetables(List<DailyTimetable> dailyTimetables) {
+		this.dailyTimetables = dailyTimetables;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, dailyTimetables);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Timetable other = (Timetable) obj;
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(dailyTimetables, other.dailyTimetables);
 	}
 	
 	public void addDailyTimetable(DailyTimetable dailyTimetable) {
-		getTimetables().add(dailyTimetable);
+		getDailyTimetables().add(dailyTimetable);
 	}
 	
 	public Optional<DailyTimetable> getTimetableDay(LocalDate date, Person person) {
-		Optional<DailyTimetable> timetable = timetables.stream()
+		Optional<DailyTimetable> timetable = dailyTimetables.stream()
 				.filter(table -> table.getDate().equals(date))
 				.findFirst();
 		if (timetable.isPresent()) {
@@ -93,23 +109,5 @@ public class Timetable {
 				}
 			});		
 		return result;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, name, timetables);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Timetable other = (Timetable) obj;
-		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(timetables, other.timetables);
 	}
 }

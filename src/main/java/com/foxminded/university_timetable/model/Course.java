@@ -13,11 +13,6 @@ public class Course {
 	public Course() {
 	}
 
-	public Course(String name) {
-		this.name = name;
-		this.prerequisites = new ArrayList<>();
-	}	
-
 	public Course(Long id, String name, List<Course> prerequisits) {
 		this.id = id;
 		this.name = name;

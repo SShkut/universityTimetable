@@ -40,7 +40,7 @@ public class Menu {
 		this.groups = new ArrayList<>();
 		this.rooms = Arrays.asList(new Room("A111", 100), new Room("A112", 100), new Room("B110", 25));
 		this.semester = new Semester(2020, "summer");
-		this.timetable = new Timetable("My timetable");
+		this.timetable = new Timetable("My timetable", null);
 	}
 
 	public void showMenu() {
@@ -96,7 +96,7 @@ public class Menu {
 		String email = scanner.next();
 		System.out.print("Student card number: ");
 		String studentCardNumber = scanner.next();
-		students.add(new Student(firstName, lastName, taxNumber, phoneNumber, email, studentCardNumber));
+		students.add(new Student(firstName, lastName, taxNumber, phoneNumber, email, null, studentCardNumber));
 	}
 
 	private void createTeacher() {
@@ -112,13 +112,13 @@ public class Menu {
 		String email = scanner.next();
 		System.out.print("Degree: ");
 		String degree = scanner.next();
-		teachers.add(new Teacher(firstName, lastName, taxNumber, phoneNumber, email, degree));
+		teachers.add(new Teacher(firstName, lastName, taxNumber, phoneNumber, email, null, degree));
 	}
 
 	private void createCourse() {
 		System.out.print("Course name: ");
 		String name = scanner.next();
-		courses.add(new Course(name));
+		courses.add(new Course(null, name, null));
 	}
 
 	private void createGroup() {
@@ -128,7 +128,7 @@ public class Menu {
 		String major = scanner.next();
 		System.out.print("Department: ");
 		String department = scanner.next();
-		groups.add(new Group(name, major, department, this.semester));
+		groups.add(new Group(name, major, department, this.semester, null));
 	}
 	
 	private void assignStudentToGroup() {
@@ -173,15 +173,15 @@ public class Menu {
 				System.out.println("Enter date (YYYY-MM-DD): ");
 				String text = scanner.next();
 				LocalDate date = LocalDate.parse(text);
-				Optional<DailyTimetable> dailyTimetable = this.timetable.getTimetables().stream()
+				Optional<DailyTimetable> dailyTimetable = this.timetable.getDailyTimetables().stream()
 						.filter(table -> table.getDate().equals(date))
 						.findFirst();
 				if (dailyTimetable.isPresent()) {
 					createTimeSlot(dailyTimetable.get());
 					correct = true;
 				} else {
-					dailyTimetable = Optional.of(new DailyTimetable(date));
-					timetable.getTimetables().add(dailyTimetable.get());
+					dailyTimetable = Optional.of(new DailyTimetable(date, null));
+					timetable.getDailyTimetables().add(dailyTimetable.get());
 					createTimeSlot(dailyTimetable.get());
 					correct = true;
 				}

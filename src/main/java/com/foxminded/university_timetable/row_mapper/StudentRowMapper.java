@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import com.foxminded.university_timetable.model.Student;
 
+@Component
 public class StudentRowMapper implements RowMapper<Student> {
 
 	@Override
@@ -23,6 +25,7 @@ public class StudentRowMapper implements RowMapper<Student> {
 		student.setPhoneNumber(rs.getString("phone_number"));
 		student.setEmail(rs.getString("email"));
 		student.setStudentCardNumber(rs.getString("student_card_number"));
+		
 		return student;
 	}
 	

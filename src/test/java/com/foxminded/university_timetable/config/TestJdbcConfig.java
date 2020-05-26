@@ -10,7 +10,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 @Configuration
-@ComponentScan("com.foxminded.university_timetable.dao")
+@ComponentScan("com.foxminded.university_timetable")
 public class TestJdbcConfig {
 	
 	@Bean
@@ -23,7 +23,7 @@ public class TestJdbcConfig {
 	}
 	
 	@Bean
-	public JdbcTemplate testJdbcTemplate(@Autowired DataSource dataSource) {
+	public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		jdbcTemplate.setDataSource(dataSource);
 		return jdbcTemplate;
