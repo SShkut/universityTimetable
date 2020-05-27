@@ -16,8 +16,8 @@ public class DailyTimetableDao {
 	
 	private static final String FIND_BY_ID = "SELECT * FROM daily_timetables WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM daily_timetables";
-	private static final String SAVE = "INSERT INTO daily_timetables (date, timetable_id) VALUES (?, ?)";
-	private static final String UPDATE = "UPDATE daily_timetables SET date = ?, timetable_id = ? WHERE id = ?";
+	private static final String SAVE = "INSERT INTO daily_timetables (date) VALUES (?)";
+	private static final String UPDATE = "UPDATE daily_timetables SET date = ? WHERE id = ?";
 	private static final String DELETE_BY_ID = "DELETE FROM daily_timetables WHERE id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
