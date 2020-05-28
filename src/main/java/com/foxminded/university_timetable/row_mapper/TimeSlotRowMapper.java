@@ -45,6 +45,7 @@ public class TimeSlotRowMapper implements RowMapper<TimeSlot> {
 		
 		TimeSlot timeSlot = new TimeSlot();
 		
+		timeSlot.setId(rs.getLong("id"));
 		timeSlot.setStartTime(rs.getTime("start_time").toLocalTime());
 		timeSlot.setEndTime(rs.getTime("end_time").toLocalTime());
 		

@@ -17,11 +17,12 @@ public class TimeSlotDao {
 	
 	private static final String FIND_BY_ID = "SELECT * FROM time_slots WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM time_slots";
-	private static final String SAVE = "INSERT INTO time_slots (start_time, end_time, course_id, teacher_id, group_id, room_id, daily_timetalbe_id) "
+	private static final String SAVE = "INSERT INTO time_slots (start_time, end_time, course_id, teacher_id, group_id, room_id) "
 			+ "VALUES (?, ?, ?, ?, ?, ?)";
-	private static final String UPDATE = "UPDATE time_slots SET start_time = ?, end_time = ?, course_id = ?, teacher_id = ?, group_id = ?, room_id = ?, daily_timetalbe_id = ? WHERE id = ?";
+	private static final String UPDATE = "UPDATE time_slots SET start_time = ?, end_time = ?, course_id = ?, teacher_id = ?, group_id = ?, room_id = ? WHERE id = ?";
 	private static final String DELETE_BY_ID = "DELETE FROM time_slots WHERE id = ?";
 	private static final String FIND_ALL_TIME_SLOTS_OF_DAILY_TIMETABLE = "SELECT * FROM time_slots WHERE daily_timetable_id = ?";
+	private static final String ADD_TIME_SLOT_TO_DAILY_TIMETABLE = "UPDATE time_slots SET daily_timetable_id = ? WHERE id = ?";
 	
 	private final JdbcTemplate jdbcTemplate;
 	private final TimeSlotRowMapper timeSlotRowMapper;
@@ -51,8 +52,8 @@ public class TimeSlotDao {
 	}
 
 	public void update(TimeSlot timeSlot) {
-		this.jdbcTemplate.update(UPDATE, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse(), timeSlot.getTeacher(), 
-				timeSlot.getGroup(), timeSlot.getRoom(), timeSlot.getId());
+		this.jdbcTemplate.update(UPDATE, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse().getId(), timeSlot.getTeacher().getId(), 
+				timeSlot.getGroup().getId(), timeSlot.getRoom().getId(), timeSlot.getId());
 	}
 	
 	public void deleteById(Long id) {
@@ -61,5 +62,9 @@ public class TimeSlotDao {
 	
 	public List<TimeSlot> findAllTimeSlotsOfDailyTimetable(DailyTimetable dailyTimetable) {
 		return this.jdbcTemplate.query(FIND_ALL_TIME_SLOTS_OF_DAILY_TIMETABLE, new Object[] {dailyTimetable.getId()}, timeSlotRowMapper);
+	}
+	
+	public void addTimeSlotToDailyTimetable(TimeSlot timeSlot, DailyTimetable dailyTimetable) {
+		this.jdbcTemplate.update(ADD_TIME_SLOT_TO_DAILY_TIMETABLE, dailyTimetable.getId(), timeSlot.getId());
 	}
 }
