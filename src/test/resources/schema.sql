@@ -1,3 +1,17 @@
+DROP TABLE IF EXISTS course_hierarchy;
+DROP TABLE IF EXISTS student_group;
+DROP TABLE IF EXISTS student_course;
+DROP TABLE IF EXISTS teacher_course;
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS time_slots;
+DROP TABLE IF EXISTS daily_timetables;
+DROP TABLE IF EXISTS timetables;
+DROP TABLE IF EXISTS teachers;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS groups;
+DROP TABLE IF EXISTS semesters;
+DROP TABLE IF EXISTS rooms;
+
 CREATE TABLE courses (
 	id serial PRIMARY KEY,
 	name VARCHAR(255) NOT NULL
