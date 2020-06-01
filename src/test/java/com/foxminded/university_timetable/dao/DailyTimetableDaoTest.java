@@ -3,6 +3,7 @@ package com.foxminded.university_timetable.dao;
 import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,6 +20,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.foxminded.university_timetable.config.TestJdbcConfig;
 import com.foxminded.university_timetable.model.DailyTimetable;
+import com.foxminded.university_timetable.model.Student;
+import com.foxminded.university_timetable.model.Teacher;
 import com.foxminded.university_timetable.model.TimeSlot;
 import com.foxminded.university_timetable.model.Timetable;
 
@@ -35,6 +38,12 @@ class DailyTimetableDaoTest {
 	
 	@Autowired
 	private TimeSlotDao timeSlotDao;
+	
+	@Autowired
+	private StudentDao studentDao;
+	
+	@Autowired
+	private TeacherDao teacherDao;
 
 	@Test
 	void givenExistentDailyTimetableId_whenFindById_thenReturnOptionalOfDailyTimetable() {
@@ -129,6 +138,101 @@ class DailyTimetableDaoTest {
 		Optional<DailyTimetable> expected = dailyTimetableDao.findById(1L);
 		
 		Optional<DailyTimetable> actual = dailyTimetableDao.findByDate(date);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenStudentWithTimetableAndDate_whenFindDailyTimetableForStudent_thenReturnListOfTimetable() {
+		Optional<Student> student = studentDao.findById(1L);
+		LocalDate date = LocalDate.of(2020, 2, 12);
+		Optional<DailyTimetable> expected = dailyTimetableDao.findById(1L);
+		
+		Optional<DailyTimetable> actual = dailyTimetableDao.findDailyTimetableForStudent(
+				student.orElseThrow(NoSuchElementException::new), date);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenStudentWhithoutTimetableAndDate_whenFindDailyTimetableForStudent_thenReturnEmptyList() {
+		Optional<Student> student = studentDao.findById(5L);
+		LocalDate date = LocalDate.of(2020, 2, 12);
+		Optional<DailyTimetable> expected = Optional.empty();
+		
+		Optional<DailyTimetable> actual = dailyTimetableDao.findDailyTimetableForStudent(
+				student.orElseThrow(NoSuchElementException::new), date);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenTeacherWithTimetableAndDate_whenFindDailyTimetableForTeacher_thenReturnListOfTimetable() {
+		Optional<Teacher> teacher= teacherDao.findById(1L);
+		LocalDate date = LocalDate.of(2020, 2, 13);
+		Optional<DailyTimetable> expected = dailyTimetableDao.findById(2L);
+		
+		Optional<DailyTimetable> actual = dailyTimetableDao.findDailyTimetableForTeacher(
+				teacher.orElseThrow(NoSuchElementException::new), date);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenTeacherWhithoutTimetableAndDate_whenFindDailyTimetableForTeacher_thenReturnEmptyList() {
+		Optional<Teacher> teacher= teacherDao.findById(2L);
+		LocalDate date = LocalDate.of(2020, 2, 13);
+		Optional<DailyTimetable> expected = Optional.empty();
+		
+		Optional<DailyTimetable> actual = dailyTimetableDao.findDailyTimetableForTeacher(
+				teacher.orElseThrow(NoSuchElementException::new), date);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenStudentWithMonthlyTimetableMonthAndYear_whenFindMonthlyTimetableForStudent_thenReturnListOfDailyTimetables() {
+		List<DailyTimetable> expected = new ArrayList<>();
+		expected.add(dailyTimetableDao.findById(1L).orElseThrow(NoSuchElementException::new));
+		expected.add(dailyTimetableDao.findById(2L).orElseThrow(NoSuchElementException::new));
+		Optional<Student> student = studentDao.findById(1L);
+		
+		List<DailyTimetable> actual = dailyTimetableDao.findMonthlyTimetableForStudent(
+				student.orElseThrow(NoSuchElementException::new), Month.FEBRUARY, 2020);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenStudentWithoutMonthlyTimetableMonthAndYear_whenFindMonthlyTimetableForStudent_thenReturnListOfDailyTimetables() {
+		List<DailyTimetable> expected = new ArrayList<>();
+		Optional<Student> student = studentDao.findById(5L);
+		
+		List<DailyTimetable> actual = dailyTimetableDao.findMonthlyTimetableForStudent(
+				student.orElseThrow(NoSuchElementException::new), Month.FEBRUARY, 2020);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenTeacherWithMonthlyTimetableMonthAndYear_whenFindMonthlyTimetableForStudent_thenReturnListOfDailyTimetables() {
+		List<DailyTimetable> expected = new ArrayList<>();
+		expected.add(dailyTimetableDao.findById(1L).orElseThrow(NoSuchElementException::new));
+		Optional<Teacher> teacher = teacherDao.findById(2L);
+		
+		List<DailyTimetable> actual = dailyTimetableDao.findMonthlyTimetableForTeacher(
+				teacher.orElseThrow(NoSuchElementException::new), Month.FEBRUARY, 2020);
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenTeacherWithoutMonthlyTimetableMonthAndYear_whenFindMonthlyTimetableForStudent_thenReturnListOfDailyTimetables() {
+		List<DailyTimetable> expected = new ArrayList<>();
+		Optional<Teacher> teacher = teacherDao.findById(1L);
+		
+		List<DailyTimetable> actual = dailyTimetableDao.findMonthlyTimetableForTeacher(
+				teacher.orElseThrow(NoSuchElementException::new), Month.MARCH, 2020);
 		
 		assertEquals(expected, actual);
 	}
