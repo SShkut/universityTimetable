@@ -8,15 +8,66 @@
   	<maven.compile.source>1.8</maven.compile.source>
   	<maven.compile.target>1.8</maven.compile.target>
   	<maven.version>3.8.0</maven.version>
+	<spring-context.version>5.2.5.RELEASE</spring-context.version>
+  	<spring-jdbc.versioin>5.2.5.RELEASE</spring-jdbc.versioin>
+  	<postgresql.version>42.2.12</postgresql.version>
+  	<slf4j.version>1.7.30</slf4j.version>
+  	<spring-test.version>5.2.5.RELEASE</spring-test.version>
   	<junit.version>5.6.0</junit.version>
+  	<dbunit.version>2.5.1</dbunit.version>
+  	<h2.version>1.4.200</h2.version>  	
   </properties>
   <dependencies>
-    <dependency>
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-context</artifactId>
+	    <version>${spring-context.version}</version>
+	</dependency>	
+  	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-jdbc</artifactId>
+	    <version>${spring-jdbc.versioin}</version>  	
+  	</dependency>
+	<dependency>
+	    <groupId>org.postgresql</groupId>
+	    <artifactId>postgresql</artifactId>
+	    <version>${postgresql.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-api</artifactId>
+	    <version>${slf4j.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-log4j12</artifactId>
+	    <version>${slf4j.version}</version>
+	    <scope>test</scope>
+	</dependency>	
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>spring-test</artifactId>
+	    <version>${spring-test.version}</version>
+	    <scope>test</scope>
+	</dependency>	
+	<dependency>
   		<groupId>org.junit.jupiter</groupId>
   		<artifactId>junit-jupiter-engine</artifactId>
   		<version>${junit.version}</version>
   		<scope>test</scope>
   	</dependency>
+  	<dependency>
+	    <groupId>org.dbunit</groupId>
+	    <artifactId>dbunit</artifactId>
+	    <version>${dbunit.version}</version>
+	    <scope>test</scope>
+	</dependency>
+	<dependency>
+	    <groupId>com.h2database</groupId>
+	    <artifactId>h2</artifactId>
+	    <version>${h2.version}</version>
+	    <scope>test</scope>
+	</dependency>
   </dependencies>
   <build>
   	<plugins>
