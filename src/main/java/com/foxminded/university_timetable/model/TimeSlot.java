@@ -110,5 +110,13 @@ public class TimeSlot {
 		return Objects.equals(course, other.course) && Objects.equals(endTime, other.endTime) 
 				&& Objects.equals(group, other.group) && Objects.equals(id, other.id) && Objects.equals(room, other.room)
 				&& Objects.equals(startTime, other.startTime) && Objects.equals(teacher, other.teacher);
-	}	
+	}
+
+	@Override
+	public String toString() {
+		return "TimeSlot id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", course=" + course
+				+ ", teacher=" + teacher + ", group=" + group + ", room=" + room;
+	}
+	
+	
 }

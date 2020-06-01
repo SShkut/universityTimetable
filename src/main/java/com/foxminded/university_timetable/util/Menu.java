@@ -5,12 +5,23 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.foxminded.university_timetable.dao.CourseDao;
+import com.foxminded.university_timetable.dao.DailyTimetableDao;
+import com.foxminded.university_timetable.dao.GroupDao;
+import com.foxminded.university_timetable.dao.RoomDao;
+import com.foxminded.university_timetable.dao.SemesterDao;
+import com.foxminded.university_timetable.dao.StudentDao;
+import com.foxminded.university_timetable.dao.TeacherDao;
+import com.foxminded.university_timetable.dao.TimeSlotDao;
+import com.foxminded.university_timetable.dao.TimetableDao;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.DailyTimetable;
 import com.foxminded.university_timetable.model.Group;
@@ -21,26 +32,33 @@ import com.foxminded.university_timetable.model.Teacher;
 import com.foxminded.university_timetable.model.TimeSlot;
 import com.foxminded.university_timetable.model.Timetable;
 
+@Component
 public class Menu {
 	
 	private static final Scanner scanner = new Scanner(System.in);
 	
-	private List<Student> students;
-	private List<Teacher> teachers;
-	private List<Course> courses;
-	private List<Group> groups;
-	private List<Room> rooms;
-	private Semester semester;
-	private Timetable timetable;
-
-	public Menu() {
-		this.students = new ArrayList<>();
-		this.teachers = new ArrayList<>();
-		this.courses = new ArrayList<>();
-		this.groups = new ArrayList<>();
-		this.rooms = Arrays.asList(new Room("A111", 100), new Room("A112", 100), new Room("B110", 25));
-		this.semester = new Semester(2020, "summer");
-		this.timetable = new Timetable("My timetable", null);
+	private final StudentDao studentDao;
+	private final TeacherDao teacherDao;
+	private final CourseDao courseDao;
+	private final GroupDao groupDao;
+	private final RoomDao roomDao;
+	private final SemesterDao semesterDao;
+	private final TimetableDao timetableDao;
+	private final DailyTimetableDao dailyTimetableDao;
+	private final TimeSlotDao timeSlotDao;
+	
+	@Autowired
+	public Menu(StudentDao studentDao, TeacherDao teacherDao, CourseDao courseDao, GroupDao groupDao,
+			RoomDao roomDao, SemesterDao semesterDao, TimetableDao timetableDao, DailyTimetableDao dailyTimetableDao, TimeSlotDao timeSlotDao) {
+		this.studentDao = studentDao;
+		this.teacherDao = teacherDao;
+		this.courseDao = courseDao;
+		this.groupDao = groupDao;
+		this.roomDao = roomDao;
+		this.semesterDao = semesterDao;
+		this.timetableDao = timetableDao;
+		this.dailyTimetableDao = dailyTimetableDao;
+		this.timeSlotDao = timeSlotDao;
 	}
 
 	public void showMenu() {
@@ -64,19 +82,25 @@ public class Menu {
 			} else if (menuItem == 5) {
 				assignStudentToGroup();
 				showPrompt();
-			} else if (menuItem == 6) {
+			} else if (menuItem == 6){
+				createTimetable();
+				showPrompt();
+			} else if (menuItem == 7){
 				createDailyTimetable();
 				showPrompt();
-			} else if (menuItem == 7) {
-				printDailyTimetableForStudent();
-				showPrompt();
 			} else if (menuItem == 8) {
-				printMonthlyTimetableForStudent();
+				createTimeSlot();
 				showPrompt();
 			} else if (menuItem == 9) {
-				printDailyTimetableForTeacher();
+				printDailyTimetableForStudent();
 				showPrompt();
 			} else if (menuItem == 10) {
+				printMonthlyTimetableForStudent();
+				showPrompt();
+			} else if (menuItem == 11) {
+				printDailyTimetableForTeacher();
+				showPrompt();
+			} else if (menuItem == 12) {
 				printMonthlyTimetableForTeacher();
 				showPrompt();
 			}
@@ -96,7 +120,7 @@ public class Menu {
 		String email = scanner.next();
 		System.out.print("Student card number: ");
 		String studentCardNumber = scanner.next();
-		students.add(new Student(firstName, lastName, taxNumber, phoneNumber, email, null, studentCardNumber));
+		studentDao.save(new Student(firstName, lastName, taxNumber, phoneNumber, email, null, studentCardNumber));
 	}
 
 	private void createTeacher() {
@@ -112,13 +136,13 @@ public class Menu {
 		String email = scanner.next();
 		System.out.print("Degree: ");
 		String degree = scanner.next();
-		teachers.add(new Teacher(firstName, lastName, taxNumber, phoneNumber, email, null, degree));
+		teacherDao.save(new Teacher(firstName, lastName, taxNumber, phoneNumber, email, null, degree));
 	}
 
 	private void createCourse() {
 		System.out.print("Course name: ");
 		String name = scanner.next();
-		courses.add(new Course(null, name, null));
+		courseDao.save(new Course(null, name, null));
 	}
 
 	private void createGroup() {
@@ -128,11 +152,28 @@ public class Menu {
 		String major = scanner.next();
 		System.out.print("Department: ");
 		String department = scanner.next();
-		groups.add(new Group(name, major, department, this.semester, null));
+		
+		boolean correct = false;
+		List<Semester> semesters = semesterDao.findAll();
+		Optional<Semester> semester;
+		do {
+			System.out.println("Chose from semesters by typing semester id.");
+			semesters.forEach(System.out::println);
+			Long id = scanner.nextLong();
+			semester = semesterDao.findById(id);
+			if (semester.isPresent()) {
+				correct = true;
+			} else {
+				System.out.println("There is no such group.");
+			}
+		} while (!correct);
+		correct = false;
+		groupDao.save(new Group(name, major, department, semester.get(), null));
 	}
 	
 	private void assignStudentToGroup() {
 		boolean correct = false;
+		List<Group> groups = groupDao.findAll();
 		Optional<Group> group;
 		Optional<Student> student;
 		do {
@@ -150,6 +191,7 @@ public class Menu {
 		} while (!correct);
 		correct = false;
 		
+		List<Student> students = studentDao.findAll();
 		do {
 			System.out.println("Chose from students by typing student full name.");
 			students.forEach(System.out::println);
@@ -163,40 +205,81 @@ public class Menu {
 			}
 		} while (!correct);
 		
-		group.get().addStudent(student.get());
+		studentDao.addStudentToGroup(student.orElseThrow(NoSuchElementException::new), group.orElseThrow(NoSuchElementException::new));
+	}
+	
+	private void createTimetable() {
+		System.out.println("Timetable name: ");
+		String name = scanner.next();
+		timetableDao.save(new Timetable(null, name, null));
 	}
 
 	private void createDailyTimetable() {
+		List<Timetable> timetables = timetableDao.findAll();
+		Optional<Timetable> timetable;
+		Optional<DailyTimetable> dailyTimetable;
 		boolean correct = false;
+		do {
+			System.out.println("Chose from timetables by typing timetable name.");
+			timetables.forEach(System.out::println);
+			String timetableName = scanner.next();
+			timetable = timetables.stream()
+					.filter(g -> g.getName().equals(timetableName))
+					.findFirst();
+			if (timetable.isPresent()) {
+				correct = true;
+			} else {
+				System.out.println("There is no such dailyTimetable.");
+			}
+		} while (!correct);
+		correct = false;
+		
 		do {
 			try {
 				System.out.println("Enter date (YYYY-MM-DD): ");
 				String text = scanner.next();
 				LocalDate date = LocalDate.parse(text);
-				Optional<DailyTimetable> dailyTimetable = this.timetable.getDailyTimetables().stream()
-						.filter(table -> table.getDate().equals(date))
-						.findFirst();
-				if (dailyTimetable.isPresent()) {
-					createTimeSlot(dailyTimetable.get());
-					correct = true;
-				} else {
-					dailyTimetable = Optional.of(new DailyTimetable(date, null));
-					timetable.getDailyTimetables().add(dailyTimetable.get());
-					createTimeSlot(dailyTimetable.get());
-					correct = true;
-				}
+				dailyTimetable = dailyTimetableDao.findByDate(date);
+				if (!dailyTimetable.isPresent()) {
+					dailyTimetable = Optional.of(dailyTimetableDao.save(new DailyTimetable(null, date, null)));
+				}				
+				dailyTimetableDao.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new), 
+						timetable.orElseThrow(NoSuchElementException::new));
+				correct = true;
 			} catch (DateTimeParseException e) {
 				System.out.println("Incorrect date format.");
 			}
 		} while (!correct);
 	}
 	
-	private void createTimeSlot(DailyTimetable dailyTimetable) {
+	private void createTimeSlot() {
+		List<Course> courses = courseDao.findAll();
+		List<Group> groups = groupDao.findAll();
+		List<Teacher> teachers = teacherDao.findAll();
+		List<Room> rooms = roomDao.findAll();
+		List<Timetable> timetables = timetableDao.findAll();
 		Optional<Course> course;
 		Optional<Teacher> teacher;
 		Optional<Group> group;
 		Optional<Room> room;
-		boolean correct = false;
+		Optional<DailyTimetable> dailyTimetable = Optional.empty();
+		Optional<Timetable> timetable;
+		boolean correct = false;		
+		do {
+			System.out.println("Chose timetable by typing timetable name.");
+			timetables.forEach(System.out::println);
+			String timetableName = scanner.next();
+			timetable = timetables.stream()
+					.filter(c -> c.getName().equals(timetableName))
+					.findFirst();
+			if (timetable.isPresent()) {
+				correct = true;
+			} else {
+				System.out.println("There is no such course.");
+			}
+		} while (!correct);
+		correct = false;
+		
 		do {
 			System.out.println("Chose from courses by typing course name.");
 			courses.forEach(System.out::println);
@@ -257,6 +340,21 @@ public class Menu {
 		correct = false;
 		
 		do {
+			try {
+				System.out.println("Enter date (YYYY-MM-DD): ");
+				String text = scanner.next();
+				LocalDate date = LocalDate.parse(text);
+				dailyTimetable = dailyTimetableDao.findByDate(date);
+				dailyTimetableDao.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new), 
+						timetable.orElseThrow(NoSuchElementException::new));
+				correct = true;
+			} catch (DateTimeParseException e) {
+				System.out.println("Incorrect date format.");
+			}
+		} while (!correct);
+		correct = false;
+		
+		do {
 			System.out.print("Enter start time (HH:MM)");
 			String start = scanner.next();
 			System.out.print("Enter end time (HH:MM)");
@@ -264,8 +362,8 @@ public class Menu {
 			try {
 				LocalTime startTime = LocalTime.parse(start, DateTimeFormatter.ofPattern("HH:mm"));
 				LocalTime endTime = LocalTime.parse(end, DateTimeFormatter.ofPattern("HH:mm"));
-				TimeSlot timeSlot = new TimeSlot(startTime, endTime, course.get(), teacher.get(), group.get(), room.get());
-				dailyTimetable.addTimeSlot(timeSlot);
+				TimeSlot timeSlot = timeSlotDao.save(new TimeSlot(startTime, endTime, course.get(), teacher.get(), group.get(), room.get()));
+				timeSlotDao.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable.orElseThrow(NoSuchElementException::new));
 				correct = true;
 			} catch (DateTimeParseException | NumberFormatException e) {
 				System.out.println("Incorrect time format.");
@@ -274,10 +372,28 @@ public class Menu {
 	}
 
 	private void printDailyTimetableForStudent() {
+		List<Student> students = studentDao.findAll();
+		List<Timetable> timetables = timetableDao.findAll();
+		Optional<Timetable> timetable;
 		System.out.print("Enter date (YYYY-MM-DD): ");
 		String text = scanner.next();
 		LocalDate date;
 		boolean correct = false;
+		do {
+			System.out.println("Chose timetable by typing timetable name.");
+			timetables.forEach(System.out::println);
+			String timetableName = scanner.next();
+			timetable = timetables.stream()
+					.filter(c -> c.getName().equals(timetableName))
+					.findFirst();
+			if (timetable.isPresent()) {
+				correct = true;
+			} else {
+				System.out.println("There is no such timetable.");
+			}
+		} while (!correct);
+		correct = false;
+		
 		do {
 			try {
 				date = LocalDate.parse(text);				
@@ -291,7 +407,9 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Student> student = findStudent(firstName, lastName);
 			if (student.isPresent()) {
-				Optional<DailyTimetable> dailyTimetable = timetable.getTimetableDay(date, student.get());
+				Optional<DailyTimetable> dailyTimetable = timetable
+						.orElseThrow(NoSuchElementException::new)
+						.getTimetableDay(date, student.get());
 				if (dailyTimetable.isPresent()) {
 					System.out.println(dailyTimetable.get());
 					correct = true;
@@ -305,10 +423,28 @@ public class Menu {
 	}
 
 	private void printDailyTimetableForTeacher() {
+		List<Teacher> teachers = teacherDao.findAll();
+		List<Timetable> timetables = timetableDao.findAll();
+		Optional<Timetable> timetable;
 		System.out.print("Enter date (YYYY-MM-DD): ");
 		String text = scanner.next();
 		LocalDate date;
 		boolean correct = false;
+		do {
+			System.out.println("Chose timetable by typing timetable name.");
+			timetables.forEach(System.out::println);
+			String timetableName = scanner.next();
+			timetable = timetables.stream()
+					.filter(c -> c.getName().equals(timetableName))
+					.findFirst();
+			if (timetable.isPresent()) {
+				correct = true;
+			} else {
+				System.out.println("There is no such course.");
+			}
+		} while (!correct);
+		correct = false;
+		
 		do {
 			try {
 				date = LocalDate.parse(text);				
@@ -322,7 +458,9 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Teacher> teacher = findTeacher(firstName, lastName);
 			if (teacher.isPresent()) {
-				Optional<DailyTimetable> dailyTimetable = timetable.getTimetableDay(date, teacher.get());
+				Optional<DailyTimetable> dailyTimetable = timetable
+						.orElseThrow(NoSuchElementException::new)
+						.getTimetableDay(date, teacher.get());
 				if (dailyTimetable.isPresent()) {
 					System.out.println(dailyTimetable.get());
 					correct = true;
@@ -336,8 +474,26 @@ public class Menu {
 	}
 
 	private void printMonthlyTimetableForStudent() {
+		List<Student> students = studentDao.findAll();
+		List<Timetable> timetables = timetableDao.findAll();
+		Optional<Timetable> timetable;
 		Month month;
 		boolean correct = false;
+		do {
+			System.out.println("Chose timetable by typing timetable name.");
+			timetables.forEach(System.out::println);
+			String timetableName = scanner.next();
+			timetable = timetables.stream()
+					.filter(c -> c.getName().equals(timetableName))
+					.findFirst();
+			if (timetable.isPresent()) {
+				correct = true;
+			} else {
+				System.out.println("There is no such course.");
+			}
+		} while (!correct);
+		correct = false;
+		
 		do {
 			try {
 				System.out.print("Enter the name of a desired month: ");
@@ -353,7 +509,9 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Student> student = findStudent(firstName, lastName);
 			if (student.isPresent()) {
-				List<DailyTimetable> dailyTimetable = timetable.getTimetableMonth(month, student.get());
+				List<DailyTimetable> dailyTimetable = timetable
+						.orElseThrow(NoSuchElementException::new)
+						.getTimetableMonth(month, student.get());
 				if (!dailyTimetable.isEmpty()) {
 					dailyTimetable.forEach(System.out::println);
 					correct = true;
@@ -367,8 +525,26 @@ public class Menu {
 	}
 	
 	private void printMonthlyTimetableForTeacher() {
+		List<Teacher> teachers = teacherDao.findAll();
+		List<Timetable> timetables = timetableDao.findAll();
+		Optional<Timetable> timetable;
 		Month month;
 		boolean correct = false;
+		do {
+			System.out.println("Chose timetable by typing timetable name.");
+			timetables.forEach(System.out::println);
+			String timetableName = scanner.next();
+			timetable = timetables.stream()
+					.filter(c -> c.getName().equals(timetableName))
+					.findFirst();
+			if (timetable.isPresent()) {
+				correct = true;
+			} else {
+				System.out.println("There is no such course.");
+			}
+		} while (!correct);
+		correct = false;
+		
 		do {
 			try {
 				System.out.print("Enter fullname of a desired month: ");
@@ -384,7 +560,9 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Teacher> teacher = findTeacher(firstName, lastName);
 			if (teacher.isPresent()) {
-				List<DailyTimetable> dailyTimetable = timetable.getTimetableMonth(month, teacher.get());
+				List<DailyTimetable> dailyTimetable = timetable
+						.orElseThrow(NoSuchElementException::new)
+						.getTimetableMonth(month, teacher.get());
 				if (!dailyTimetable.isEmpty()) {
 					dailyTimetable.forEach(System.out::println);
 					correct = true;
@@ -398,12 +576,14 @@ public class Menu {
 	}
 	
 	private Optional<Student> findStudent(String firstName, String lastName) {
+		List<Student> students = studentDao.findAll();
 		return students.stream()
 				.filter(t -> t.getFirstName().equals(firstName) && t.getLastName().equals(lastName))
 				.findFirst();
 	}
 	
 	private Optional<Teacher> findTeacher(String firstName, String lastName) {
+		List<Teacher> teachers = teacherDao.findAll();
 		return teachers.stream()
 				.filter(t -> t.getFirstName().equals(firstName) && t.getLastName().equals(lastName))
 				.findFirst();
@@ -416,11 +596,13 @@ public class Menu {
 		System.out.println("3. Create course.");
 		System.out.println("4. Create group.");
 		System.out.println("5. Assign student to group.");
-		System.out.println("6. Cretae daily timetable.");
-		System.out.println("7. Get daily timetable for student.");
-		System.out.println("8. Get monthly timetable for student.");
-		System.out.println("9. Get daily timetable for teacher.");
+		System.out.println("6. Create timetable.");
+		System.out.println("7. Cretae daily timetable.");
+		System.out.println("8. Cretae time slot.");
+		System.out.println("9. Get daily timetable for student.");
 		System.out.println("10. Get monthly timetable for student.");
+		System.out.println("11. Get daily timetable for teacher.");
+		System.out.println("12. Get monthly timetable for student.");
 		System.out.println("-------------------------------------");
 	}
 }

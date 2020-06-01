@@ -70,11 +70,11 @@ class RoomDaoTest {
 	
 	@Test
 	void givenNewRoom_whenSave_thenInsertRoom() throws DatabaseUnitException, SQLException {
-		Room room = new Room(3L, "c-1", 60);
-		Optional<Room> expected = Optional.of(room);
+		Room room = new Room(null, "c-1", 60);
 		
-		roomDao.save(room);
+		Room inserted = roomDao.save(room);
 		
+		Optional<Room> expected = Optional.of(inserted);
 		Optional<Room> actual = roomDao.findById(room.getId());
 		assertEquals(expected, actual);
 	}

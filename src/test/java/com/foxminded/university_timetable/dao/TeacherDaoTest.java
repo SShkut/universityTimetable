@@ -91,11 +91,11 @@ class TeacherDaoTest {
 	
 	@Test
 	void givenTeacher_whenSave_thenInsertTeacher() throws DatabaseUnitException, SQLException {
-		Teacher teacher = new Teacher(3L, "fnt-3", "lnt-3", "343456789", "6634567890", "lnt-3@unv.com", new ArrayList<>(), "phD");
-		Optional<Teacher> expected = Optional.of(teacher);
+		Teacher teacher = new Teacher(null, "fnt-3", "lnt-3", "343456789", "6634567890", "lnt-3@unv.com", new ArrayList<>(), "phD");
 		
-		teacherDao.save(teacher);
+		Teacher inserted = teacherDao.save(teacher);
 		
+		Optional<Teacher> expected = Optional.of(inserted);
 		Optional<Teacher> actual = teacherDao.findById(teacher.getId());
 		assertEquals(expected, actual);
 	}

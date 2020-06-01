@@ -1,6 +1,5 @@
 package com.foxminded.university_timetable.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,4 +59,10 @@ public class Course {
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name)
 				&& Objects.equals(prerequisites, other.prerequisites);
 	}
+
+	@Override
+	public String toString() {
+		return "Course id=" + id + ", name=" + name;
+	}
+	
 }

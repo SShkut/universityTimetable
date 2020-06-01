@@ -85,13 +85,13 @@ class StudentDaoTest {
 	
 	@Test
 	void givenStudent_whenSave_thenInsertStudent() throws DatabaseUnitException, SQLException {
-		Student student = new Student(6L, "fn-6", "ln-6", "623456789", "6234567890", "ln-6@unv.com", null, "cn-623");
+		Student student = new Student(null, "fn-6", "ln-6", "623456789", "6234567890", "ln-6@unv.com", null, "cn-623");
 		List<Course> courses = studentDao.findAllStudentCourses(student);
 		student.setCourses(courses);
-		Optional<Student> expected = Optional.of(student);
 		
-		studentDao.save(student);
+		Student inserted = studentDao.save(student);
 		
+		Optional<Student> expected = Optional.of(inserted);
 		Optional<Student> actual = studentDao.findById(student.getId());
 		assertEquals(expected, actual);
 	}

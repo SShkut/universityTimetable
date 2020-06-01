@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.foxminded.university_timetable.config.TestJdbcConfig;
 import com.foxminded.university_timetable.model.DailyTimetable;
+import com.foxminded.university_timetable.model.TimeSlot;
 import com.foxminded.university_timetable.model.Timetable;
 
 @ExtendWith(SpringExtension.class)
@@ -27,11 +28,17 @@ class TimetableDaoTest {
 	@Autowired
 	private TimetableDao timetableDao;
 	
+	@Autowired
+	private TimeSlotDao timeSlotDao;
+	
 	@Test
 	void givenTimetable_whenFindDailyTimetablesOfTimetable_thenReturnListOfDailyTimetables() {
 		Timetable timetable = new Timetable(1L, "actual", null);
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12), null);
+		List<TimeSlot> timeSlots = timeSlotDao.findAllTimeSlotsOfDailyTimetable(dailyTimetable);
+		dailyTimetable.setTimeSlots(timeSlots);
 		List<DailyTimetable> expected = new ArrayList<>();
-		expected.add(new DailyTimetable(1L, LocalDate.of(2020, 2, 12), null));
+		expected.add(dailyTimetable);
 		
 		List<DailyTimetable> actual = timetableDao.findDailyTimetablesOfTimetable(timetable);
 		
@@ -72,13 +79,13 @@ class TimetableDaoTest {
 
 	@Test
 	void givenTimetable_whenSave_thenInsertTimetable() {
-		Timetable timetable = new Timetable(3L, "new", null);
+		Timetable timetable = new Timetable(null, "new", null);
 		List<DailyTimetable> dailyTimetables = timetableDao.findDailyTimetablesOfTimetable(timetable);
 		timetable.setDailyTimetables(dailyTimetables);
-		Optional<Timetable> expected = Optional.of(timetable);
 		
-		timetableDao.save(timetable);
+		Timetable inserted = timetableDao.save(timetable);
 		
+		Optional<Timetable> expected = Optional.of(inserted);
 		Optional<Timetable> actual = timetableDao.findById(timetable.getId());
 		assertEquals(expected, actual);
 	}

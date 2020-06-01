@@ -27,12 +27,24 @@ class CourseDaoTest {
 	
 	@Autowired
 	private CourseDao courseDao;
+	
+	@Test
+	void givenCourse_whenFindPrerequisitesOfCourse_thenReturnCoursePrerequisites() {
+		Course course = new Course(1L, "CS", null);
+		List<Course> expected = new ArrayList<>();
+		expected.add(new Course(2L, "Math", null));
+		expected.add(new Course(4L, "History", null));
+		expected.add(new Course(5L, "Chemistry", null));
+		
+		List<Course> actual = courseDao.findPrerequisitesOfCourse(course);
+		
+		assertEquals(expected, actual);
+	}
 
 	@Test
 	void givenExistentCourseId_whenFindById_thenReturnOptionalOfCourse() {
 		Course course = new Course(2L, "Math", null);
-		List<Course> prerequisites = new ArrayList<>();
-		prerequisites.add(new Course(5L, "Chemistry", null));
+		List<Course> prerequisites = courseDao.findPrerequisitesOfCourse(course);
 		course.setPrerequisites(prerequisites);
 		Optional<Course> expected = Optional.of(course);
 		
@@ -80,11 +92,11 @@ class CourseDaoTest {
 	
 	@Test
 	void givenNewCourse_whenSave_thenInsertCourse() throws DatabaseUnitException, SQLException {
-		Course course = new Course(6L, "Calculus", new ArrayList<>());
-		Optional<Course> expected = Optional.of(course);
+		Course course = new Course(null, "Calculus", new ArrayList<>());
 		
-		courseDao.save(course);
+		Course inserted = courseDao.save(course);
 
+		Optional<Course> expected = Optional.of(inserted);
 		Optional<Course> actual = courseDao.findById(course.getId());
 		assertEquals(expected, actual);
 	}
@@ -92,31 +104,16 @@ class CourseDaoTest {
 	@Test
 	void givenExistentCourse_whenUpdate_thenUpdateCourse() throws DatabaseUnitException, SQLException {
 		Course course = new Course(1L, "CS-2", null);
-		List<Course> prerequisites = new ArrayList<>();
-		prerequisites.add(new Course(2L, "Math", null));
-		prerequisites.add(new Course(4L, "History", null));
-		prerequisites.add(new Course(5L, "Chemistry", null));
+		List<Course> prerequisites = courseDao.findPrerequisitesOfCourse(course);
 		course.setPrerequisites(prerequisites);
-		Optional<Course> expected = Optional.of(course);
 		
-		courseDao.update(new Course(1L, "CS-2", null));
+		Course updatedCourse = courseDao.update(course);
 		
+		Optional<Course> expected = Optional.of(updatedCourse);		
 		Optional<Course> actual = courseDao.findById(course.getId());
 		assertEquals(expected, actual);
 	}
 	
-	@Test
-	void givenCourse_whenFindPrerequisitesOfCourse_thenReturnCoursePrerequisites() {
-		Course course = new Course(1L, "CS", null);
-		List<Course> expected = new ArrayList<>();
-		expected.add(new Course(2L, "Math", null));
-		expected.add(new Course(4L, "History", null));
-		expected.add(new Course(5L, "Chemistry", null));
-		
-		List<Course> actual = courseDao.findPrerequisitesOfCourse(course);
-		
-		assertEquals(expected, actual);
-	}
 	
 	@Test
 	void givenCourse_whenFindStudentsOfCourse_thenReturnListOfStudents() {

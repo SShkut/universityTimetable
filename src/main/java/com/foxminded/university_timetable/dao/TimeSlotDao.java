@@ -1,11 +1,17 @@
 package com.foxminded.university_timetable.dao;
 
+import java.sql.Types;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.DailyTimetable;
@@ -46,14 +52,33 @@ public class TimeSlotDao {
 		return this.jdbcTemplate.query(FIND_ALL, timeSlotRowMapper);
 	}
 	
-	public void save(TimeSlot timeSlot) {
-		this.jdbcTemplate.update(SAVE, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse().getId(),
-				timeSlot.getTeacher().getId(), timeSlot.getGroup().getId(), timeSlot.getRoom().getId());
+	public TimeSlot save(TimeSlot timeSlot) {
+		PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(SAVE,
+				Types.TIME, Types.TIME, Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER);
+		factory.setReturnGeneratedKeys(true);
+		PreparedStatementCreator psc = factory.newPreparedStatementCreator(Arrays.asList(
+				timeSlot.getStartTime(),
+				timeSlot.getEndTime(),
+				timeSlot.getCourse().getId(),
+				timeSlot.getTeacher().getId(),
+				timeSlot.getGroup().getId(),
+				timeSlot.getRoom().getId()));
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		this.jdbcTemplate.update(psc, keyHolder);
+		Long newId;
+		if (keyHolder.getKeys().size() > 1) {
+			 newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id"))); 
+		} else {
+			newId= keyHolder.getKey().longValue();
+		}
+		timeSlot.setId(newId);
+		return timeSlot;
 	}
 
-	public void update(TimeSlot timeSlot) {
+	public TimeSlot update(TimeSlot timeSlot) {
 		this.jdbcTemplate.update(UPDATE, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse().getId(), timeSlot.getTeacher().getId(), 
 				timeSlot.getGroup().getId(), timeSlot.getRoom().getId(), timeSlot.getId());
+		return timeSlot;
 	}
 	
 	public void deleteById(Long id) {

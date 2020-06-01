@@ -79,10 +79,6 @@ public class Group {
 	public void setStudents(List<Student> students) {
 		this.students = students;
 	}
-	
-	public void addStudent(Student student) {
-		getStudents().add(student);
-	}
 
 	@Override
 	public int hashCode() {
@@ -102,4 +98,10 @@ public class Group {
 				&& Objects.equals(major, other.major) && Objects.equals(name, other.name)
 				&& Objects.equals(semester, other.semester) && Objects.equals(students, other.students);
 	}
+
+	@Override
+	public String toString() {
+		return "Group id=" + id + ", name=" + name + ", major=" + major + ", department=" + department + ", semester="
+				+ semester;
+	}	
 }

@@ -1,11 +1,17 @@
 package com.foxminded.university_timetable.dao;
 
+import java.sql.Types;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Course;
@@ -66,12 +72,25 @@ public class CourseDao {
 		this.jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 	
-	public void save(Course course) {
-		this.jdbcTemplate.update(SAVE, course.getName());
+	public Course save(Course course) {
+		PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(SAVE, Types.VARCHAR);
+		factory.setReturnGeneratedKeys(true);
+		PreparedStatementCreator psc = factory.newPreparedStatementCreator(Arrays.asList(course.getName()));		
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		this.jdbcTemplate.update(psc, keyHolder);
+		Long newId;
+		if (keyHolder.getKeys().size() > 1) {
+			 newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id"))); 
+		} else {
+			newId= keyHolder.getKey().longValue();
+		}
+		course.setId(newId);
+		return course;
 	}
 	
-	public void update(Course course) {
+	public Course update(Course course) {
 		this.jdbcTemplate.update(UPDATE, course.getName(), course.getId());
+		return course;
 	}	
 	
 	public List<Course> findPrerequisitesOfCourse(Course course) {

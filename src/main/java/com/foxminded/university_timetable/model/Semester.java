@@ -64,4 +64,9 @@ public class Semester {
 		return Objects.equals(id, other.id) && Objects.equals(period, other.period)
 				&& Objects.equals(yearOfStudy, other.yearOfStudy);
 	}
+
+	@Override
+	public String toString() {
+		return "Semester id=" + id + ", yearOfStudy=" + yearOfStudy + ", period=" + period;
+	}
 }

@@ -70,11 +70,11 @@ class SemesterDaoTest {
 	
 	@Test
 	void givenNewSemester_whenSave_thenInsertSemester() throws DatabaseUnitException, SQLException {		
-		Semester semester = new Semester(3L, 2021, "winter");
-		Optional<Semester> expected = Optional.of(semester);
+		Semester semester = new Semester(null, 2021, "winter");
 		
-		semesterDao.save(new Semester(3L, 2021, "winter"));
-			
+		Semester inserted = semesterDao.save(semester);
+		
+		Optional<Semester> expected = Optional.of(inserted);
 		Optional<Semester> actual = semesterDao.findById(semester.getId());
 		assertEquals(expected, actual);	
 	}

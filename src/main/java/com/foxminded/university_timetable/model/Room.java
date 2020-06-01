@@ -64,4 +64,9 @@ public class Room {
 		return Objects.equals(capacity, other.capacity) && Objects.equals(id, other.id)
 				&& Objects.equals(sybmol, other.sybmol);
 	}
+
+	@Override
+	public String toString() {
+		return "Room id=" + id + ", sybmol=" + sybmol + ", capacity=" + capacity;
+	}	
 }

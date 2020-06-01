@@ -54,5 +54,5 @@ public class Student extends Person {
 			return false;
 		Student other = (Student) obj;
 		return Objects.equals(studentCardNumber, other.studentCardNumber);
-	}
+	}	
 }

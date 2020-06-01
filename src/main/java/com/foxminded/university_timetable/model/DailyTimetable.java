@@ -69,4 +69,9 @@ public class DailyTimetable {
 		return Objects.equals(date, other.date) && Objects.equals(id, other.id)
 				&& Objects.equals(timeSlots, other.timeSlots);
 	}
+
+	@Override
+	public String toString() {
+		return "DailyTimetable id=" + id + ", date=" + date;
+	}	
 }

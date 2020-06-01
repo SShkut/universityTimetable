@@ -115,17 +115,17 @@ class TimeSlotDaoTest {
 		Optional<Teacher> teacher = teacherDao.findById(2L);
 		Optional<Group> group = groupDao.findById(2L);
 		Optional<Room> room = roomDao.findById(2L);
-		TimeSlot timeSlot = new TimeSlot(4L, 
+		TimeSlot timeSlot = new TimeSlot(null, 
 				LocalTime.of(16, 0), 
 				LocalTime.of(17, 30), 
 				course.orElseThrow(NoSuchElementException::new), 
 				teacher.orElseThrow(NoSuchElementException::new), 
 				group.orElseThrow(NoSuchElementException::new), 
 				room.orElseThrow(NoSuchElementException::new));
-		Optional<TimeSlot> expected = Optional.of(timeSlot);
 		
-		timeSlotDao.save(timeSlot);
+		TimeSlot inserted = timeSlotDao.save(timeSlot);
 		
+		Optional<TimeSlot> expected = Optional.of(inserted);
 		Optional<TimeSlot> actual = timeSlotDao.findById(timeSlot.getId());		
 		assertEquals(expected, actual);
 	}

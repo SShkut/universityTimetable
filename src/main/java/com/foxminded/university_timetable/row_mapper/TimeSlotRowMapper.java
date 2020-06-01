@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.foxminded.university_timetable.dao.CourseDao;
-import com.foxminded.university_timetable.dao.DailyTimetableDao;
 import com.foxminded.university_timetable.dao.GroupDao;
 import com.foxminded.university_timetable.dao.RoomDao;
 import com.foxminded.university_timetable.dao.TeacherDao;
@@ -29,8 +28,7 @@ public class TimeSlotRowMapper implements RowMapper<TimeSlot> {
 	private final RoomDao roomDao;
 	
 	@Autowired
-	public TimeSlotRowMapper(CourseDao courseDao, TeacherDao teacherDao, GroupDao groupDao, RoomDao roomDao,
-			DailyTimetableDao dailyTimetableDao) {
+	public TimeSlotRowMapper(CourseDao courseDao, TeacherDao teacherDao, GroupDao groupDao, RoomDao roomDao) {
 		this.courseDao = courseDao;
 		this.teacherDao = teacherDao;
 		this.groupDao = groupDao;

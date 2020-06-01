@@ -88,13 +88,13 @@ class GroupDaoTest {
 	
 	@Test
 	void givenNewGroup_whenSave_thenInsertGroup() throws DatabaseUnitException, SQLException {
-		Group group = new Group(4L, "cs-4", "css", "csg", new Semester(1L, 2020, "summer"), new ArrayList<>());
+		Group group = new Group(null, "cs-4", "css", "csg", new Semester(1L, 2020, "summer"), new ArrayList<>());
 		List<Student> students = groupDao.findStudentsOfGroup(group);
 		group.setStudents(students);
-		Optional<Group> expected = Optional.of(group);
 		
-		groupDao.save(group);
-			
+		Group inserted = groupDao.save(group);
+		
+		Optional<Group> expected = Optional.of(inserted);
 		Optional<Group> actual = groupDao.findById(group.getId());
 		assertEquals(expected, actual);
 	}

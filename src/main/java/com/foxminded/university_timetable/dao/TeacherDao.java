@@ -1,11 +1,17 @@
 package com.foxminded.university_timetable.dao;
 
+import java.sql.Types;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Course;
@@ -53,14 +59,33 @@ public class TeacherDao {
 		return this.jdbcTemplate.query(FIND_ALL, teacherRowMapper);
 	}
 	
-	public void save(Teacher teahcer) {
-		this.jdbcTemplate.update(SAVE, teahcer.getFirstName(), teahcer.getLastName(), teahcer.getTaxNumber(), 
-				teahcer.getPhoneNumber(), teahcer.getEmail(), teahcer.getDegree());
+	public Teacher save(Teacher teacher) {
+		PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(SAVE,
+				Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR);
+		factory.setReturnGeneratedKeys(true);
+		PreparedStatementCreator psc = factory.newPreparedStatementCreator(Arrays.asList(
+				teacher.getFirstName(),
+				teacher.getLastName(),
+				teacher.getTaxNumber(),
+				teacher.getPhoneNumber(),
+				teacher.getEmail(),
+				teacher.getDegree()));
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		this.jdbcTemplate.update(psc, keyHolder);
+		Long newId;
+		if (keyHolder.getKeys().size() > 1) {
+			 newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id"))); 
+		} else {
+			newId= keyHolder.getKey().longValue();
+		}
+		teacher.setId(newId);
+		return teacher;
 	}
 	
-	public void update(Teacher teahcer) {
+	public Teacher update(Teacher teahcer) {
 		this.jdbcTemplate.update(UPDATE, teahcer.getFirstName(), teahcer.getLastName(), teahcer.getTaxNumber(), 
 				teahcer.getPhoneNumber(), teahcer.getEmail(), teahcer.getDegree(), teahcer.getId());
+		return teahcer;
 	}
 	
 	public void deleteById(Long id) {

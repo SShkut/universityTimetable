@@ -110,4 +110,9 @@ public class Timetable {
 			});		
 		return result;
 	}
+
+	@Override
+	public String toString() {
+		return "Timetable id=" + id + ", name=" + name;
+	}	
 }
