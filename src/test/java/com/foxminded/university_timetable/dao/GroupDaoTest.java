@@ -2,12 +2,10 @@ package com.foxminded.university_timetable.dao;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.dbunit.DatabaseUnitException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +28,13 @@ class GroupDaoTest {
 	private GroupDao groupDao;	
 	
 	@Test
-	void givenGroup_whenFindStudentsOfGroup_thenReturnListOfStudents() {
+	void givenGroup_whenFindGroupStudents_thenReturnListOfStudents() {
 		List<Student> expected = new ArrayList<>();
 		expected.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
 		expected.add(new Student(3L, "fn-3", "ln-3", "123456987", "1234567892", "ln-3@unv.com", null, "cn-125"));
 		expected.add(new Student(4L, "fn-4", "ln-4", "123459876", "1234567893", "ln-4@unv.com", null, "cn-126"));		
 		
-		List<Student> actual = groupDao.findStudentsOfGroup(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
+		List<Student> actual = groupDao.findGroupStudents(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
 		
 		assertEquals(expected, actual);
 	}
@@ -44,7 +42,7 @@ class GroupDaoTest {
 	@Test
 	void givenExistentGroupId_whenFindById_thenReturnOptionalOfGroup() {
 		Group group = new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null);
-		List<Student> students = groupDao.findStudentsOfGroup(group);
+		List<Student> students = groupDao.findGroupStudents(group);
 		group.setStudents(students);
 		Optional<Group> expected = Optional.of(group);
 		
@@ -75,21 +73,22 @@ class GroupDaoTest {
 	}	
 	
 	@Test
-	void givenGroupId_whenDelete_thenDeleteGroupWithGivenId() throws DatabaseUnitException, SQLException {
+	void givenGroup_whenDelete_thenDeleteGroup() {
 		List<Group> expected = new ArrayList<>();
 		expected.add(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
 		expected.add(new Group(3L, "cs-3", "cs", "cs", new Semester(2L, 2020, "winter"), null));
 		
-		groupDao.deleteById(1L);
+		
+		groupDao.delete(new Group(1L, null, null, null, null, null));
 		
 		List<Group> actual = groupDao.findAll();
 		assertEquals(expected, actual);
 	}
 	
 	@Test
-	void givenNewGroup_whenSave_thenInsertGroup() throws DatabaseUnitException, SQLException {
+	void givenNewGroup_whenSave_thenInsertGroup() {
 		Group group = new Group(null, "cs-4", "css", "csg", new Semester(1L, 2020, "summer"), new ArrayList<>());
-		List<Student> students = groupDao.findStudentsOfGroup(group);
+		List<Student> students = groupDao.findGroupStudents(group);
 		group.setStudents(students);
 		
 		Group inserted = groupDao.save(group);
@@ -100,9 +99,9 @@ class GroupDaoTest {
 	}
 	
 	@Test
-	void givenExistentGroup_whenUpdate_thenUpdateGroup() throws DatabaseUnitException, SQLException {
+	void givenExistentGroup_whenUpdate_thenUpdateGroup() {
 		Group group = new Group(1L, "cs-4", "css", "csg", new Semester(2L, 2020, "winter"), null);
-		List<Student> students = groupDao.findStudentsOfGroup(group);
+		List<Student> students = groupDao.findGroupStudents(group);
 		group.setStudents(students);
 		Optional<Group> expected = Optional.of(group);
 		

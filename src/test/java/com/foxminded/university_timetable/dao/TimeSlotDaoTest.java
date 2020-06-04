@@ -152,24 +152,24 @@ class TimeSlotDaoTest {
 	}
 	
 	@Test
-	void givenTimeSlotId_whenDelete_thenDeleteTimeSlot() {
+	void givenTimeSlot_whenDelete_thenDeleteTimeSlot() {
 		Optional<TimeSlot> timeSlot = timeSlotDao.findById(1L);
 		assertTrue(timeSlot.isPresent());
 		
-		timeSlotDao.deleteById(1L);
+		timeSlotDao.delete(new TimeSlot(1L, null, null, null, null, null, null));
 		
 		timeSlot = timeSlotDao.findById(1L);
 		assertTrue(!timeSlot.isPresent());
 	}
 	
 	@Test
-	void givenDailyTimetable_whenFindAllTimeSlotsOfDailyTimetable_thenReturnListOfTimeslots() {
+	void givenDailyTimetable_whenFindAllDailyTimetableTimeSlots_thenReturnListOfTimeSlots() {
 		Optional<DailyTimetable> dailyTimetable = dailyTimetableDao.findById(2L);
 		Optional<TimeSlot> timeSlot = timeSlotDao.findById(3L);		
 		List<TimeSlot> expected = new ArrayList<>();
 		expected.add(timeSlot.orElseThrow(NoSuchElementException::new));
 		
-		List<TimeSlot> actual = timeSlotDao.findAllTimeSlotsOfDailyTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new));
+		List<TimeSlot> actual = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable.orElseThrow(NoSuchElementException::new));
 		
 		assertEquals(expected, actual);
 	}
@@ -186,7 +186,7 @@ class TimeSlotDaoTest {
 		timeSlotDao.addTimeSlotToDailyTimetable(timeSlot1.orElseThrow(NoSuchElementException::new),
 				dailyTimetable.orElseThrow(NoSuchElementException::new));
 		
-		List<TimeSlot> actual = timeSlotDao.findAllTimeSlotsOfDailyTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new));
+		List<TimeSlot> actual = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable.orElseThrow(NoSuchElementException::new));
 		assertEquals(expected, actual);
 	}
 }

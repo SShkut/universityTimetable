@@ -25,10 +25,15 @@ public class CourseDao {
 	private static final String SAVE = "INSERT INTO courses (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE courses SET name = ? WHERE id = ?";
 	private static final String FIND_PREREQUISITES_OF_COURSE = "WITH RECURSIVE course_prerequisites(course_id, prerequisite_id) AS ("
-			+ "SELECT course_id, prerequisite_id " + "FROM course_hierarchy " + "WHERE course_id = ? " + "UNION ALL "
-			+ "SELECT ch.course_id, ch.prerequisite_id " + "FROM course_hierarchy ch "
-			+ "JOIN course_prerequisites cp ON ch.course_id = cp.prerequisite_id) " + "SELECT DISTINCT c.id, c.name "
-			+ "FROM course_prerequisites cp " + "JOIN courses c ON cp.prerequisite_id = c.id;";
+			+ "SELECT course_id, prerequisite_id " 
+			+ "FROM course_hierarchy " + "WHERE course_id = ? " 
+			+ "UNION ALL "
+			+ "SELECT ch.course_id, ch.prerequisite_id " 
+			+ "FROM course_hierarchy ch "
+			+ "JOIN course_prerequisites cp ON ch.course_id = cp.prerequisite_id) " 
+			+ "SELECT DISTINCT c.id, c.name "
+			+ "FROM course_prerequisites cp " 
+			+ "JOIN courses c ON cp.prerequisite_id = c.id;";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final CourseRowMapper courseRowMapper;
@@ -53,8 +58,8 @@ public class CourseDao {
 		return jdbcTemplate.query(FIND_ALL, courseRowMapper);
 	}
 
-	public void delteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(Course course) {
+		jdbcTemplate.update(DELETE_BY_ID, course.getId());
 	}
 
 	public Course save(Course course) {

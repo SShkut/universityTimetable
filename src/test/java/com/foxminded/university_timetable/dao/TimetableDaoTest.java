@@ -35,7 +35,7 @@ class TimetableDaoTest {
 	void givenTimetable_whenFindDailyTimetablesOfTimetable_thenReturnListOfDailyTimetables() {
 		Timetable timetable = new Timetable(1L, "actual", null);
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12), null);
-		List<TimeSlot> timeSlots = timeSlotDao.findAllTimeSlotsOfDailyTimetable(dailyTimetable);
+		List<TimeSlot> timeSlots = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
 		dailyTimetable.setTimeSlots(timeSlots);
 		List<DailyTimetable> expected = new ArrayList<>();
 		expected.add(dailyTimetable);
@@ -104,11 +104,11 @@ class TimetableDaoTest {
 	}
 	
 	@Test
-	void givenTimetableId_whenDeleteById_thenDeleteTimetable() {
+	void givenTimetable_whenDelete_thenDeleteTimetable() {
 		List<Timetable> expected = new ArrayList<>();
 		expected.add(new Timetable(2L, "archived", null));
 		
-		timetableDao.deleteById(1L);
+		timetableDao.delete(new Timetable(1L, null, null));
 		
 		List<Timetable> actual = timetableDao.findAll();
 		assertEquals(expected, actual);

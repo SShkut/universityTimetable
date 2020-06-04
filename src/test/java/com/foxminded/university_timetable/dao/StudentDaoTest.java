@@ -2,12 +2,10 @@ package com.foxminded.university_timetable.dao;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.dbunit.DatabaseUnitException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +79,7 @@ class StudentDaoTest {
 	}
 	
 	@Test
-	void givenStudent_whenSave_thenInsertStudent() throws DatabaseUnitException, SQLException {
+	void givenStudent_whenSave_thenInsertStudent() {
 		Student student = new Student(null, "fn-6", "ln-6", "623456789", "6234567890", "ln-6@unv.com", null, "cn-623");
 		List<Course> courses = studentDao.findAllStudentCourses(student);
 		student.setCourses(courses);
@@ -94,7 +92,7 @@ class StudentDaoTest {
 	}
 	
 	@Test
-	void givenStudent_whenUpdate_thenUpdateStudent() throws DatabaseUnitException, SQLException {
+	void givenStudent_whenUpdate_thenUpdateStudent() {
 		Student student = new Student(1L, "fn-11", "ln-11", "223456789", "2234567890", "ln-11@unv.com", null, "cn-1231");
 		List<Course> courses = studentDao.findAllStudentCourses(student);
 		student.setCourses(courses);
@@ -107,21 +105,21 @@ class StudentDaoTest {
 	}
 	
 	@Test
-	void givenStudentId_whenDeleteById_thenDeleteStudentWithGivenId() throws DatabaseUnitException, SQLException {
+	void givenStudent_whenDelete_thenDeleteStudent() {
 		List<Student> expected = new ArrayList<>();
 		expected.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
 		expected.add(new Student(3L, "fn-3", "ln-3", "123456987", "1234567892", "ln-3@unv.com", null, "cn-125"));
 		expected.add(new Student(4L, "fn-4", "ln-4", "123459876", "1234567893", "ln-4@unv.com", null, "cn-126"));
 		expected.add(new Student(5L, "fn-5", "ln-5", "123498765", "1234567894", "ln-5@unv.com", null, "cn-127"));
 		
-		studentDao.deleteById(1L);
+		studentDao.delete(new Student(1L, null, null, null, null, null, null, null));
 		
 		List<Student> actual = studentDao.findAll();
 		assertEquals(expected, actual);
 	}
 	
 	@Test
-	void givenStudentAndGroup_whenAddStudentToGroup_thenAddStudentToGroup() throws DatabaseUnitException, SQLException {
+	void givenStudentAndGroup_whenAddStudentToGroup_thenAddStudentToGroup() {
 		Student student = new Student(5L, "fn-5", "ln-5", "123498765", "1234567894", "ln-5@unv.com", null, "cn-127");
 		Group group = new Group(3L, "cs-3", "cs", "cs", new Semester(2L, 2020, "winter"), null);
 		List<Student> expected = new ArrayList<>();
@@ -129,12 +127,12 @@ class StudentDaoTest {
 		
 		studentDao.addStudentToGroup(student, group);
 		
-		List<Student> actual = groupDao.findStudentsOfGroup(group);
+		List<Student> actual = groupDao.findGroupStudents(group);
 		assertEquals(expected, actual);
 	}
 	
 	@Test
-	void givenStudentAndGroup_whenDeleteStudentFromGroup_thenRemoveStudentFromGroup() throws DatabaseUnitException, SQLException {
+	void givenStudentAndGroup_whenDeleteStudentFromGroup_thenRemoveStudentFromGroup() {
 		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123");
 		Group group = new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), null);
 		List<Student> expected = new ArrayList<>();
@@ -142,12 +140,12 @@ class StudentDaoTest {
 		
 		studentDao.deleteStudentFromGroup(student, group);
 		
-		List<Student> actual = groupDao.findStudentsOfGroup(group);
+		List<Student> actual = groupDao.findGroupStudents(group);
 		assertEquals(expected, actual);
 	}
 	
 	@Test
-	void givenStudentAndCourse_whenAddStudentToCourse_thenEnrollCourse() throws DatabaseUnitException, SQLException {
+	void givenStudentAndCourse_whenAddStudentToCourse_thenEnrollCourse() {
 		Student student = new Student(3L, "fn-3", "ln-3", "123456987", "1234567892", "ln-3@unv.com", null, "cn-125");
 		Course course = new Course(1L, "Math", null);
 		List<Student> expected = new ArrayList<>();
@@ -161,7 +159,7 @@ class StudentDaoTest {
 	}
 	
 	@Test
-	void givenStudentAndCourse_whenDeleteStudentFromCourse_thenLeaveCourse() throws DatabaseUnitException, SQLException {
+	void givenStudentAndCourse_whenDeleteStudentFromCourse_thenLeaveCourse() {
 		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123");
 		Course course = new Course(2L, "CS", null);
 		List<Student> expected = new ArrayList<>();
@@ -174,7 +172,7 @@ class StudentDaoTest {
 	}	
 	
 	@Test
-	void givenCourse_whenFindStudentsOfCourse_thenReturnListOfStudents() {
+	void givenCourse_whenFindCourseStudents_thenReturnListOfStudents() {
 		Course course = new Course(1L, "CS-2", null);
 		List<Student> expected = new ArrayList<>();
 		expected.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));

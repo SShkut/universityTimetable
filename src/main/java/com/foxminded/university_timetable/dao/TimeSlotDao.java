@@ -26,7 +26,7 @@ public class TimeSlotDao {
 			+ "VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE time_slots SET start_time = ?, end_time = ?, course_id = ?, teacher_id = ?, group_id = ?, room_id = ? WHERE id = ?";
 	private static final String DELETE_BY_ID = "DELETE FROM time_slots WHERE id = ?";
-	private static final String FIND_ALL_TIME_SLOTS_OF_DAILY_TIMETABLE = "SELECT * FROM time_slots WHERE daily_timetable_id = ?";
+	private static final String FIND_ALL_DAILY_TIMETABLE_TIME_SLOTS = "SELECT * FROM time_slots WHERE daily_timetable_id = ?";
 	private static final String ADD_TIME_SLOT_TO_DAILY_TIMETABLE = "UPDATE time_slots SET daily_timetable_id = ? WHERE id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
@@ -76,12 +76,12 @@ public class TimeSlotDao {
 		return timeSlot;
 	}
 
-	public void deleteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(TimeSlot timeSlot) {
+		jdbcTemplate.update(DELETE_BY_ID, timeSlot.getId());
 	}
 
-	public List<TimeSlot> findAllTimeSlotsOfDailyTimetable(DailyTimetable dailyTimetable) {
-		return jdbcTemplate.query(FIND_ALL_TIME_SLOTS_OF_DAILY_TIMETABLE, new Object[] { dailyTimetable.getId() },
+	public List<TimeSlot> findAllDailyTimetableTimeSlots(DailyTimetable dailyTimetable) {
+		return jdbcTemplate.query(FIND_ALL_DAILY_TIMETABLE_TIME_SLOTS, new Object[] { dailyTimetable.getId() },
 				timeSlotRowMapper);
 	}
 

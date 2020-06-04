@@ -90,7 +90,7 @@ class TeacherDaoTest {
 	}
 	
 	@Test
-	void givenTeacher_whenSave_thenInsertTeacher() throws DatabaseUnitException, SQLException {
+	void givenTeacher_whenSave_thenInsertTeacher() {
 		Teacher teacher = new Teacher(null, "fnt-3", "lnt-3", "343456789", "6634567890", "lnt-3@unv.com", new ArrayList<>(), "phD");
 		
 		Teacher inserted = teacherDao.save(teacher);
@@ -101,7 +101,7 @@ class TeacherDaoTest {
 	}
 	
 	@Test
-	void givenTeacher_whenUpdate_thenUpdateTeacher() throws DatabaseUnitException, SQLException {
+	void givenTeacher_whenUpdate_thenUpdateTeacher() {
 		Teacher teacher = new Teacher(1L, "fnt-11", "lnt-11", "323456789", "6234567890", "lns-11@unv.com", new ArrayList<>(), "bs");
 		List<Course> qualification = teacherDao.findAllTeacherQualifications(teacher);
 		teacher.setCourses(qualification);
@@ -114,12 +114,12 @@ class TeacherDaoTest {
 	}
 	
 	@Test
-	void givenTeacherId_whenDeleteById_thenDeleteTeacherWithGivenId() throws DatabaseUnitException, SQLException {
+	void givenTeacher_whenDelete_thenDeleteTeacher() {
 		List<Teacher> expected = new ArrayList<>();
 		Teacher teacher = new Teacher(2L, "fnt-2", "lnt-2", "323456798", "5234567891", "lnt-2@unv.com", null, "masters");
 		expected.add(teacher);
 		
-		teacherDao.deleteById(1L);
+		teacherDao.delete(new Teacher(1L, null, null, null, null, null, null, null));
 		
 		List<Teacher> actual = teacherDao.findAll();		
 		assertEquals(expected, actual);

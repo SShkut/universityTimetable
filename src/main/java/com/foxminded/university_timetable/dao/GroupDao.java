@@ -26,7 +26,7 @@ public class GroupDao {
 	private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
 	private static final String SAVE = "INSERT INTO groups (name, major, department, semester_id) values(?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE groups SET name = ?, major = ?, department = ?, semester_id = ? WHERE id = ?";
-	private static final String FIND_STUDENTS_OF_GROUP = "SELECT s.id, s.first_name, s.last_name, s.tax_number, s.phone_number, s.email, s.student_card_number "
+	private static final String FIND_GROUP_STUDENTS = "SELECT s.id, s.first_name, s.last_name, s.tax_number, s.phone_number, s.email, s.student_card_number "
 			+ "FROM students s " 
 			+ "JOIN student_group sg ON s.id = sg.student_id AND sg.group_id = ?";
 
@@ -43,7 +43,7 @@ public class GroupDao {
 	public Optional<Group> findById(Long id) {
 		try {
 			Group group = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, groupRowMapper);
-			List<Student> students = findStudentsOfGroup(group);
+			List<Student> students = findGroupStudents(group);
 			group.setStudents(students);
 			return Optional.of(group);
 		} catch (EmptyResultDataAccessException e) {
@@ -55,8 +55,8 @@ public class GroupDao {
 		return jdbcTemplate.query(FIND_ALL, groupRowMapper);
 	}
 
-	public void deleteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(Group group) {
+		jdbcTemplate.update(DELETE_BY_ID, group.getId());
 	}
 
 	public Group save(Group group) {
@@ -83,7 +83,7 @@ public class GroupDao {
 		return group;
 	}
 
-	public List<Student> findStudentsOfGroup(Group group) {
-		return jdbcTemplate.query(FIND_STUDENTS_OF_GROUP, new Object[] { group.getId() }, studentRowMapper);
+	public List<Student> findGroupStudents(Group group) {
+		return jdbcTemplate.query(FIND_GROUP_STUDENTS, new Object[] { group.getId() }, studentRowMapper);
 	}
 }

@@ -86,8 +86,8 @@ public class StudentDao {
 		return student;
 	}
 
-	public void deleteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(Student student) {
+		jdbcTemplate.update(DELETE_BY_ID, student.getId());
 	}
 
 	public void addStudentToGroup(Student student, Group group) {

@@ -48,7 +48,7 @@ class DailyTimetableDaoTest {
 	@Test
 	void givenExistentDailyTimetableId_whenFindById_thenReturnOptionalOfDailyTimetable() {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12), null);
-		List<TimeSlot> timeSlots = timeSlotDao.findAllTimeSlotsOfDailyTimetable(dailyTimetable);
+		List<TimeSlot> timeSlots = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
 		dailyTimetable.setTimeSlots(timeSlots);
 		Optional<DailyTimetable> expected = Optional.of(dailyTimetable);
 		
@@ -104,14 +104,14 @@ class DailyTimetableDaoTest {
 	}
 	
 	@Test
-	void givenDailyTimetableId_whenDeleteById_thenDeleteGivenTiemtable() {
-		Long idForDelelte = 2L;
+	void givenDailyTimetable_whenDelete_thenDeleteGivenTimetable() {
+		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.now(), null);
 		List<DailyTimetable> dailyTimetables = dailyTimetableDao.findAll();
 		List<DailyTimetable> expected = dailyTimetables.stream()
-				.filter(d -> !d.getId().equals(idForDelelte))
+				.filter(d -> !d.getId().equals(dailyTimetable.getId()))
 				.collect(Collectors.toList());
 		
-		dailyTimetableDao.deleteById(idForDelelte);
+		dailyTimetableDao.delete(dailyTimetable);
 		
 		List<DailyTimetable> actual = dailyTimetableDao.findAll();
 		assertEquals(expected, actual);

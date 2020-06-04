@@ -2,12 +2,10 @@ package com.foxminded.university_timetable.dao;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.dbunit.DatabaseUnitException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +36,7 @@ class RoomDaoTest {
 	}
 
 	@Test
-	void givenNonExistentRoomId_whenFindById_thenRetrunEmptyOptional() {
+	void givenNonExistentRoomId_whenFindById_thenReturnEmptyOptional() {
 		Optional<Room> expected = Optional.empty();
 		
 		Optional<Room> actual = roomDao.findById(0L);
@@ -58,18 +56,18 @@ class RoomDaoTest {
 	}
 	
 	@Test
-	void givenRoomId_whenDelete_thenDeleteRoomWithGivenId() throws DatabaseUnitException, SQLException {
+	void givenRoom_whenDelete_thenDeleteRoom() {
 		List<Room> expected = new ArrayList<>();
 		expected.add(new Room(2L, "b-1", 70));
 		
-		roomDao.deleteById(1L);
+		roomDao.delete(new Room(1L, null, null));
 		
 		List<Room> actual = roomDao.findAll();
 		assertEquals(expected, actual);
 	}
 	
 	@Test
-	void givenNewRoom_whenSave_thenInsertRoom() throws DatabaseUnitException, SQLException {
+	void givenNewRoom_whenSave_thenInsertRoom() {
 		Room room = new Room(null, "c-1", 60);
 		
 		Room inserted = roomDao.save(room);
@@ -80,7 +78,7 @@ class RoomDaoTest {
 	}
 	
 	@Test
-	void givenExistentRoom_whenUpdate_thenUpdateRoom() throws DatabaseUnitException, SQLException {
+	void givenExistentRoom_whenUpdate_thenUpdateRoom() {
 		Room room = new Room(1L, "a-2", 90);
 		Optional<Room> expected = Optional.of(room);
 		

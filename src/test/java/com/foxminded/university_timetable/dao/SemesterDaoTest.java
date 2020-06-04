@@ -2,12 +2,10 @@ package com.foxminded.university_timetable.dao;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.dbunit.DatabaseUnitException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,18 +56,18 @@ class SemesterDaoTest {
 	}
 	
 	@Test
-	void givenSemester_whenDelete_thenDeleteSemesterWithGivenId() throws DatabaseUnitException, SQLException {
+	void givenSemester_whenDelete_thenDeleteSemester() {
 		List<Semester> expected = new ArrayList<>();
 		expected.add(new Semester(2L, 2020, "winter"));
 		
-		semesterDao.deleteById(1L);
+		semesterDao.delete(new Semester(1L, null, null));
 		
 		List<Semester> actual = semesterDao.findAll();
 		assertEquals(expected, actual);	
 	}
 	
 	@Test
-	void givenNewSemester_whenSave_thenInsertSemester() throws DatabaseUnitException, SQLException {		
+	void givenNewSemester_whenSave_thenInsertSemester() {		
 		Semester semester = new Semester(null, 2021, "winter");
 		
 		Semester inserted = semesterDao.save(semester);
@@ -80,7 +78,7 @@ class SemesterDaoTest {
 	}
 	
 	@Test
-	void givenExistentSemester_whenUpdate_thenUpdateSemester() throws DatabaseUnitException, SQLException {	
+	void givenExistentSemester_whenUpdate_thenUpdateSemester() {	
 		Semester semester = new Semester(1L, 2019, "winter");
 		Optional<Semester> expected = Optional.of(semester);
 		

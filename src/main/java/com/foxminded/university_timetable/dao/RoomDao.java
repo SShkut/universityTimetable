@@ -68,7 +68,7 @@ public class RoomDao {
 		return room;
 	}
 
-	public void deleteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(Room room) {
+		jdbcTemplate.update(DELETE_BY_ID, room.getId());
 	}
 }

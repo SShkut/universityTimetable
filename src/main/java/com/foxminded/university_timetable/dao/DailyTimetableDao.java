@@ -97,8 +97,8 @@ public class DailyTimetableDao {
 		return dailyTimetable;
 	}
 
-	public void deleteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(DailyTimetable dailyTimetable) {
+		jdbcTemplate.update(DELETE_BY_ID, dailyTimetable.getId());
 	}
 
 	public void addDailyTimetableToTimetable(DailyTimetable dailyTimetable, Timetable timetable) {

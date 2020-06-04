@@ -75,8 +75,8 @@ public class TimetableDao {
 		return timetable;
 	}
 
-	public void deleteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(Timetable timetable) {
+		jdbcTemplate.update(DELETE_BY_ID, timetable.getId());
 	}
 
 	public List<DailyTimetable> findDailyTimetablesOfTimetable(Timetable timetable) {

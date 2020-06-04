@@ -76,14 +76,14 @@ public class TeacherDao {
 		return teacher;
 	}
 
-	public Teacher update(Teacher teahcer) {
-		jdbcTemplate.update(UPDATE, teahcer.getFirstName(), teahcer.getLastName(), teahcer.getTaxNumber(),
-				teahcer.getPhoneNumber(), teahcer.getEmail(), teahcer.getDegree(), teahcer.getId());
-		return teahcer;
+	public Teacher update(Teacher teacher) {
+		jdbcTemplate.update(UPDATE, teacher.getFirstName(), teacher.getLastName(), teacher.getTaxNumber(),
+				teacher.getPhoneNumber(), teacher.getEmail(), teacher.getDegree(), teacher.getId());
+		return teacher;
 	}
 
-	public void deleteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(Teacher teacher) {
+		jdbcTemplate.update(DELETE_BY_ID, teacher.getId());
 	}
 
 	public void addTeacherQualification(Teacher teacher, Course course) {

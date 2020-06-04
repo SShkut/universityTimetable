@@ -69,7 +69,7 @@ public class SemesterDao {
 		return semester;
 	}
 
-	public void deleteById(Long id) {
-		jdbcTemplate.update(DELETE_BY_ID, id);
+	public void delete(Semester semester) {
+		jdbcTemplate.update(DELETE_BY_ID, semester.getId());
 	}
 }
