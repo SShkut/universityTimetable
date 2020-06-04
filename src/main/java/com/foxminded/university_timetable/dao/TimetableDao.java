@@ -22,23 +22,22 @@ public class TimetableDao {
 	private static final String SAVE = "INSERT INTO timetables (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE timetables SET name = ? WHERE id = ?";
 	private static final String DELETE_BY_ID = "DELETE FROM timetables WHERE id = ?";
-	private static final String FIND_DAILY_TIMETABLES_OF_TIMETABLE = "SELECT * FROM daily_timetables WHERE timetable_id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final TimetableRowMapper timetableRowMapper;
-	private final DailyTimetableRowMapper dailyTimetableRowMapper;
+	private final DailyTimetableDao dailyTimetableDao;
 
 	public TimetableDao(JdbcTemplate jdbcTemplate, TimetableRowMapper timetableRowMapper,
-			DailyTimetableRowMapper dailyTimetableRowMapper) {
+			DailyTimetableDao dailyTimetableDao) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.timetableRowMapper = timetableRowMapper;
-		this.dailyTimetableRowMapper = dailyTimetableRowMapper;
+		this.dailyTimetableDao = dailyTimetableDao;
 	}
 
 	public Optional<Timetable> findById(Long id) {
 		try {
 			Timetable timetable = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, timetableRowMapper);
-			List<DailyTimetable> dailyTimetables = findDailyTimetablesOfTimetable(timetable);
+			List<DailyTimetable> dailyTimetables = dailyTimetableDao.findTimetableDailyTimetables(timetable);
 			timetable.setDailyTimetables(dailyTimetables);
 			return Optional.of(timetable);
 		} catch (EmptyResultDataAccessException e) {
@@ -68,10 +67,5 @@ public class TimetableDao {
 
 	public void delete(Timetable timetable) {
 		jdbcTemplate.update(DELETE_BY_ID, timetable.getId());
-	}
-
-	public List<DailyTimetable> findDailyTimetablesOfTimetable(Timetable timetable) {
-		return jdbcTemplate.query(FIND_DAILY_TIMETABLES_OF_TIMETABLE, new Object[] { timetable.getId() },
-				dailyTimetableRowMapper);
 	}
 }

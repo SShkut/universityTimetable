@@ -3,10 +3,10 @@ package com.foxminded.university_timetable.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -22,171 +22,203 @@ import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.DailyTimetable;
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Room;
+import com.foxminded.university_timetable.model.Semester;
+import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.model.Teacher;
 import com.foxminded.university_timetable.model.TimeSlot;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {TestJdbcConfig.class})
+@ContextConfiguration(classes = { TestJdbcConfig.class })
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class TimeSlotDaoTest {
 
 	@Autowired
 	private TimeSlotDao timeSlotDao;
-	
-	@Autowired
-	private CourseDao courseDao;
-	
-	@Autowired
-	private TeacherDao teacherDao;
-	
-	@Autowired
-	private GroupDao groupDao;
-	
-	@Autowired 
-	private RoomDao roomDao;
-	
-	@Autowired
-	private DailyTimetableDao dailyTimetableDao;
-	
+
 	@Test
 	void givenExistentTimeSlotId_whenFindById_thenReturnOptionalOfTimeSlot() {
-		Optional<Course> course = courseDao.findById(1L);
-		Optional<Teacher> teacher = teacherDao.findById(1L);
-		Optional<Group> group = groupDao.findById(1L);
-		Optional<Room> room = roomDao.findById(1L);
-		TimeSlot timeSlot = new TimeSlot(1L, 
-				LocalTime.of(9, 0), 
-				LocalTime.of(9, 30), 
-				course.orElseThrow(NoSuchElementException::new), 
-				teacher.orElseThrow(NoSuchElementException::new), 
-				group.orElseThrow(NoSuchElementException::new), 
-				room.orElseThrow(NoSuchElementException::new));
+		List<Course> courses = new ArrayList<>();
+		courses.add(new Course(1L, "CS", null));
+		courses.add(new Course(3L, "Physics", null));
+		List<Course> prerequisites = new ArrayList<>();
+		prerequisites.add(new Course(2L, "Math", null));
+		prerequisites.add(new Course(4L, "History", null));
+		prerequisites.add(new Course(5L, "Chemistry", null));
+		List<Student> students = new ArrayList<>();
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		TimeSlot timeSlot = new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50),
+				new Course(1L, "CS", prerequisites),
+				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
+				new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
+				new Room(1L, "a-1", 100));
 		Optional<TimeSlot> expected = Optional.of(timeSlot);
-		
+
 		Optional<TimeSlot> actual = timeSlotDao.findById(timeSlot.getId());
-		
+
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	void givenTimeSlot_whenFindAll_returnListOfTimeSlots() {
-			List<TimeSlot> expected = new ArrayList<>();
-			Optional<Course> course1 = courseDao.findById(1L);
-			Optional<Course> course2 = courseDao.findById(2L);
-			Optional<Teacher> teacher1 = teacherDao.findById(1L);
-			Optional<Teacher> teacher2 = teacherDao.findById(2L);
-			Optional<Group> group1 = groupDao.findById(1L);
-			Optional<Group> group2 = groupDao.findById(2L);
-			Optional<Room> room1 = roomDao.findById(1L);
-			Optional<Room> room2 = roomDao.findById(2L);
-			TimeSlot timeSlot = new TimeSlot(1L, 
-					LocalTime.of(9, 0), 
-					LocalTime.of(9, 30), 
-					course1.orElseThrow(NoSuchElementException::new), 
-					teacher1.orElseThrow(NoSuchElementException::new), 
-					group1.orElseThrow(NoSuchElementException::new), 
-					room1.orElseThrow(NoSuchElementException::new));
-			expected.add(timeSlot);
-			timeSlot = new TimeSlot(2L, 
-					LocalTime.of(9, 0), 
-					LocalTime.of(9, 30), 
-					course2.orElseThrow(NoSuchElementException::new), 
-					teacher2.orElseThrow(NoSuchElementException::new), 
-					group2.orElseThrow(NoSuchElementException::new), 
-					room2.orElseThrow(NoSuchElementException::new));
-			expected.add(timeSlot);
-			timeSlot = new TimeSlot(3L, 
-					LocalTime.of(10, 00), 
-					LocalTime.of(11, 50), 
-					course1.orElseThrow(NoSuchElementException::new), 
-					teacher1.orElseThrow(NoSuchElementException::new), 
-					group1.orElseThrow(NoSuchElementException::new), 
-					room1.orElseThrow(NoSuchElementException::new));
-			expected.add(timeSlot);
-			
-			List<TimeSlot> actual = timeSlotDao.findAll();
-			
-			assertEquals(expected, actual);			
+		List<TimeSlot> expected = new ArrayList<>();
+		List<Course> courses = new ArrayList<>();
+		courses.add(new Course(1L, "CS", null));
+		courses.add(new Course(3L, "Physics", null));
+		List<Course> prerequisites = new ArrayList<>();
+		prerequisites.add(new Course(2L, "Math", null));
+		prerequisites.add(new Course(4L, "History", null));
+		prerequisites.add(new Course(5L, "Chemistry", null));
+		List<Student> students = new ArrayList<>();
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		TimeSlot timeSlot1 = new TimeSlot(1L, LocalTime.of(9, 0), LocalTime.of(9, 30),
+				new Course(1L, "CS", prerequisites),
+				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
+				new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
+				new Room(1L, "a-1", 100));
+		expected.add(timeSlot1);
+
+		List<Course> courses2 = new ArrayList<>();
+		courses2.add(new Course(3L, "Physics", null));
+		courses2.add(new Course(4L, "History", null));
+		List<Course> prerequisites2 = new ArrayList<>();
+		prerequisites2.add(new Course(5L, "Chemistry", null));
+		List<Student> students2 = new ArrayList<>();
+		students2.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
+		students2.add(new Student(3L, "fn-3", "ln-3", "123456987", "1234567892", "ln-3@unv.com", null, "cn-125"));
+		students2.add(new Student(4L, "fn-4", "ln-4", "123459876", "1234567893", "ln-4@unv.com", null, "cn-126"));
+		TimeSlot timeSlot2 = new TimeSlot(2L, LocalTime.of(9, 0), LocalTime.of(9, 30),
+				new Course(2L, "Math", prerequisites2),
+				new Teacher(2L, "fnt-2", "lnt-2", "323456798", "5234567891", "lnt-2@unv.com", courses2, "masters"),
+				new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), students2),
+				new Room(2L, "b-1", 70));
+		expected.add(timeSlot2);
+
+		TimeSlot timeSlot3 = new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50),
+				new Course(1L, "CS", prerequisites),
+				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
+				new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
+				new Room(1L, "a-1", 100));
+		expected.add(timeSlot3);
+
+		List<TimeSlot> actual = timeSlotDao.findAll();
+
+		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	void givenTimeSlot_whenSave_thenInsertTimeSlot() {
-		Optional<Course> course = courseDao.findById(4L);
-		Optional<Teacher> teacher = teacherDao.findById(2L);
-		Optional<Group> group = groupDao.findById(2L);
-		Optional<Room> room = roomDao.findById(2L);
-		TimeSlot timeSlot = new TimeSlot(null, 
-				LocalTime.of(16, 0), 
-				LocalTime.of(17, 30), 
-				course.orElseThrow(NoSuchElementException::new), 
-				teacher.orElseThrow(NoSuchElementException::new), 
-				group.orElseThrow(NoSuchElementException::new), 
-				room.orElseThrow(NoSuchElementException::new));
-		
-		TimeSlot inserted = timeSlotDao.save(timeSlot);
-		
-		Optional<TimeSlot> expected = Optional.of(inserted);
-		Optional<TimeSlot> actual = timeSlotDao.findById(timeSlot.getId());		
+		List<Course> courses = new ArrayList<>();
+		courses.add(new Course(1L, "CS", null));
+		courses.add(new Course(3L, "Physics", null));
+		List<Course> prerequisites = new ArrayList<>();
+		prerequisites.add(new Course(2L, "Math", null));
+		prerequisites.add(new Course(4L, "History", null));
+		prerequisites.add(new Course(5L, "Chemistry", null));
+		List<Student> students = new ArrayList<>();
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		TimeSlot timeSlot = this.timeSlotDao
+				.save(new TimeSlot(null, LocalTime.of(19, 0), LocalTime.of(19, 30), new Course(1L, "CS", prerequisites),
+						new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
+						new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
+						new Room(1L, "a-1", 100)));
+		Optional<TimeSlot> expected = Optional.of(timeSlot);
+		Optional<TimeSlot> actual = timeSlotDao.findById(timeSlot.getId());
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	void givenTimeSlot_whenUpdate_thenUpdateGivenTimeSlot() {
-		Optional<Course> course = courseDao.findById(2L);
-		Optional<Teacher> teacher = teacherDao.findById(2L);
-		Optional<Group> group = groupDao.findById(2L);
-		Optional<Room> room = roomDao.findById(2L);
-		TimeSlot timeSlot = new TimeSlot(1L, 
-				LocalTime.of(16, 0), 
-				LocalTime.of(17, 30), 
-				course.orElseThrow(NoSuchElementException::new), 
-				teacher.orElseThrow(NoSuchElementException::new), 
-				group.orElseThrow(NoSuchElementException::new), 
-				room.orElseThrow(NoSuchElementException::new));
+		List<Course> courses = new ArrayList<>();
+		courses.add(new Course(1L, "CS", null));
+		courses.add(new Course(3L, "Physics", null));
+		List<Course> prerequisites = new ArrayList<>();
+		prerequisites.add(new Course(2L, "Math", null));
+		prerequisites.add(new Course(4L, "History", null));
+		prerequisites.add(new Course(5L, "Chemistry", null));
+		List<Student> students = new ArrayList<>();
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		TimeSlot timeSlot = new TimeSlot(1L, LocalTime.of(12, 0), LocalTime.of(13, 30),
+				new Course(1L, "CS", prerequisites),
+				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
+				new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
+				new Room(1L, "a-1", 100));
 		Optional<TimeSlot> expected = Optional.of(timeSlot);
-		
+
 		timeSlotDao.update(timeSlot);
-		
+
 		Optional<TimeSlot> actual = timeSlotDao.findById(timeSlot.getId());
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	void givenTimeSlot_whenDelete_thenDeleteTimeSlot() {
 		Optional<TimeSlot> timeSlot = timeSlotDao.findById(1L);
 		assertTrue(timeSlot.isPresent());
-		
+
 		timeSlotDao.delete(new TimeSlot(1L, null, null, null, null, null, null));
-		
+
 		timeSlot = timeSlotDao.findById(1L);
 		assertTrue(!timeSlot.isPresent());
 	}
-	
+
 	@Test
 	void givenDailyTimetable_whenFindAllDailyTimetableTimeSlots_thenReturnListOfTimeSlots() {
-		Optional<DailyTimetable> dailyTimetable = dailyTimetableDao.findById(2L);
-		Optional<TimeSlot> timeSlot = timeSlotDao.findById(3L);		
+		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13), null);
+		List<Course> courses = new ArrayList<>();
+		courses.add(new Course(1L, "CS", null));
+		courses.add(new Course(3L, "Physics", null));
+		List<Course> prerequisites = new ArrayList<>();
+		prerequisites.add(new Course(2L, "Math", null));
+		prerequisites.add(new Course(4L, "History", null));
+		prerequisites.add(new Course(5L, "Chemistry", null));
+		List<Student> students = new ArrayList<>();
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
 		List<TimeSlot> expected = new ArrayList<>();
-		expected.add(timeSlot.orElseThrow(NoSuchElementException::new));
-		
-		List<TimeSlot> actual = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable.orElseThrow(NoSuchElementException::new));
-		
+		expected.add(new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50), new Course(1L, "CS", prerequisites),
+				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
+				new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
+				new Room(1L, "a-1", 100)));
+
+		List<TimeSlot> actual = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
+
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	void givenTimeSlotAndDailyTimetable_whenAddTimeSlotToDailyTimetable_thenAddTimeSlotToDailyTimetable() {
-		Optional<DailyTimetable> dailyTimetable = dailyTimetableDao.findById(2L);
-		Optional<TimeSlot> timeSlot1 = timeSlotDao.findById(2L);
-		Optional<TimeSlot> timeSlot2 = timeSlotDao.findById(3L);
+		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13), null);
+		List<Course> courses = new ArrayList<>();
+		courses.add(new Course(1L, "CS", null));
+		courses.add(new Course(3L, "Physics", null));
+		List<Course> prerequisites = new ArrayList<>();
+		prerequisites.add(new Course(2L, "Math", null));
+		prerequisites.add(new Course(4L, "History", null));
+		prerequisites.add(new Course(5L, "Chemistry", null));
+		List<Student> students = new ArrayList<>();
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
 		List<TimeSlot> expected = new ArrayList<>();
-		expected.add(timeSlot1.orElseThrow(NoSuchElementException::new));
-		expected.add(timeSlot2.orElseThrow(NoSuchElementException::new));
-		
-		timeSlotDao.addTimeSlotToDailyTimetable(timeSlot1.orElseThrow(NoSuchElementException::new),
-				dailyTimetable.orElseThrow(NoSuchElementException::new));
-		
-		List<TimeSlot> actual = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable.orElseThrow(NoSuchElementException::new));
+		TimeSlot timeSlot1 = new TimeSlot(1L, LocalTime.of(9, 0), LocalTime.of(9, 30),
+				new Course(1L, "CS", prerequisites),
+				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
+				new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
+				new Room(1L, "a-1", 100));
+		TimeSlot timeSlot2 = new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50),
+				new Course(1L, "CS", prerequisites),
+				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
+				new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
+				new Room(1L, "a-1", 100));
+		expected.add(timeSlot1);
+		expected.add(timeSlot2);
+
+		timeSlotDao.addTimeSlotToDailyTimetable(timeSlot1, dailyTimetable);
+
+		List<TimeSlot> actual = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
 		assertEquals(expected, actual);
 	}
 }

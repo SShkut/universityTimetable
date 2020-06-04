@@ -50,7 +50,8 @@ public class DailyTimetableDao {
 	private static final String FIND_MONTHLY_TIMETABLE_FOR_TEACHER = "SELECT dt.id, dt.date, dt.timetable_id "
 			+ "FROM daily_timetables dt "
 			+ "JOIN time_slots ts ON ts.daily_timetable_id = dt.id AND dt.date BETWEEN ? AND ? "
-			+ "JOIN teachers t ON t.id = ts.teacher_id and t.id = ? " + "GROUP BY dt.id, dt.date, dt.timetable_id";;
+			+ "JOIN teachers t ON t.id = ts.teacher_id and t.id = ? " + "GROUP BY dt.id, dt.date, dt.timetable_id";
+	private static final String FIND_TIMETABLE_DAILY_TIMETABLES = "SELECT * FROM daily_timetables WHERE timetable_id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final DailyTimetableRowMapper dailyTimetableRowMapper;
@@ -139,6 +140,11 @@ public class DailyTimetableDao {
 		return jdbcTemplate.query(FIND_MONTHLY_TIMETABLE_FOR_TEACHER,
 				new Object[] { YearMonth.of(year, month).atDay(1),
 						YearMonth.of(year, month).atDay(YearMonth.of(year, month).lengthOfMonth()), teacher.getId() },
+				dailyTimetableRowMapper);
+	}
+	
+	public List<DailyTimetable> findTimetableDailyTimetables(Timetable timetable) {
+		return jdbcTemplate.query(FIND_TIMETABLE_DAILY_TIMETABLES, new Object[] { timetable.getId() },
 				dailyTimetableRowMapper);
 	}
 }
