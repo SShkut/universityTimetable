@@ -31,10 +31,6 @@ public class TimeSlotRowMapper implements RowMapper<TimeSlot> {
 
 	@Override
 	public TimeSlot mapRow(ResultSet rs, int rowNum) throws SQLException {
-		if (rs.isBeforeFirst()) {
-			return null;
-		}
-
 		TimeSlot timeSlot = new TimeSlot();
 
 		timeSlot.setId(rs.getLong("id"));

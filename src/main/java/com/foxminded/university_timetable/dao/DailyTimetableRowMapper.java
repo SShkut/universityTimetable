@@ -21,10 +21,6 @@ public class DailyTimetableRowMapper implements RowMapper<DailyTimetable> {
 
 	@Override
 	public DailyTimetable mapRow(ResultSet rs, int rowNum) throws SQLException {
-		if (rs.isBeforeFirst()) {
-			return null;
-		}
-
 		DailyTimetable dailyTimetable = new DailyTimetable();
 		dailyTimetable.setId(rs.getLong("id"));
 		dailyTimetable.setDate(rs.getDate("date").toLocalDate());

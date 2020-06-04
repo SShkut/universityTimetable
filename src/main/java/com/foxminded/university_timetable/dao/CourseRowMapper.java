@@ -13,10 +13,6 @@ public class CourseRowMapper implements RowMapper<Course> {
 
 	@Override
 	public Course mapRow(ResultSet rs, int rowNum) throws SQLException {
-		if (rs.isBeforeFirst()) {
-			return null;
-		}
-
 		Course course = new Course();
 		course.setId(rs.getLong("id"));
 		course.setName(rs.getString("name"));

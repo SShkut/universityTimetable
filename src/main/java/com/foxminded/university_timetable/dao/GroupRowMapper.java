@@ -22,11 +22,6 @@ public class GroupRowMapper implements RowMapper<Group> {
 
 	@Override
 	public Group mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-		if (rs.isBeforeFirst()) {
-			return null;
-		}
-
 		Group group = new Group();
 		group.setId(rs.getLong("id"));
 		group.setName(rs.getString("name"));

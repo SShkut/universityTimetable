@@ -13,10 +13,6 @@ public class RoomRowMapper implements RowMapper<Room> {
 
 	@Override
 	public Room mapRow(ResultSet rs, int rowNum) throws SQLException {
-		if (rs.isBeforeFirst()) {
-			return null;
-		}
-
 		Room room = new Room();
 		room.setId(rs.getLong("id"));
 		room.setSybmol(rs.getString("symbol"));
