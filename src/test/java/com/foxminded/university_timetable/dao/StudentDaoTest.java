@@ -31,9 +31,6 @@ class StudentDaoTest {
 	private StudentDao studentDao;
 	
 	@Autowired
-	private CourseDao courseDao;
-	
-	@Autowired
 	private GroupDao groupDao;
 	
 	@Test
@@ -159,7 +156,7 @@ class StudentDaoTest {
 		
 		studentDao.addStudentToCourse(student, course);
 		
-		List<Student> actual = courseDao.findStudentsOfCourse(course);
+		List<Student> actual = studentDao.findCourseStudents(course);
 		assertEquals(expected, actual);
 	}
 	
@@ -172,7 +169,18 @@ class StudentDaoTest {
 		
 		studentDao.deleteStudentFromCourse(student, course);
 
-		List<Student> actual = courseDao.findStudentsOfCourse(course);
+		List<Student> actual = studentDao.findCourseStudents(course);
+		assertEquals(expected, actual);
+	}	
+	
+	@Test
+	void givenCourse_whenFindStudentsOfCourse_thenReturnListOfStudents() {
+		Course course = new Course(1L, "CS-2", null);
+		List<Student> expected = new ArrayList<>();
+		expected.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
+		
+		List<Student> actual = studentDao.findCourseStudents(course);
+		
 		assertEquals(expected, actual);
 	}
 }

@@ -18,7 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.foxminded.university_timetable.config.TestJdbcConfig;
 import com.foxminded.university_timetable.model.Course;
-import com.foxminded.university_timetable.model.Student;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestJdbcConfig.class})
@@ -36,7 +35,7 @@ class CourseDaoTest {
 		expected.add(new Course(4L, "History", null));
 		expected.add(new Course(5L, "Chemistry", null));
 		
-		List<Course> actual = courseDao.findPrerequisitesOfCourse(course);
+		List<Course> actual = courseDao.findCoursePrerequisites(course);
 		
 		assertEquals(expected, actual);
 	}
@@ -44,7 +43,7 @@ class CourseDaoTest {
 	@Test
 	void givenExistentCourseId_whenFindById_thenReturnOptionalOfCourse() {
 		Course course = new Course(2L, "Math", null);
-		List<Course> prerequisites = courseDao.findPrerequisitesOfCourse(course);
+		List<Course> prerequisites = courseDao.findCoursePrerequisites(course);
 		course.setPrerequisites(prerequisites);
 		Optional<Course> expected = Optional.of(course);
 		
@@ -104,25 +103,13 @@ class CourseDaoTest {
 	@Test
 	void givenExistentCourse_whenUpdate_thenUpdateCourse() throws DatabaseUnitException, SQLException {
 		Course course = new Course(1L, "CS-2", null);
-		List<Course> prerequisites = courseDao.findPrerequisitesOfCourse(course);
+		List<Course> prerequisites = courseDao.findCoursePrerequisites(course);
 		course.setPrerequisites(prerequisites);
 		
 		Course updatedCourse = courseDao.update(course);
 		
 		Optional<Course> expected = Optional.of(updatedCourse);		
 		Optional<Course> actual = courseDao.findById(course.getId());
-		assertEquals(expected, actual);
-	}
-	
-	
-	@Test
-	void givenCourse_whenFindStudentsOfCourse_thenReturnListOfStudents() {
-		Course course = new Course(1L, "CS-2", null);
-		List<Student> expected = new ArrayList<>();
-		expected.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
-		
-		List<Student> actual = courseDao.findStudentsOfCourse(course);
-		
 		assertEquals(expected, actual);
 	}
 }

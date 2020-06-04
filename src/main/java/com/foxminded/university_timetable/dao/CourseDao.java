@@ -14,9 +14,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Course;
-import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.row_mapper.CourseRowMapper;
-import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
 
 @Repository
 public class CourseDao {
@@ -27,31 +25,23 @@ public class CourseDao {
 	private static final String SAVE = "INSERT INTO courses (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE courses SET name = ? WHERE id = ?";
 	private static final String FIND_PREREQUISITES_OF_COURSE = "WITH RECURSIVE course_prerequisites(course_id, prerequisite_id) AS ("
-			+ "SELECT course_id, prerequisite_id " 
-			+ "FROM course_hierarchy " 
-			+ "WHERE course_id = ? " 
-			+ "UNION ALL "
+			+ "SELECT course_id, prerequisite_id " + "FROM course_hierarchy " + "WHERE course_id = ? " + "UNION ALL "
 			+ "SELECT ch.course_id, ch.prerequisite_id " + "FROM course_hierarchy ch "
 			+ "JOIN course_prerequisites cp ON ch.course_id = cp.prerequisite_id) " + "SELECT DISTINCT c.id, c.name "
 			+ "FROM course_prerequisites cp " + "JOIN courses c ON cp.prerequisite_id = c.id;";
-	private static final String FIND_STUDENTS_OF_COURSE = "SELECT s.id, s.first_name, s.last_name, s.tax_number, s.phone_number, s.email, s.student_card_number "
-			+ "FROM students s " 
-			+ "JOIN student_course sc ON sc.student_id = s.id AND sc.course_id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final CourseRowMapper courseRowMapper;
-	private final StudentRowMapper studentRowMapper;
 
-	public CourseDao(JdbcTemplate jdbcTemplate, CourseRowMapper courseRowMapper, StudentRowMapper studentRowMapper) {
+	public CourseDao(JdbcTemplate jdbcTemplate, CourseRowMapper courseRowMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.courseRowMapper = courseRowMapper;
-		this.studentRowMapper = studentRowMapper;
 	}
 
 	public Optional<Course> findById(Long id) {
 		try {
 			Course course = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, courseRowMapper);
-			List<Course> prerequisites = findPrerequisitesOfCourse(course);
+			List<Course> prerequisites = findCoursePrerequisites(course);
 			course.setPrerequisites(prerequisites);
 			return Optional.of(course);
 		} catch (EmptyResultDataAccessException e) {
@@ -88,11 +78,7 @@ public class CourseDao {
 		return course;
 	}
 
-	public List<Course> findPrerequisitesOfCourse(Course course) {
+	public List<Course> findCoursePrerequisites(Course course) {
 		return jdbcTemplate.query(FIND_PREREQUISITES_OF_COURSE, new Object[] { course.getId() }, courseRowMapper);
-	}
-
-	public List<Student> findStudentsOfCourse(Course course) {
-		return jdbcTemplate.query(FIND_STUDENTS_OF_COURSE, new Object[] { course.getId() }, studentRowMapper);
 	}
 }

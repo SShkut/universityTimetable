@@ -31,9 +31,10 @@ public class StudentDao {
 	private static final String DELETE_STUDENT_FROM_GROUP = "DELETE FROM student_group WHERE student_id = ? and group_id = ?";
 	private static final String ENROLL_COURSE = "INSERT INTO student_course (student_id, course_id) values (?, ?)";
 	private static final String LEAVE_COURSE = "DELETE FROM student_course WHERE student_id = ? AND course_id = ?";
-	private static final String FIND_ALL_STUDENT_COURSES = "SELECT c.id, c.name " 
-			+ "FROM courses c "
+	private static final String FIND_ALL_STUDENT_COURSES = "SELECT c.id, c.name " + "FROM courses c "
 			+ "JOIN student_course sc ON c.id = sc.course_id AND sc.student_id = ?";
+	private static final String FIND_COURSE_STUDENTS = "SELECT s.id, s.first_name, s.last_name, s.tax_number, s.phone_number, s.email, s.student_card_number "
+			+ "FROM students s " + "JOIN student_course sc ON sc.student_id = s.id AND sc.course_id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final StudentRowMapper studentRowMapper;
@@ -107,5 +108,9 @@ public class StudentDao {
 
 	public List<Course> findAllStudentCourses(Student student) {
 		return jdbcTemplate.query(FIND_ALL_STUDENT_COURSES, new Object[] { student.getId() }, courseRowMapper);
+	}
+
+	public List<Student> findCourseStudents(Course course) {
+		return jdbcTemplate.query(FIND_COURSE_STUDENTS, new Object[] { course.getId() }, studentRowMapper);
 	}
 }
