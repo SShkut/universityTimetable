@@ -60,7 +60,7 @@ INSERT INTO timetables (id, name) VALUES
 	
 INSERT INTO daily_timetables (id, date, timetable_id) VALUES
 	(1, '2020-02-12', 1),
-	(2, '2020-02-14', 2);
+	(2, '2020-02-13', 2);
 	
 INSERT INTO time_slots(id, start_time, end_time, course_id, teacher_id, group_id, room_id, daily_timetable_id) VALUES
 	(1, '9:00', '9:30', 1, 1, 1, 1, 1),
