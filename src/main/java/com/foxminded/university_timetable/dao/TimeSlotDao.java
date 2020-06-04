@@ -1,14 +1,13 @@
 package com.foxminded.university_timetable.dao;
 
-import java.sql.Types;
-import java.util.Arrays;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -50,21 +49,19 @@ public class TimeSlotDao {
 	}
 
 	public TimeSlot save(TimeSlot timeSlot) {
-		PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(SAVE, Types.TIME, Types.TIME,
-				Types.INTEGER, Types.INTEGER, Types.INTEGER, Types.INTEGER);
-		factory.setReturnGeneratedKeys(true);
-		PreparedStatementCreator psc = factory.newPreparedStatementCreator(
-				Arrays.asList(timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse().getId(),
-						timeSlot.getTeacher().getId(), timeSlot.getGroup().getId(), timeSlot.getRoom().getId()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, keyHolder);
-		Long newId;
-		if (keyHolder.getKeys().size() > 1) {
-			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
-		} else {
-			newId = keyHolder.getKey().longValue();
-		}
-		timeSlot.setId(newId);
+		jdbcTemplate.update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
+			ps.setTime(1, Time.valueOf(timeSlot.getStartTime()));
+			ps.setTime(2, Time.valueOf(timeSlot.getEndTime()));
+			ps.setLong(3, timeSlot.getCourse().getId());
+			ps.setLong(4, timeSlot.getTeacher().getId());
+			ps.setLong(5, timeSlot.getGroup().getId());
+			ps.setLong(6, timeSlot.getRoom().getId());
+			return ps;
+		}, keyHolder);
+		Long id = keyHolder.getKey().longValue();
+		timeSlot.setId(id);
 		return timeSlot;
 	}
 

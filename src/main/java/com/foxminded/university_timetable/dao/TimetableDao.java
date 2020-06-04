@@ -1,14 +1,12 @@
 package com.foxminded.university_timetable.dao;
 
-import java.sql.Types;
-import java.util.Arrays;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -53,18 +51,14 @@ public class TimetableDao {
 	}
 
 	public Timetable save(Timetable timetable) {
-		PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(SAVE, Types.VARCHAR);
-		factory.setReturnGeneratedKeys(true);
-		PreparedStatementCreator psc = factory.newPreparedStatementCreator(Arrays.asList(timetable.getName()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(psc, keyHolder);
-		Long newId;
-		if (keyHolder.getKeys().size() > 1) {
-			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
-		} else {
-			newId = keyHolder.getKey().longValue();
-		}
-		timetable.setId(newId);
+		jdbcTemplate.update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, timetable.getName());
+			return ps;
+		}, keyHolder);
+		Long id = keyHolder.getKey().longValue();
+		timetable.setId(id);
 		return timetable;
 	}
 
