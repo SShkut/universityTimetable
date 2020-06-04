@@ -25,9 +25,7 @@ public class DailyTimetableRowMapper implements RowMapper<DailyTimetable> {
 		dailyTimetable.setId(rs.getLong("id"));
 		dailyTimetable.setDate(rs.getDate("date").toLocalDate());
 		List<TimeSlot> timeSlots = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
-		if (!timeSlots.isEmpty()) {
-			dailyTimetable.setTimeSlots(timeSlots);
-		}
+		dailyTimetable.setTimeSlots(timeSlots);
 		return dailyTimetable;
 	}
 }

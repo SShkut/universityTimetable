@@ -81,7 +81,7 @@ class DailyTimetableDaoTest {
 	
 	@Test
 	void givenDailyTimetable_whenSave_thenInsertDailyTimetable() {
-		DailyTimetable dailyTimetable = new DailyTimetable(null, LocalDate.of(2020, 3, 1), null);
+		DailyTimetable dailyTimetable = new DailyTimetable(null, LocalDate.of(2020, 3, 1), new ArrayList<>());
 		
 		DailyTimetable inserted = dailyTimetableDao.save(dailyTimetable);
 		
