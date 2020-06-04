@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +20,12 @@ import com.foxminded.university_timetable.model.TimeSlot;
 
 @Component
 public class TimeSlotRowMapper implements RowMapper<TimeSlot> {
-	
+
 	private final CourseDao courseDao;
 	private final TeacherDao teacherDao;
 	private final GroupDao groupDao;
 	private final RoomDao roomDao;
-	
-	@Autowired
+
 	public TimeSlotRowMapper(CourseDao courseDao, TeacherDao teacherDao, GroupDao groupDao, RoomDao roomDao) {
 		this.courseDao = courseDao;
 		this.teacherDao = teacherDao;
@@ -40,23 +38,22 @@ public class TimeSlotRowMapper implements RowMapper<TimeSlot> {
 		if (rs.isBeforeFirst()) {
 			return null;
 		}
-		
+
 		TimeSlot timeSlot = new TimeSlot();
-		
+
 		timeSlot.setId(rs.getLong("id"));
 		timeSlot.setStartTime(rs.getTime("start_time").toLocalTime());
 		timeSlot.setEndTime(rs.getTime("end_time").toLocalTime());
-		
+
 		Optional<Course> course = courseDao.findById(rs.getLong("course_id"));
 		Optional<Teacher> teacher = teacherDao.findById(rs.getLong("teacher_id"));
 		Optional<Group> group = groupDao.findById(rs.getLong("group_id"));
 		Optional<Room> room = roomDao.findById(rs.getLong("room_id"));
-		
+
 		timeSlot.setCourse(course.orElseThrow(NoSuchElementException::new));
 		timeSlot.setTeacher(teacher.orElseThrow(NoSuchElementException::new));
 		timeSlot.setGroup(group.orElseThrow(NoSuchElementException::new));
-		timeSlot.setRoom(room.orElseThrow(NoSuchElementException::new));			
-		
+		timeSlot.setRoom(room.orElseThrow(NoSuchElementException::new));
 		return timeSlot;
 	}
 }

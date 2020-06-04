@@ -2,7 +2,6 @@ package com.foxminded.university_timetable.util;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.ClassPathResource;
@@ -11,12 +10,11 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartupApplicatoinListener implements ApplicationListener<ContextRefreshedEvent> {
-	
+public class StartupApplicationListener implements ApplicationListener<ContextRefreshedEvent> {
+
 	private final DataSource dataSource;
-	
-	@Autowired
-	public StartupApplicatoinListener(DataSource dataSource) {
+
+	public StartupApplicationListener(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
@@ -26,6 +24,6 @@ public class StartupApplicatoinListener implements ApplicationListener<ContextRe
 		Resource data = new ClassPathResource("data.sql");
 		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
 		populator.addScripts(resource, data);
-		populator.execute(dataSource);		
-	}	
+		populator.execute(dataSource);
+	}
 }

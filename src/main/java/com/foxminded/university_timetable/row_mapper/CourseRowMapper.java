@@ -16,11 +16,10 @@ public class CourseRowMapper implements RowMapper<Course> {
 		if (rs.isBeforeFirst()) {
 			return null;
 		}
-		
+
 		Course course = new Course();
-		course.setId(Long.valueOf(rs.getLong("id")));
+		course.setId(rs.getLong("id"));
 		course.setName(rs.getString("name"));
-			
 		return course;
 	}
 }

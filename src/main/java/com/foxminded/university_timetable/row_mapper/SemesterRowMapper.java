@@ -16,12 +16,11 @@ public class SemesterRowMapper implements RowMapper<Semester> {
 		if (rs.isBeforeFirst()) {
 			return null;
 		}
-		
+
 		Semester semester = new Semester();
 		semester.setId(rs.getLong("id"));
 		semester.setYearOfStudy(rs.getInt("year_of_study"));
 		semester.setPeriod(rs.getString("period"));
-		
 		return semester;
 	}
 }

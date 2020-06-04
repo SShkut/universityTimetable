@@ -16,17 +16,16 @@ public class StudentRowMapper implements RowMapper<Student> {
 		if (rs.isBeforeFirst()) {
 			return null;
 		}
-		
+
 		Student student = new Student();
-		student.setId(Long.valueOf(rs.getLong("id")));
+		student.setId(rs.getLong("id"));
 		student.setFirstName(rs.getString("first_name"));
 		student.setLastName(rs.getString("last_name"));
 		student.setTaxNumber(rs.getString("tax_number"));
 		student.setPhoneNumber(rs.getString("phone_number"));
 		student.setEmail(rs.getString("email"));
 		student.setStudentCardNumber(rs.getString("student_card_number"));
-		
 		return student;
 	}
-	
+
 }

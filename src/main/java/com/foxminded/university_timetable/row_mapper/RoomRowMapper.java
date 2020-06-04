@@ -16,12 +16,11 @@ public class RoomRowMapper implements RowMapper<Room> {
 		if (rs.isBeforeFirst()) {
 			return null;
 		}
-		
+
 		Room room = new Room();
 		room.setId(rs.getLong("id"));
 		room.setSybmol(rs.getString("symbol"));
 		room.setCapacity(rs.getInt("capacity"));
-		
 		return room;
 	}
 }

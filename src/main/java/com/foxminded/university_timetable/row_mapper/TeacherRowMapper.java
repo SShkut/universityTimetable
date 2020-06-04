@@ -16,7 +16,7 @@ public class TeacherRowMapper implements RowMapper<Teacher> {
 		if (rs.isBeforeFirst()) {
 			return null;
 		}
-		
+
 		Teacher teacher = new Teacher();
 		teacher.setId(Long.valueOf(rs.getLong("id")));
 		teacher.setFirstName(rs.getString("first_name"));
@@ -25,7 +25,6 @@ public class TeacherRowMapper implements RowMapper<Teacher> {
 		teacher.setPhoneNumber(rs.getString("phone_number"));
 		teacher.setEmail(rs.getString("email"));
 		teacher.setDegree(rs.getString("degree"));
-
 		return teacher;
 	}
 }

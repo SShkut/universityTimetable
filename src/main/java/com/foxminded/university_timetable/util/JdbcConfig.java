@@ -23,10 +23,9 @@ public class JdbcConfig {
 		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
 		dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
 		dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
-		
 		return dataSource;
 	}
-	
+
 	@Bean
 	public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
