@@ -14,7 +14,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Course;
-import com.foxminded.university_timetable.row_mapper.CourseRowMapper;
 
 @Repository
 public class CourseDao {

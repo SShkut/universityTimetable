@@ -15,8 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Student;
-import com.foxminded.university_timetable.row_mapper.GroupRowMapper;
-import com.foxminded.university_timetable.row_mapper.StudentRowMapper;
 
 @Repository
 public class GroupDao {

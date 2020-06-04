@@ -1,4 +1,4 @@
-package com.foxminded.university_timetable.row_mapper;
+package com.foxminded.university_timetable.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

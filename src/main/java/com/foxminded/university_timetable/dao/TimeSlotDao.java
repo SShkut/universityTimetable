@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.DailyTimetable;
 import com.foxminded.university_timetable.model.TimeSlot;
-import com.foxminded.university_timetable.row_mapper.TimeSlotRowMapper;
 
 @Repository
 public class TimeSlotDao {

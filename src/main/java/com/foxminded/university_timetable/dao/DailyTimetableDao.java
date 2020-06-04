@@ -20,7 +20,6 @@ import com.foxminded.university_timetable.model.DailyTimetable;
 import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.model.Teacher;
 import com.foxminded.university_timetable.model.Timetable;
-import com.foxminded.university_timetable.row_mapper.DailyTimetableRowMapper;
 
 @Repository
 public class DailyTimetableDao {

@@ -15,8 +15,6 @@ import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Teacher;
-import com.foxminded.university_timetable.row_mapper.CourseRowMapper;
-import com.foxminded.university_timetable.row_mapper.TeacherRowMapper;
 
 @Repository
 public class TeacherDao {
