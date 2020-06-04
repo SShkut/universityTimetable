@@ -2,23 +2,19 @@ package com.foxminded.university_timetable.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class Person {
 	
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String taxNumber;
 	private String phoneNumber;
 	private String email;
-	private List<Course> courses;	
-
-	public Person(String firstName, String lastName, String taxNumber, String phoneNumber, String email) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.taxNumber = taxNumber;
-		this.phoneNumber = phoneNumber;
-		this.email = email;
-		this.courses = new ArrayList<>();
+	private List<Course> courses;
+	
+	public Person() {
 	}
 
 	public Person(String firstName, String lastName, String taxNumber, String phoneNumber, String email, List<Course> courses) {
@@ -28,6 +24,25 @@ public abstract class Person {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.courses = courses;
+	}	
+
+	public Person(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email,
+			List<Course> courses) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.taxNumber = taxNumber;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+		this.courses = courses;
+	}	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getFirstName() {
@@ -84,12 +99,7 @@ public abstract class Person {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result + ((taxNumber == null) ? 0 : taxNumber.hashCode());
-		return result;
+		return Objects.hash(courses, email, firstName, id, lastName, phoneNumber, taxNumber);
 	}
 
 	@Override
@@ -101,21 +111,9 @@ public abstract class Person {
 		if (getClass() != obj.getClass())
 			return false;
 		Person other = (Person) obj;
-		if (firstName == null) {
-			if (other.firstName != null)
-				return false;
-		} else if (!firstName.equals(other.firstName))
-			return false;
-		if (lastName == null) {
-			if (other.lastName != null)
-				return false;
-		} else if (!lastName.equals(other.lastName))
-			return false;
-		if (taxNumber == null) {
-			if (other.taxNumber != null)
-				return false;
-		} else if (!taxNumber.equals(other.taxNumber))
-			return false;
-		return true;
-	}	
+		return Objects.equals(courses, other.courses) && Objects.equals(email, other.email)
+				&& Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id)
+				&& Objects.equals(lastName, other.lastName) && Objects.equals(phoneNumber, other.phoneNumber)
+				&& Objects.equals(taxNumber, other.taxNumber);
+	}
 }
