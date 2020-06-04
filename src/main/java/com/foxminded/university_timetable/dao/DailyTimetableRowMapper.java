@@ -2,6 +2,7 @@ package com.foxminded.university_timetable.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -23,7 +24,7 @@ public class DailyTimetableRowMapper implements RowMapper<DailyTimetable> {
 	public DailyTimetable mapRow(ResultSet rs, int rowNum) throws SQLException {
 		DailyTimetable dailyTimetable = new DailyTimetable();
 		dailyTimetable.setId(rs.getLong("id"));
-		dailyTimetable.setDate(rs.getDate("date").toLocalDate());
+		dailyTimetable.setDate(rs.getObject("date", LocalDate.class));
 		List<TimeSlot> timeSlots = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
 		dailyTimetable.setTimeSlots(timeSlots);
 		return dailyTimetable;
