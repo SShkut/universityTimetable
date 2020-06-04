@@ -34,7 +34,7 @@ public class RoomDao {
 
 	public Optional<Room> findById(Long id) {
 		try {
-			Room room = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, roomRowMapper);
+			Room room = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, roomRowMapper);
 			return Optional.of(room);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -42,7 +42,7 @@ public class RoomDao {
 	}
 
 	public List<Room> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, roomRowMapper);
+		return jdbcTemplate.query(FIND_ALL, roomRowMapper);
 	}
 
 	public Room save(Room room) {
@@ -52,7 +52,7 @@ public class RoomDao {
 		PreparedStatementCreator psc = factory
 				.newPreparedStatementCreator(Arrays.asList(room.getSybmol(), room.getCapacity()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -64,11 +64,11 @@ public class RoomDao {
 	}
 
 	public Room update(Room room) {
-		this.jdbcTemplate.update(UPDATE, room.getSybmol(), room.getCapacity(), room.getId());
+		jdbcTemplate.update(UPDATE, room.getSybmol(), room.getCapacity(), room.getId());
 		return room;
 	}
 
 	public void deleteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 }

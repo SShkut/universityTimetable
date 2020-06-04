@@ -47,7 +47,7 @@ public class StudentDao {
 
 	public Optional<Student> findById(Long id) {
 		try {
-			Student student = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, studentRowMapper);
+			Student student = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, studentRowMapper);
 			List<Course> courses = findAllStudentCourses(student);
 			student.setCourses(courses);
 			return Optional.of(student);
@@ -57,7 +57,7 @@ public class StudentDao {
 	}
 
 	public List<Student> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, studentRowMapper);
+		return jdbcTemplate.query(FIND_ALL, studentRowMapper);
 	}
 
 	public Student save(Student student) {
@@ -68,7 +68,7 @@ public class StudentDao {
 				Arrays.asList(student.getFirstName(), student.getLastName(), student.getTaxNumber(),
 						student.getPhoneNumber(), student.getEmail(), student.getStudentCardNumber()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -80,32 +80,32 @@ public class StudentDao {
 	}
 
 	public Student update(Student student) {
-		this.jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(), student.getTaxNumber(),
+		jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(), student.getTaxNumber(),
 				student.getPhoneNumber(), student.getEmail(), student.getStudentCardNumber(), student.getId());
 		return student;
 	}
 
 	public void deleteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 
 	public void addStudentToGroup(Student student, Group group) {
-		this.jdbcTemplate.update(ADD_STUDENT_TO_GROUP, student.getId(), group.getId());
+		jdbcTemplate.update(ADD_STUDENT_TO_GROUP, student.getId(), group.getId());
 	}
 
 	public void deleteStudentFromGroup(Student student, Group group) {
-		this.jdbcTemplate.update(DELETE_STUDENT_FROM_GROUP, student.getId(), group.getId());
+		jdbcTemplate.update(DELETE_STUDENT_FROM_GROUP, student.getId(), group.getId());
 	}
 
 	public void addStudentToCourse(Student student, Course course) {
-		this.jdbcTemplate.update(ENROLL_COURSE, student.getId(), course.getId());
+		jdbcTemplate.update(ENROLL_COURSE, student.getId(), course.getId());
 	}
 
 	public void deleteStudentFromCourse(Student student, Course course) {
-		this.jdbcTemplate.update(LEAVE_COURSE, student.getId(), course.getId());
+		jdbcTemplate.update(LEAVE_COURSE, student.getId(), course.getId());
 	}
 
 	public List<Course> findAllStudentCourses(Student student) {
-		return this.jdbcTemplate.query(FIND_ALL_STUDENT_COURSES, new Object[] { student.getId() }, courseRowMapper);
+		return jdbcTemplate.query(FIND_ALL_STUDENT_COURSES, new Object[] { student.getId() }, courseRowMapper);
 	}
 }

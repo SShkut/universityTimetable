@@ -41,7 +41,7 @@ public class TimetableDao {
 
 	public Optional<Timetable> findById(Long id) {
 		try {
-			Timetable timetable = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, timetableRowMapper);
+			Timetable timetable = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, timetableRowMapper);
 			List<DailyTimetable> dailyTimetables = findDailyTimetablesOfTimetable(timetable);
 			timetable.setDailyTimetables(dailyTimetables);
 			return Optional.of(timetable);
@@ -51,7 +51,7 @@ public class TimetableDao {
 	}
 
 	public List<Timetable> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, timetableRowMapper);
+		return jdbcTemplate.query(FIND_ALL, timetableRowMapper);
 	}
 
 	public Timetable save(Timetable timetable) {
@@ -59,7 +59,7 @@ public class TimetableDao {
 		factory.setReturnGeneratedKeys(true);
 		PreparedStatementCreator psc = factory.newPreparedStatementCreator(Arrays.asList(timetable.getName()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -71,16 +71,16 @@ public class TimetableDao {
 	}
 
 	public Timetable update(Timetable timetable) {
-		this.jdbcTemplate.update(UPDATE, timetable.getName(), timetable.getId());
+		jdbcTemplate.update(UPDATE, timetable.getName(), timetable.getId());
 		return timetable;
 	}
 
 	public void deleteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 
 	public List<DailyTimetable> findDailyTimetablesOfTimetable(Timetable timetable) {
-		return this.jdbcTemplate.query(FIND_DAILY_TIMETABLES_OF_TIMETABLE, new Object[] { timetable.getId() },
+		return jdbcTemplate.query(FIND_DAILY_TIMETABLES_OF_TIMETABLE, new Object[] { timetable.getId() },
 				dailyTimetableRowMapper);
 	}
 }

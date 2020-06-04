@@ -44,7 +44,7 @@ public class TeacherDao {
 
 	public Optional<Teacher> findById(Long id) {
 		try {
-			Teacher teacher = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, teacherRowMapper);
+			Teacher teacher = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, teacherRowMapper);
 			List<Course> qualification = findAllTeacherQualifications(teacher);
 			teacher.setCourses(qualification);
 			return Optional.of(teacher);
@@ -54,7 +54,7 @@ public class TeacherDao {
 	}
 
 	public List<Teacher> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, teacherRowMapper);
+		return jdbcTemplate.query(FIND_ALL, teacherRowMapper);
 	}
 
 	public Teacher save(Teacher teacher) {
@@ -65,7 +65,7 @@ public class TeacherDao {
 				.newPreparedStatementCreator(Arrays.asList(teacher.getFirstName(), teacher.getLastName(),
 						teacher.getTaxNumber(), teacher.getPhoneNumber(), teacher.getEmail(), teacher.getDegree()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -77,25 +77,25 @@ public class TeacherDao {
 	}
 
 	public Teacher update(Teacher teahcer) {
-		this.jdbcTemplate.update(UPDATE, teahcer.getFirstName(), teahcer.getLastName(), teahcer.getTaxNumber(),
+		jdbcTemplate.update(UPDATE, teahcer.getFirstName(), teahcer.getLastName(), teahcer.getTaxNumber(),
 				teahcer.getPhoneNumber(), teahcer.getEmail(), teahcer.getDegree(), teahcer.getId());
 		return teahcer;
 	}
 
 	public void deleteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 
 	public void addTeacherQualification(Teacher teacher, Course course) {
-		this.jdbcTemplate.update(ADD_TEACHER_QUALIFICATION, teacher.getId(), course.getId());
+		jdbcTemplate.update(ADD_TEACHER_QUALIFICATION, teacher.getId(), course.getId());
 	}
 
 	public void deleteTeacherQualification(Teacher teacher, Course course) {
-		this.jdbcTemplate.update(DELETE_TEACHER_QUALIFICATION, teacher.getId(), course.getId());
+		jdbcTemplate.update(DELETE_TEACHER_QUALIFICATION, teacher.getId(), course.getId());
 	}
 
 	public List<Course> findAllTeacherQualifications(Teacher teacher) {
-		return this.jdbcTemplate.query(FIND_ALL_TEACHER_QUALIFICATIONS, new Object[] { teacher.getId() },
+		return jdbcTemplate.query(FIND_ALL_TEACHER_QUALIFICATIONS, new Object[] { teacher.getId() },
 				courseRowMapper);
 	}
 }

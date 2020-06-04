@@ -42,7 +42,7 @@ public class GroupDao {
 
 	public Optional<Group> findById(Long id) {
 		try {
-			Group group = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, groupRowMapper);
+			Group group = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, groupRowMapper);
 			List<Student> students = findStudentsOfGroup(group);
 			group.setStudents(students);
 			return Optional.of(group);
@@ -52,11 +52,11 @@ public class GroupDao {
 	}
 
 	public List<Group> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, groupRowMapper);
+		return jdbcTemplate.query(FIND_ALL, groupRowMapper);
 	}
 
 	public void deleteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 
 	public Group save(Group group) {
@@ -66,7 +66,7 @@ public class GroupDao {
 		PreparedStatementCreator psc = factory.newPreparedStatementCreator(
 				Arrays.asList(group.getName(), group.getMajor(), group.getDepartment(), group.getSemester().getId()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -78,12 +78,12 @@ public class GroupDao {
 	}
 
 	public Group update(Group group) {
-		this.jdbcTemplate.update(UPDATE, group.getName(), group.getMajor(), group.getDepartment(),
+		jdbcTemplate.update(UPDATE, group.getName(), group.getMajor(), group.getDepartment(),
 				group.getSemester().getId(), group.getId());
 		return group;
 	}
 
 	public List<Student> findStudentsOfGroup(Group group) {
-		return this.jdbcTemplate.query(FIND_STUDENTS_OF_GROUP, new Object[] { group.getId() }, studentRowMapper);
+		return jdbcTemplate.query(FIND_STUDENTS_OF_GROUP, new Object[] { group.getId() }, studentRowMapper);
 	}
 }

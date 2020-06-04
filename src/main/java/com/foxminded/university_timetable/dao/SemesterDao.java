@@ -35,7 +35,7 @@ public class SemesterDao {
 
 	public Optional<Semester> findById(Long id) {
 		try {
-			Semester semester = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, semesterRowMapper);
+			Semester semester = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, semesterRowMapper);
 			return Optional.of(semester);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -43,7 +43,7 @@ public class SemesterDao {
 	}
 
 	public List<Semester> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, semesterRowMapper);
+		return jdbcTemplate.query(FIND_ALL, semesterRowMapper);
 	}
 
 	public Semester save(Semester semester) {
@@ -53,7 +53,7 @@ public class SemesterDao {
 		PreparedStatementCreator psc = factory
 				.newPreparedStatementCreator(Arrays.asList(semester.getYearOfStudy(), semester.getPeriod()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -65,11 +65,11 @@ public class SemesterDao {
 	}
 
 	public Semester update(Semester semester) {
-		this.jdbcTemplate.update(UPDATE, semester.getYearOfStudy(), semester.getPeriod(), semester.getId());
+		jdbcTemplate.update(UPDATE, semester.getYearOfStudy(), semester.getPeriod(), semester.getId());
 		return semester;
 	}
 
 	public void deleteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 }

@@ -60,11 +60,11 @@ public class CourseDao {
 	}
 
 	public List<Course> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, courseRowMapper);
+		return jdbcTemplate.query(FIND_ALL, courseRowMapper);
 	}
 
 	public void delteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 
 	public Course save(Course course) {
@@ -72,7 +72,7 @@ public class CourseDao {
 		factory.setReturnGeneratedKeys(true);
 		PreparedStatementCreator psc = factory.newPreparedStatementCreator(Arrays.asList(course.getName()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -84,15 +84,15 @@ public class CourseDao {
 	}
 
 	public Course update(Course course) {
-		this.jdbcTemplate.update(UPDATE, course.getName(), course.getId());
+		jdbcTemplate.update(UPDATE, course.getName(), course.getId());
 		return course;
 	}
 
 	public List<Course> findPrerequisitesOfCourse(Course course) {
-		return this.jdbcTemplate.query(FIND_PREREQUISITES_OF_COURSE, new Object[] { course.getId() }, courseRowMapper);
+		return jdbcTemplate.query(FIND_PREREQUISITES_OF_COURSE, new Object[] { course.getId() }, courseRowMapper);
 	}
 
 	public List<Student> findStudentsOfCourse(Course course) {
-		return this.jdbcTemplate.query(FIND_STUDENTS_OF_COURSE, new Object[] { course.getId() }, studentRowMapper);
+		return jdbcTemplate.query(FIND_STUDENTS_OF_COURSE, new Object[] { course.getId() }, studentRowMapper);
 	}
 }

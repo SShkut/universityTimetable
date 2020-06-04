@@ -39,7 +39,7 @@ public class TimeSlotDao {
 
 	public Optional<TimeSlot> findById(Long id) {
 		try {
-			TimeSlot timeSlot = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, timeSlotRowMapper);
+			TimeSlot timeSlot = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, timeSlotRowMapper);
 			return Optional.of(timeSlot);
 		} catch (EmptyResultDataAccessException e) {
 			return Optional.empty();
@@ -47,7 +47,7 @@ public class TimeSlotDao {
 	}
 
 	public List<TimeSlot> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, timeSlotRowMapper);
+		return jdbcTemplate.query(FIND_ALL, timeSlotRowMapper);
 	}
 
 	public TimeSlot save(TimeSlot timeSlot) {
@@ -58,7 +58,7 @@ public class TimeSlotDao {
 				Arrays.asList(timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse().getId(),
 						timeSlot.getTeacher().getId(), timeSlot.getGroup().getId(), timeSlot.getRoom().getId()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -70,22 +70,22 @@ public class TimeSlotDao {
 	}
 
 	public TimeSlot update(TimeSlot timeSlot) {
-		this.jdbcTemplate.update(UPDATE, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse().getId(),
+		jdbcTemplate.update(UPDATE, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse().getId(),
 				timeSlot.getTeacher().getId(), timeSlot.getGroup().getId(), timeSlot.getRoom().getId(),
 				timeSlot.getId());
 		return timeSlot;
 	}
 
 	public void deleteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 
 	public List<TimeSlot> findAllTimeSlotsOfDailyTimetable(DailyTimetable dailyTimetable) {
-		return this.jdbcTemplate.query(FIND_ALL_TIME_SLOTS_OF_DAILY_TIMETABLE, new Object[] { dailyTimetable.getId() },
+		return jdbcTemplate.query(FIND_ALL_TIME_SLOTS_OF_DAILY_TIMETABLE, new Object[] { dailyTimetable.getId() },
 				timeSlotRowMapper);
 	}
 
 	public void addTimeSlotToDailyTimetable(TimeSlot timeSlot, DailyTimetable dailyTimetable) {
-		this.jdbcTemplate.update(ADD_TIME_SLOT_TO_DAILY_TIMETABLE, dailyTimetable.getId(), timeSlot.getId());
+		jdbcTemplate.update(ADD_TIME_SLOT_TO_DAILY_TIMETABLE, dailyTimetable.getId(), timeSlot.getId());
 	}
 }

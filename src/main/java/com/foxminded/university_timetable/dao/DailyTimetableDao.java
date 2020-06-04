@@ -73,7 +73,7 @@ public class DailyTimetableDao {
 	}
 
 	public List<DailyTimetable> findAll() {
-		return this.jdbcTemplate.query(FIND_ALL, dailyTimetableRowMapper);
+		return jdbcTemplate.query(FIND_ALL, dailyTimetableRowMapper);
 	}
 
 	public DailyTimetable save(DailyTimetable dailyTimetable) {
@@ -81,7 +81,7 @@ public class DailyTimetableDao {
 		factory.setReturnGeneratedKeys(true);
 		PreparedStatementCreator psc = factory.newPreparedStatementCreator(Arrays.asList(dailyTimetable.getDate()));
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		this.jdbcTemplate.update(psc, keyHolder);
+		jdbcTemplate.update(psc, keyHolder);
 		Long newId;
 		if (keyHolder.getKeys().size() > 1) {
 			newId = Long.parseLong(String.valueOf(keyHolder.getKeys().get("id")));
@@ -93,21 +93,21 @@ public class DailyTimetableDao {
 	}
 
 	public DailyTimetable update(DailyTimetable dailyTimetable) {
-		this.jdbcTemplate.update(UPDATE, dailyTimetable.getDate(), dailyTimetable.getId());
+		jdbcTemplate.update(UPDATE, dailyTimetable.getDate(), dailyTimetable.getId());
 		return dailyTimetable;
 	}
 
 	public void deleteById(Long id) {
-		this.jdbcTemplate.update(DELETE_BY_ID, id);
+		jdbcTemplate.update(DELETE_BY_ID, id);
 	}
 
 	public void addDailyTimetableToTimetable(DailyTimetable dailyTimetable, Timetable timetable) {
-		this.jdbcTemplate.update(ADD_DAILY_TIMETABLE_TO_TIMETABLE, timetable.getId(), dailyTimetable.getId());
+		jdbcTemplate.update(ADD_DAILY_TIMETABLE_TO_TIMETABLE, timetable.getId(), dailyTimetable.getId());
 	}
 
 	public Optional<DailyTimetable> findByDate(LocalDate date) {
 		try {
-			DailyTimetable dailyTimetable = this.jdbcTemplate.queryForObject(FIND_BY_DATE, new Object[] { date },
+			DailyTimetable dailyTimetable = jdbcTemplate.queryForObject(FIND_BY_DATE, new Object[] { date },
 					dailyTimetableRowMapper);
 			return Optional.of(dailyTimetable);
 		} catch (EmptyResultDataAccessException e) {
@@ -117,7 +117,7 @@ public class DailyTimetableDao {
 
 	public Optional<DailyTimetable> findDailyTimetableForStudent(Student student, LocalDate date) {
 		try {
-			DailyTimetable dailyTimetable = this.jdbcTemplate.queryForObject(FIND_DAILY_TIMETABLE_FOR_STUDENT,
+			DailyTimetable dailyTimetable = jdbcTemplate.queryForObject(FIND_DAILY_TIMETABLE_FOR_STUDENT,
 					new Object[] { date, student.getId() }, dailyTimetableRowMapper);
 			return Optional.of(dailyTimetable);
 		} catch (EmptyResultDataAccessException e) {
@@ -127,7 +127,7 @@ public class DailyTimetableDao {
 
 	public Optional<DailyTimetable> findDailyTimetableForTeacher(Teacher teacher, LocalDate date) {
 		try {
-			DailyTimetable dailyTimetable = this.jdbcTemplate.queryForObject(FIND_DAILY_TIMETABLE_FOR_TEACHER,
+			DailyTimetable dailyTimetable = jdbcTemplate.queryForObject(FIND_DAILY_TIMETABLE_FOR_TEACHER,
 					new Object[] { date, teacher.getId() }, dailyTimetableRowMapper);
 			return Optional.of(dailyTimetable);
 		} catch (EmptyResultDataAccessException e) {
@@ -136,14 +136,14 @@ public class DailyTimetableDao {
 	}
 
 	public List<DailyTimetable> findMonthlyTimetableForStudent(Student student, Month month, int year) {
-		return this.jdbcTemplate.query(FIND_MONTHLY_TIMETABLE_FOR_STUDENT,
+		return jdbcTemplate.query(FIND_MONTHLY_TIMETABLE_FOR_STUDENT,
 				new Object[] { YearMonth.of(year, month).atDay(1),
 						YearMonth.of(year, month).atDay(YearMonth.of(year, month).lengthOfMonth()), student.getId() },
 				dailyTimetableRowMapper);
 	}
 
 	public List<DailyTimetable> findMonthlyTimetableForTeacher(Teacher teacher, Month month, int year) {
-		return this.jdbcTemplate.query(FIND_MONTHLY_TIMETABLE_FOR_TEACHER,
+		return jdbcTemplate.query(FIND_MONTHLY_TIMETABLE_FOR_TEACHER,
 				new Object[] { YearMonth.of(year, month).atDay(1),
 						YearMonth.of(year, month).atDay(YearMonth.of(year, month).lengthOfMonth()), teacher.getId() },
 				dailyTimetableRowMapper);
