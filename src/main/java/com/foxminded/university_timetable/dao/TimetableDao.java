@@ -70,9 +70,8 @@ public class TimetableDao {
 		return timetable;
 	}
 
-	public Timetable update(Timetable timetable) {
+	public void update(Timetable timetable) {
 		jdbcTemplate.update(UPDATE, timetable.getName(), timetable.getId());
-		return timetable;
 	}
 
 	public void delete(Timetable timetable) {

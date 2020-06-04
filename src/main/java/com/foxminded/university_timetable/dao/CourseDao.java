@@ -78,9 +78,8 @@ public class CourseDao {
 		return course;
 	}
 
-	public Course update(Course course) {
+	public void update(Course course) {
 		jdbcTemplate.update(UPDATE, course.getName(), course.getId());
-		return course;
 	}
 
 	public List<Course> findCoursePrerequisites(Course course) {

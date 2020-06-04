@@ -64,9 +64,8 @@ public class SemesterDao {
 		return semester;
 	}
 
-	public Semester update(Semester semester) {
+	public void update(Semester semester) {
 		jdbcTemplate.update(UPDATE, semester.getYearOfStudy(), semester.getPeriod(), semester.getId());
-		return semester;
 	}
 
 	public void delete(Semester semester) {

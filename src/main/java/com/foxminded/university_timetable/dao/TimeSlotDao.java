@@ -69,11 +69,10 @@ public class TimeSlotDao {
 		return timeSlot;
 	}
 
-	public TimeSlot update(TimeSlot timeSlot) {
+	public void update(TimeSlot timeSlot) {
 		jdbcTemplate.update(UPDATE, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getCourse().getId(),
 				timeSlot.getTeacher().getId(), timeSlot.getGroup().getId(), timeSlot.getRoom().getId(),
 				timeSlot.getId());
-		return timeSlot;
 	}
 
 	public void delete(TimeSlot timeSlot) {

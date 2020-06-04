@@ -76,10 +76,9 @@ public class TeacherDao {
 		return teacher;
 	}
 
-	public Teacher update(Teacher teacher) {
+	public void update(Teacher teacher) {
 		jdbcTemplate.update(UPDATE, teacher.getFirstName(), teacher.getLastName(), teacher.getTaxNumber(),
 				teacher.getPhoneNumber(), teacher.getEmail(), teacher.getDegree(), teacher.getId());
-		return teacher;
 	}
 
 	public void delete(Teacher teacher) {

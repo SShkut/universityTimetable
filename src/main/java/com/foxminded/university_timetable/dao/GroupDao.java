@@ -77,10 +77,9 @@ public class GroupDao {
 		return group;
 	}
 
-	public Group update(Group group) {
+	public void update(Group group) {
 		jdbcTemplate.update(UPDATE, group.getName(), group.getMajor(), group.getDepartment(),
 				group.getSemester().getId(), group.getId());
-		return group;
 	}
 
 	public List<Student> findGroupStudents(Group group) {

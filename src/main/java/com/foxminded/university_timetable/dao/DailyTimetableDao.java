@@ -92,9 +92,8 @@ public class DailyTimetableDao {
 		return dailyTimetable;
 	}
 
-	public DailyTimetable update(DailyTimetable dailyTimetable) {
+	public void update(DailyTimetable dailyTimetable) {
 		jdbcTemplate.update(UPDATE, dailyTimetable.getDate(), dailyTimetable.getId());
-		return dailyTimetable;
 	}
 
 	public void delete(DailyTimetable dailyTimetable) {

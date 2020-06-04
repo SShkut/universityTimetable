@@ -63,9 +63,8 @@ public class RoomDao {
 		return room;
 	}
 
-	public Room update(Room room) {
+	public void update(Room room) {
 		jdbcTemplate.update(UPDATE, room.getSybmol(), room.getCapacity(), room.getId());
-		return room;
 	}
 
 	public void delete(Room room) {

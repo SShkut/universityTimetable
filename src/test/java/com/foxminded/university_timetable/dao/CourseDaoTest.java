@@ -104,9 +104,9 @@ class CourseDaoTest {
 		List<Course> prerequisites = courseDao.findCoursePrerequisites(course);
 		course.setPrerequisites(prerequisites);
 		
-		Course updatedCourse = courseDao.update(course);
+		courseDao.update(course);
 		
-		Optional<Course> expected = Optional.of(updatedCourse);		
+		Optional<Course> expected = Optional.of(course);		
 		Optional<Course> actual = courseDao.findById(course.getId());
 		assertEquals(expected, actual);
 	}

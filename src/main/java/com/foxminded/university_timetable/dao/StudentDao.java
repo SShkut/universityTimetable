@@ -80,10 +80,9 @@ public class StudentDao {
 		return student;
 	}
 
-	public Student update(Student student) {
+	public void update(Student student) {
 		jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(), student.getTaxNumber(),
 				student.getPhoneNumber(), student.getEmail(), student.getStudentCardNumber(), student.getId());
-		return student;
 	}
 
 	public void delete(Student student) {
