@@ -4,19 +4,29 @@ import java.util.List;
 import java.util.Objects;
 
 public class Course {
-	
+
 	private Long id;
 	private String name;
 	private List<Course> prerequisites;
-	
+
 	public Course() {
+	}
+
+	public Course(Long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public Course(String name, List<Course> prerequisits) {
+		this.name = name;
+		this.prerequisites = prerequisits;
 	}
 
 	public Course(Long id, String name, List<Course> prerequisits) {
 		this.id = id;
 		this.name = name;
 		this.prerequisites = prerequisits;
-	}	
+	}
 
 	public Long getId() {
 		return id;
@@ -29,14 +39,14 @@ public class Course {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	public List<Course> getPrerequisites() {
 		return prerequisites;
-	}	
+	}
 
 	public void setPrerequisites(List<Course> prerequisites) {
 		this.prerequisites = prerequisites;
@@ -64,5 +74,5 @@ public class Course {
 	public String toString() {
 		return "Course id=" + id + ", name=" + name;
 	}
-	
+
 }

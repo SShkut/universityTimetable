@@ -11,7 +11,7 @@ public class Group {
 	private String department;
 	private Semester semester;
 	private List<Student> students;
-	
+
 	public Group() {
 	}
 
@@ -21,8 +21,16 @@ public class Group {
 		this.department = department;
 		this.semester = semester;
 		this.students = students;
-	}	
-	
+	}
+
+	public Group(Long id, String name, String major, String department, Semester semester) {
+		this.id = id;
+		this.name = name;
+		this.major = major;
+		this.department = department;
+		this.semester = semester;
+	}
+
 	public Group(Long id, String name, String major, String department, Semester semester, List<Student> students) {
 		this.id = id;
 		this.name = name;
@@ -30,7 +38,7 @@ public class Group {
 		this.department = department;
 		this.semester = semester;
 		this.students = students;
-	}	
+	}
 
 	public Long getId() {
 		return id;
@@ -43,39 +51,39 @@ public class Group {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getMajor() {
 		return major;
 	}
-	
+
 	public void setMajor(String major) {
 		this.major = major;
 	}
-	
+
 	public String getDepartment() {
 		return department;
 	}
-	
+
 	public void setDepartment(String department) {
 		this.department = department;
 	}
-	
+
 	public Semester getSemester() {
 		return semester;
 	}
-	
+
 	public void setSemester(Semester semester) {
 		this.semester = semester;
 	}
-	
+
 	public List<Student> getStudents() {
 		return students;
 	}
-	
+
 	public void setStudents(List<Student> students) {
 		this.students = students;
 	}
@@ -103,5 +111,5 @@ public class Group {
 	public String toString() {
 		return "Group id=" + id + ", name=" + name + ", major=" + major + ", department=" + department + ", semester="
 				+ semester;
-	}	
+	}
 }

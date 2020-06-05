@@ -7,15 +7,14 @@ public class Semester {
 	private Long id;
 	private Integer yearOfStudy;
 	private String period;
-	
+
 	public Semester() {
-		
 	}
-	
+
 	public Semester(int yearOfStudy, String period) {
 		this.yearOfStudy = yearOfStudy;
 		this.period = period;
-	}	
+	}
 
 	public Semester(Long id, Integer yearOfStudy, String period) {
 		this.id = id;

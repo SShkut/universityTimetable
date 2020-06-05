@@ -4,20 +4,25 @@ import java.util.List;
 import java.util.Objects;
 
 public class Student extends Person {
-	
+
 	private String studentCardNumber;
-	
+
 	public Student() {
-		
 	}
 
-	public Student(String firstName, String lastName, String taxNumber, String phoneNumber, String email, 
+	public Student(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
 			List<Course> courses, String studentCardNumber) {
 		super(firstName, lastName, taxNumber, phoneNumber, email, courses);
 		this.studentCardNumber = studentCardNumber;
 	}
-	
-	public Student(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email, 
+
+	public Student(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email,
+			String studentCardNumber) {
+		super(id, firstName, lastName, taxNumber, phoneNumber, email);
+		this.studentCardNumber = studentCardNumber;
+	}
+
+	public Student(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email,
 			List<Course> courses, String studentCardNumber) {
 		super(id, firstName, lastName, taxNumber, phoneNumber, email, courses);
 		this.studentCardNumber = studentCardNumber;
@@ -54,5 +59,5 @@ public class Student extends Person {
 			return false;
 		Student other = (Student) obj;
 		return Objects.equals(studentCardNumber, other.studentCardNumber);
-	}	
+	}
 }

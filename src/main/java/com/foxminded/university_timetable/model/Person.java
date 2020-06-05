@@ -1,11 +1,10 @@
 package com.foxminded.university_timetable.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class Person {
-	
+
 	private Long id;
 	private String firstName;
 	private String lastName;
@@ -13,18 +12,28 @@ public abstract class Person {
 	private String phoneNumber;
 	private String email;
 	private List<Course> courses;
-	
+
 	public Person() {
 	}
 
-	public Person(String firstName, String lastName, String taxNumber, String phoneNumber, String email, List<Course> courses) {
+	public Person(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
+			List<Course> courses) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.taxNumber = taxNumber;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.courses = courses;
-	}	
+	}
+
+	public Person(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.taxNumber = taxNumber;
+		this.phoneNumber = phoneNumber;
+		this.email = email;
+	}
 
 	public Person(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email,
 			List<Course> courses) {
@@ -35,7 +44,7 @@ public abstract class Person {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.courses = courses;
-	}	
+	}
 
 	public Long getId() {
 		return id;
@@ -92,7 +101,7 @@ public abstract class Person {
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
 	}
-	
+
 	public void addCourse(Course course) {
 		this.courses.add(course);
 	}

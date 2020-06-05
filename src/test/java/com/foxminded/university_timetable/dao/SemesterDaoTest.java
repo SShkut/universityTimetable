@@ -60,7 +60,7 @@ class SemesterDaoTest {
 		List<Semester> expected = new ArrayList<>();
 		expected.add(new Semester(2L, 2020, "winter"));
 
-		semesterDao.delete(new Semester(1L, null, null));
+		semesterDao.delete(new Semester(1L, 2020, "summer"));
 
 		List<Semester> actual = semesterDao.findAll();
 		assertEquals(expected, actual);
@@ -68,7 +68,7 @@ class SemesterDaoTest {
 
 	@Test
 	void givenNewSemester_whenSave_thenInsertSemester() {
-		Semester semester = new Semester(null, 2021, "winter");
+		Semester semester = new Semester(2021, "winter");
 
 		Semester inserted = semesterDao.save(semester);
 

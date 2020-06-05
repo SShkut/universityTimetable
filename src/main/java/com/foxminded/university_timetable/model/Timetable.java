@@ -17,6 +17,11 @@ public class Timetable {
 		this.dailyTimetables = timetables;
 	}
 
+	public Timetable(Long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
 	public Timetable(Long id, String name, List<DailyTimetable> timetables) {
 		this.id = id;
 		this.name = name;

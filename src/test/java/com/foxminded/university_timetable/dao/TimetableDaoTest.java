@@ -38,18 +38,18 @@ class TimetableDaoTest {
 
 	@Test
 	void givenExistentTimetableId_whenFindById_thenReturnOptionalOfTimetable() {
-		Timetable timetable = new Timetable(2L, "archived", null);
-		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13), null);
+		Timetable timetable = new Timetable(2L, "archived");
+		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13));
 		List<Course> courses = new ArrayList<>();
-		courses.add(new Course(1L, "CS", null));
-		courses.add(new Course(3L, "Physics", null));
+		courses.add(new Course(1L, "CS"));
+		courses.add(new Course(3L, "Physics"));
 		List<Course> prerequisites = new ArrayList<>();
-		prerequisites.add(new Course(2L, "Math", null));
-		prerequisites.add(new Course(4L, "History", null));
-		prerequisites.add(new Course(5L, "Chemistry", null));
+		prerequisites.add(new Course(2L, "Math"));
+		prerequisites.add(new Course(4L, "History"));
+		prerequisites.add(new Course(5L, "Chemistry"));
 		List<Student> students = new ArrayList<>();
-		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
-		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", "cn-124"));
 		List<TimeSlot> timeSlots = new ArrayList<>();
 		timeSlots.add(new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50), new Course(1L, "CS", prerequisites),
 				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
@@ -77,8 +77,8 @@ class TimetableDaoTest {
 	@Test
 	void whenFindAll_thenReturnListOfTimetables() {
 		List<Timetable> expected = new ArrayList<>();
-		expected.add(new Timetable(1L, "actual", null));
-		expected.add(new Timetable(2L, "archived", null));
+		expected.add(new Timetable(1L, "actual"));
+		expected.add(new Timetable(2L, "archived"));
 
 		List<Timetable> actual = timetableDao.findAll();
 
@@ -88,7 +88,7 @@ class TimetableDaoTest {
 	@Test
 	void givenTimetable_whenSave_thenInsertTimetable() {
 
-		Timetable timetable = timetableDao.save(new Timetable(null, "new", new ArrayList<>()));
+		Timetable timetable = timetableDao.save(new Timetable("new", new ArrayList<>()));
 
 		Optional<Timetable> expected = Optional.of(timetable);
 		Optional<Timetable> actual = timetableDao.findById(timetable.getId());
@@ -97,18 +97,18 @@ class TimetableDaoTest {
 
 	@Test
 	void givenTimetable_whenUpdate_thenUpdateTimetable() {
-		Timetable timetable = new Timetable(2L, "new", null);
-		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13), null);
+		Timetable timetable = new Timetable(2L, "new");
+		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13));
 		List<Course> courses = new ArrayList<>();
-		courses.add(new Course(1L, "CS", null));
-		courses.add(new Course(3L, "Physics", null));
+		courses.add(new Course(1L, "CS"));
+		courses.add(new Course(3L, "Physics"));
 		List<Course> prerequisites = new ArrayList<>();
-		prerequisites.add(new Course(2L, "Math", null));
-		prerequisites.add(new Course(4L, "History", null));
-		prerequisites.add(new Course(5L, "Chemistry", null));
+		prerequisites.add(new Course(2L, "Math"));
+		prerequisites.add(new Course(4L, "History"));
+		prerequisites.add(new Course(5L, "Chemistry"));
 		List<Student> students = new ArrayList<>();
-		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
-		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", "cn-124"));
 		List<TimeSlot> timeSlots = new ArrayList<>();
 		timeSlots.add(new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50), new Course(1L, "CS", prerequisites),
 				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
@@ -128,9 +128,9 @@ class TimetableDaoTest {
 	@Test
 	void givenTimetable_whenDelete_thenDeleteTimetable() {
 		List<Timetable> expected = new ArrayList<>();
-		expected.add(new Timetable(2L, "archived", null));
+		expected.add(new Timetable(2L, "archived"));
 
-		timetableDao.delete(new Timetable(1L, null, null));
+		timetableDao.delete(new Timetable(1L, ""));
 
 		List<Timetable> actual = timetableDao.findAll();
 		assertEquals(expected, actual);

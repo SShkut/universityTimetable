@@ -60,7 +60,7 @@ class RoomDaoTest {
 		List<Room> expected = new ArrayList<>();
 		expected.add(new Room(2L, "b-1", 70));
 
-		roomDao.delete(new Room(1L, null, null));
+		roomDao.delete(new Room(1L, "", 0));
 
 		List<Room> actual = roomDao.findAll();
 		assertEquals(expected, actual);
@@ -68,7 +68,7 @@ class RoomDaoTest {
 
 	@Test
 	void givenNewRoom_whenSave_thenInsertRoom() {
-		Room room = new Room(null, "c-1", 60);
+		Room room = new Room("c-1", 60);
 
 		Room inserted = roomDao.save(room);
 

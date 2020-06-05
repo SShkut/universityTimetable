@@ -27,11 +27,11 @@ class CourseDaoTest {
 
 	@Test
 	void givenCourse_whenFindCoursePrerequisites_thenReturnCoursePrerequisites() {
-		Course course = new Course(1L, "CS", null);
+		Course course = new Course(1L, "CS");
 		List<Course> expected = new ArrayList<>();
-		expected.add(new Course(2L, "Math", null));
-		expected.add(new Course(4L, "History", null));
-		expected.add(new Course(5L, "Chemistry", null));
+		expected.add(new Course(2L, "Math"));
+		expected.add(new Course(4L, "History"));
+		expected.add(new Course(5L, "Chemistry"));
 
 		List<Course> actual = courseDao.findCoursePrerequisites(course);
 
@@ -40,7 +40,7 @@ class CourseDaoTest {
 
 	@Test
 	void givenExistentCourseId_whenFindById_thenReturnOptionalOfCourse() {
-		Course course = new Course(2L, "Math", null);
+		Course course = new Course(2L, "Math");
 		List<Course> prerequisites = courseDao.findCoursePrerequisites(course);
 		course.setPrerequisites(prerequisites);
 		Optional<Course> expected = Optional.of(course);
@@ -62,11 +62,11 @@ class CourseDaoTest {
 	@Test
 	void whenFindAll_thenReturnListOfAllCourses() {
 		List<Course> expected = new ArrayList<>();
-		expected.add(new Course(1L, "CS", null));
-		expected.add(new Course(2L, "Math", null));
-		expected.add(new Course(3L, "Physics", null));
-		expected.add(new Course(4L, "History", null));
-		expected.add(new Course(5L, "Chemistry", null));
+		expected.add(new Course(1L, "CS"));
+		expected.add(new Course(2L, "Math"));
+		expected.add(new Course(3L, "Physics"));
+		expected.add(new Course(4L, "History"));
+		expected.add(new Course(5L, "Chemistry"));
 
 		List<Course> actual = courseDao.findAll();
 
@@ -76,12 +76,12 @@ class CourseDaoTest {
 	@Test
 	void givenCourseId_whenDelete_thenDeleteCourse() {
 		List<Course> expected = new ArrayList<>();
-		expected.add(new Course(2L, "Math", null));
-		expected.add(new Course(3L, "Physics", null));
-		expected.add(new Course(4L, "History", null));
-		expected.add(new Course(5L, "Chemistry", null));
+		expected.add(new Course(2L, "Math"));
+		expected.add(new Course(3L, "Physics"));
+		expected.add(new Course(4L, "History"));
+		expected.add(new Course(5L, "Chemistry"));
 
-		courseDao.delete(new Course(1L, "CS", null));
+		courseDao.delete(new Course(1L, "CS"));
 
 		List<Course> actual = courseDao.findAll();
 		assertEquals(expected, actual);
@@ -89,7 +89,7 @@ class CourseDaoTest {
 
 	@Test
 	void givenNewCourse_whenSave_thenInsertCourse() {
-		Course course = new Course(null, "Calculus", new ArrayList<>());
+		Course course = new Course("Calculus", new ArrayList<>());
 
 		Course inserted = courseDao.save(course);
 
@@ -100,7 +100,7 @@ class CourseDaoTest {
 
 	@Test
 	void givenExistentCourse_whenUpdate_thenUpdateCourse() {
-		Course course = new Course(1L, "CS-2", null);
+		Course course = new Course(1L, "CS-2");
 		List<Course> prerequisites = courseDao.findCoursePrerequisites(course);
 		course.setPrerequisites(prerequisites);
 

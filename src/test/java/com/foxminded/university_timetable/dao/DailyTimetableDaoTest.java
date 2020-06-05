@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -40,17 +40,17 @@ class DailyTimetableDaoTest {
 
 	@Test
 	void givenExistentDailyTimetableId_whenFindById_thenReturnOptionalOfDailyTimetable() {
-		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13), null);
+		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13));
 		List<Course> courses = new ArrayList<>();
-		courses.add(new Course(1L, "CS", null));
-		courses.add(new Course(3L, "Physics", null));
+		courses.add(new Course(1L, "CS"));
+		courses.add(new Course(3L, "Physics"));
 		List<Course> prerequisites = new ArrayList<>();
-		prerequisites.add(new Course(2L, "Math", null));
-		prerequisites.add(new Course(4L, "History", null));
-		prerequisites.add(new Course(5L, "Chemistry", null));
+		prerequisites.add(new Course(2L, "Math"));
+		prerequisites.add(new Course(4L, "History"));
+		prerequisites.add(new Course(5L, "Chemistry"));
 		List<Student> students = new ArrayList<>();
-		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
-		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", "cn-124"));
 		List<TimeSlot> timeSlots = new ArrayList<>();
 		timeSlots.add(new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50), new Course(1L, "CS", prerequisites),
 				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
@@ -90,7 +90,7 @@ class DailyTimetableDaoTest {
 
 	@Test
 	void givenDailyTimetable_whenSave_thenInsertDailyTimetable() {
-		DailyTimetable dailyTimetable = new DailyTimetable(null, LocalDate.of(2020, 3, 1), new ArrayList<>());
+		DailyTimetable dailyTimetable = new DailyTimetable(LocalDate.of(2020, 3, 1), new ArrayList<>());
 
 		DailyTimetable inserted = dailyTimetableDao.save(dailyTimetable);
 
@@ -114,7 +114,7 @@ class DailyTimetableDaoTest {
 
 	@Test
 	void givenDailyTimetable_whenDelete_thenDeleteGivenTimetable() {
-		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.now(), null);
+		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.now());
 		List<DailyTimetable> dailyTimetables = dailyTimetableDao.findAll();
 		List<DailyTimetable> expected = dailyTimetables.stream().filter(d -> !d.getId().equals(dailyTimetable.getId()))
 				.collect(Collectors.toList());
@@ -127,18 +127,18 @@ class DailyTimetableDaoTest {
 
 	@Test
 	void givenTimetable_whenFindTimetableDailyTimetables_thenReturnListOfDailyTimetables() {
-		Timetable timetable = new Timetable(2L, "archived", null);
-		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13), null);
+		Timetable timetable = new Timetable(2L, "archived");
+		DailyTimetable dailyTimetable = new DailyTimetable(2L, LocalDate.of(2020, 2, 13));
 		List<Course> courses = new ArrayList<>();
-		courses.add(new Course(1L, "CS", null));
-		courses.add(new Course(3L, "Physics", null));
+		courses.add(new Course(1L, "CS"));
+		courses.add(new Course(3L, "Physics"));
 		List<Course> prerequisites = new ArrayList<>();
-		prerequisites.add(new Course(2L, "Math", null));
-		prerequisites.add(new Course(4L, "History", null));
-		prerequisites.add(new Course(5L, "Chemistry", null));
+		prerequisites.add(new Course(2L, "Math"));
+		prerequisites.add(new Course(4L, "History"));
+		prerequisites.add(new Course(5L, "Chemistry"));
 		List<Student> students = new ArrayList<>();
-		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
-		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", "cn-124"));
 		List<TimeSlot> timeSlots = new ArrayList<>();
 		timeSlots.add(new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50), new Course(1L, "CS", prerequisites),
 				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
@@ -156,23 +156,23 @@ class DailyTimetableDaoTest {
 	@Test
 	void givenDailyTimetableAndTimetable_whenAddDailyTimetableToTimetable_thenAddDailyTimetableToTimetable() {
 		Optional<DailyTimetable> dailyTimetable = dailyTimetableDao.findById(3L);
-		Timetable timetable = new Timetable(2L, null, null);
+		Timetable timetable = new Timetable(2L, "");
 
 		dailyTimetableDao.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
 				timetable);
 
-		DailyTimetable dailyTimetableExpected1 = new DailyTimetable(2L, LocalDate.of(2020, 2, 13), null);
+		DailyTimetable dailyTimetableExpected1 = new DailyTimetable(2L, LocalDate.of(2020, 2, 13));
 		DailyTimetable dailyTimetableExpected2 = new DailyTimetable(3L, LocalDate.of(2020, 2, 14), new ArrayList<>());
 		List<Course> courses = new ArrayList<>();
-		courses.add(new Course(1L, "CS", null));
-		courses.add(new Course(3L, "Physics", null));
+		courses.add(new Course(1L, "CS"));
+		courses.add(new Course(3L, "Physics"));
 		List<Course> prerequisites = new ArrayList<>();
-		prerequisites.add(new Course(2L, "Math", null));
-		prerequisites.add(new Course(4L, "History", null));
-		prerequisites.add(new Course(5L, "Chemistry", null));
+		prerequisites.add(new Course(2L, "Math"));
+		prerequisites.add(new Course(4L, "History"));
+		prerequisites.add(new Course(5L, "Chemistry"));
 		List<Student> students = new ArrayList<>();
-		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
-		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", null, "cn-124"));
+		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123"));
+		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", "cn-124"));
 		List<TimeSlot> timeSlots = new ArrayList<>();
 		timeSlots.add(new TimeSlot(3L, LocalTime.of(10, 0), LocalTime.of(11, 50), new Course(1L, "CS", prerequisites),
 				new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
@@ -197,90 +197,88 @@ class DailyTimetableDaoTest {
 	}
 
 	@Test
-	void givenStudentWithTimetableAndDate_whenFindDailyTimetableForStudent_thenReturnListOfTimetable() {
-		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123");
+	void givenStudentWithTimetableAndSameDates_whenFindTimetableForStudent_thenReturnListOfTimetablesForGivenDay() {
+		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123");
 		LocalDate date = LocalDate.of(2020, 2, 12);
-		Optional<DailyTimetable> expected = dailyTimetableDao.findById(1L);
+		List<DailyTimetable> expected = Arrays.asList(dailyTimetableDao.findById(1L).orElseThrow(NoSuchElementException::new));
 
-		Optional<DailyTimetable> actual = dailyTimetableDao.findDailyTimetableForStudent(student, date);
+		List<DailyTimetable> actual = dailyTimetableDao.findTimetableForStudent(student, date, date);
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	void givenStudentWithoutTimetableAndDate_whenFindDailyTimetableForStudent_thenReturnEmptyList() {
-		Student student = new Student(5L, "fn-5", "ln-5", "123498765", "1234567894", "ln-5@unv.com", null, "cn-127");
+	void givenStudentWithoutTimetableAndDate_whenFindTimetableForStudent_thenReturnEmptyList() {
+		Student student = new Student(5L, "fn-5", "ln-5", "123498765", "1234567894", "ln-5@unv.com", "cn-127");
 		LocalDate date = LocalDate.of(2020, 2, 12);
-		Optional<DailyTimetable> expected = Optional.empty();
+		List<DailyTimetable> expected = new ArrayList<>();
 
-		Optional<DailyTimetable> actual = dailyTimetableDao.findDailyTimetableForStudent(student, date);
+		List<DailyTimetable> actual = dailyTimetableDao.findTimetableForStudent(student, date, date);
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	void givenTeacherWithTimetableAndDate_whenFindDailyTimetableForTeacher_thenReturnListOfTimetable() {
-		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", null, "phD");
+	void givenTeacherWithTimetableAndSameDates_whenFindDailyTimetableForTeacher_thenReturnListOfTimetablesForGivenDay() {
+		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", "phD");
 		LocalDate date = LocalDate.of(2020, 2, 13);
-		Optional<DailyTimetable> expected = dailyTimetableDao.findById(2L);
+		List<DailyTimetable> expected = Arrays.asList(dailyTimetableDao.findById(2L).orElseThrow(NoSuchElementException::new));
 
-		Optional<DailyTimetable> actual = dailyTimetableDao.findDailyTimetableForTeacher(teacher, date);
+		List<DailyTimetable> actual = dailyTimetableDao.findTimetableForTeacher(teacher, date, date);
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	void givenTeacherWhithoutTimetableAndDate_whenFindDailyTimetableForTeacher_thenReturnEmptyList() {
-		Teacher teacher = new Teacher(2L, "fnt-2", "lnt-2", "323456798", "5234567891", "lnt-2@unv.com", null,
-				"masters");
+	void givenTeacherWithoutTimetableAndDate_whenFindTimetableForTeacher_thenReturnEmptyList() {
+		Teacher teacher = new Teacher(2L, "fnt-2", "lnt-2", "323456798", "5234567891", "lnt-2@unv.com", "masters");
 		LocalDate date = LocalDate.of(2020, 2, 13);
-		Optional<DailyTimetable> expected = Optional.empty();
+		List<DailyTimetable> expected = new ArrayList<>();
 
-		Optional<DailyTimetable> actual = dailyTimetableDao.findDailyTimetableForTeacher(teacher, date);
+		List<DailyTimetable> actual = dailyTimetableDao.findTimetableForTeacher(teacher, date, date);
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	void givenStudentWithMonthlyTimetableMonthAndYear_whenFindMonthlyTimetableForStudent_thenReturnListOfDailyTimetables() {
+	void givenStudentWithTimetableAndDifferentDates_whenFindTimetableForStudent_thenReturnListOfDailyTimetablesForGivenPeriod() {
 		List<DailyTimetable> expected = new ArrayList<>();
 		expected.add(dailyTimetableDao.findById(1L).orElseThrow(NoSuchElementException::new));
 		expected.add(dailyTimetableDao.findById(2L).orElseThrow(NoSuchElementException::new));
-		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123");
+		Student student = new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123");
 
-		List<DailyTimetable> actual = dailyTimetableDao.findMonthlyTimetableForStudent(student, Month.FEBRUARY, 2020);
+		List<DailyTimetable> actual = dailyTimetableDao.findTimetableForStudent(student, LocalDate.of(2020, 2, 1), LocalDate.of(2020, 2, 28));
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	void givenStudentWithoutMonthlyTimetableMonthAndYear_whenFindMonthlyTimetableForStudent_thenReturnListOfDailyTimetables() {
+	void givenStudentWithoutMonthlyTimetableAndDifferentDates_whenFindTimetableForStudent_thenReturnEmptyList() {
 		List<DailyTimetable> expected = new ArrayList<>();
-		Student student = new Student(5L, "fn-5", "ln-5", "123498765", "1234567894", "ln-5@unv.com", null, "cn-127");
+		Student student = new Student(5L, "fn-5", "ln-5", "123498765", "1234567894", "ln-5@unv.com", "cn-127");
 
-		List<DailyTimetable> actual = dailyTimetableDao.findMonthlyTimetableForStudent(student, Month.FEBRUARY, 2020);
+		List<DailyTimetable> actual = dailyTimetableDao.findTimetableForStudent(student, LocalDate.of(2020, 2, 1), LocalDate.of(2020, 2, 28));
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	void givenTeacherWithMonthlyTimetableMonthAndYear_whenFindMonthlyTimetableForStudent_thenReturnListOfDailyTimetables() {
+	void givenTeacherWithTimetableAndDifferentDates_whenFindTimetableForTeacher_thenReturnListOfDailyTimetablesForGivenPeriod() {
 		List<DailyTimetable> expected = new ArrayList<>();
 		expected.add(dailyTimetableDao.findById(1L).orElseThrow(NoSuchElementException::new));
-		Teacher teacher = new Teacher(2L, "fnt-2", "lnt-2", "323456798", "5234567891", "lnt-2@unv.com", null,
-				"masters");
+		Teacher teacher = new Teacher(2L, "fnt-2", "lnt-2", "323456798", "5234567891", "lnt-2@unv.com", "masters");
 
-		List<DailyTimetable> actual = dailyTimetableDao.findMonthlyTimetableForTeacher(teacher, Month.FEBRUARY, 2020);
+		List<DailyTimetable> actual = dailyTimetableDao.findTimetableForTeacher(teacher, LocalDate.of(2020, 2, 1), LocalDate.of(2020, 2, 28));
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
-	void givenTeacherWithoutMonthlyTimetableMonthAndYear_whenFindMonthlyTimetableForStudent_thenReturnListOfDailyTimetables() {
+	void givenTeacherWithoutMonthlyTimetableAndDifferentDates_whenFindTimetableForTeacher_thenReturnEmptyList() {
 		List<DailyTimetable> expected = new ArrayList<>();
-		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", null, "phD");
+		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", "phD");
 
-		List<DailyTimetable> actual = dailyTimetableDao.findMonthlyTimetableForTeacher(teacher, Month.MARCH, 2020);
+		List<DailyTimetable> actual = dailyTimetableDao.findTimetableForTeacher(teacher, LocalDate.of(2020, 3, 1), LocalDate.of(2020, 3, 31));
 
 		assertEquals(expected, actual);
 	}

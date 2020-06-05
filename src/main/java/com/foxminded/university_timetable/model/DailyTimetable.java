@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class DailyTimetable {
-	
+
 	private Long id;
 	private LocalDate date;
-	private List<TimeSlot> timeSlots;	
+	private List<TimeSlot> timeSlots;
 
 	public DailyTimetable() {
 	}
@@ -16,8 +16,13 @@ public class DailyTimetable {
 	public DailyTimetable(LocalDate date, List<TimeSlot> timeSlots) {
 		this.date = date;
 		this.timeSlots = timeSlots;
-	}	
-	
+	}
+
+	public DailyTimetable(Long id, LocalDate date) {
+		this.id = id;
+		this.date = date;
+	}
+
 	public DailyTimetable(Long id, LocalDate date, List<TimeSlot> timeSlots) {
 		this.id = id;
 		this.date = date;
@@ -47,7 +52,7 @@ public class DailyTimetable {
 	public void setTimeSlots(List<TimeSlot> timeSlots) {
 		this.timeSlots = timeSlots;
 	}
-	
+
 	public void addTimeSlot(TimeSlot timeSlot) {
 		this.getTimeSlots().add(timeSlot);
 	}
@@ -73,5 +78,5 @@ public class DailyTimetable {
 	@Override
 	public String toString() {
 		return "DailyTimetable id=" + id + ", date=" + date;
-	}	
+	}
 }

@@ -2,7 +2,6 @@ package com.foxminded.university_timetable.util;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 public class JdbcConfig {
 
 	@Bean
-	public DataSource dataSource(@Autowired Environment environment) {
+	public DataSource dataSource(Environment environment) {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
 		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
@@ -27,7 +26,7 @@ public class JdbcConfig {
 	}
 
 	@Bean
-	public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
+	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate();
 		jdbcTemplate.setDataSource(dataSource);
 		return jdbcTemplate;

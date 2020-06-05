@@ -5,10 +5,9 @@ import java.util.Objects;
 
 public class Teacher extends Person {
 
-	private String degree;	
+	private String degree;
 
 	public Teacher() {
-		
 	}
 
 	public Teacher(String firstName, String lastName, String taxNumber, String phoneNumber, String email,
@@ -16,7 +15,13 @@ public class Teacher extends Person {
 		super(firstName, lastName, taxNumber, phoneNumber, email, courses);
 		this.degree = degree;
 	}
-	
+
+	public Teacher(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email,
+			String degree) {
+		super(id, firstName, lastName, taxNumber, phoneNumber, email);
+		this.degree = degree;
+	}
+
 	public Teacher(Long id, String firstName, String lastName, String taxNumber, String phoneNumber, String email,
 			List<Course> courses, String degree) {
 		super(id, firstName, lastName, taxNumber, phoneNumber, email, courses);

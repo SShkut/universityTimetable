@@ -3,6 +3,7 @@ package com.foxminded.university_timetable.util;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -385,10 +386,10 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Student> student = findStudent(firstName, lastName);
 			if (student.isPresent()) {
-				Optional<DailyTimetable> dailyTimetable = dailyTimetableDao
-						.findDailyTimetableForStudent(student.orElseThrow(NoSuchElementException::new), date);
-				if (dailyTimetable.isPresent()) {
-					System.out.println(dailyTimetable.get());
+				List<DailyTimetable> dailyTimetable = dailyTimetableDao
+						.findTimetableForStudent(student.orElseThrow(NoSuchElementException::new), date, date);
+				if (!dailyTimetable.isEmpty()) {
+					System.out.println(dailyTimetable);
 					correct = true;
 				} else {
 					System.out.println("Threre is no timetable for date: " + date + " and student: " + student.get());
@@ -422,10 +423,10 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Teacher> teacher = findTeacher(firstName, lastName);
 			if (teacher.isPresent()) {
-				Optional<DailyTimetable> dailyTimetable = dailyTimetableDao
-						.findDailyTimetableForTeacher(teacher.orElseThrow(NoSuchElementException::new), date);
-				if (dailyTimetable.isPresent()) {
-					System.out.println(dailyTimetable.get());
+				List<DailyTimetable> dailyTimetable = dailyTimetableDao
+						.findTimetableForTeacher(teacher.orElseThrow(NoSuchElementException::new), date, date);
+				if (!dailyTimetable.isEmpty()) {
+					System.out.println(dailyTimetable);
 					correct = true;
 				} else {
 					System.out.println("Threre is no timetable for date: " + date + " and teacher: " + teacher.get());
@@ -456,7 +457,7 @@ public class Menu {
 			Optional<Student> student = findStudent(firstName, lastName);
 			if (student.isPresent()) {
 				List<DailyTimetable> dailyTimetables = dailyTimetableDao
-						.findMonthlyTimetableForStudent(student.orElseThrow(NoSuchElementException::new), month, 2020);
+						.findTimetableForStudent(student.orElseThrow(NoSuchElementException::new), YearMonth.of(2020, month).atDay(1), YearMonth.of(2020, month).atEndOfMonth());
 				if (!dailyTimetables.isEmpty()) {
 					dailyTimetables.forEach(System.out::println);
 					correct = true;
@@ -490,7 +491,7 @@ public class Menu {
 			Optional<Teacher> teacher = findTeacher(firstName, lastName);
 			if (teacher.isPresent()) {
 				List<DailyTimetable> dailyTimetable = dailyTimetableDao
-						.findMonthlyTimetableForTeacher(teacher.orElseThrow(NoSuchElementException::new), month, 2020);
+						.findTimetableForTeacher(teacher.orElseThrow(NoSuchElementException::new), YearMonth.of(2020, month).atDay(1), YearMonth.of(2020, month).atEndOfMonth());
 				if (!dailyTimetable.isEmpty()) {
 					dailyTimetable.forEach(System.out::println);
 					correct = true;

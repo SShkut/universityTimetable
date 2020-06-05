@@ -7,22 +7,21 @@ public class Room {
 	private Long id;
 	private String sybmol;
 	private Integer capacity;
-	
+
 	public Room() {
-		
 	}
-	
+
 	public Room(String sybmol, Integer capacity) {
 		this.sybmol = sybmol;
 		this.capacity = capacity;
-	}	
+	}
 
 	public Room(Long id, String sybmol, Integer capacity) {
 		this.id = id;
 		this.sybmol = sybmol;
 		this.capacity = capacity;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -68,5 +67,5 @@ public class Room {
 	@Override
 	public String toString() {
 		return "Room id=" + id + ", sybmol=" + sybmol + ", capacity=" + capacity;
-	}	
+	}
 }

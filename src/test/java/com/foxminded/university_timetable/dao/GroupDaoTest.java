@@ -30,19 +30,19 @@ class GroupDaoTest {
 	@Test
 	void givenGroup_whenFindGroupStudents_thenReturnListOfStudents() {
 		List<Student> expected = new ArrayList<>();
-		expected.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", null, "cn-123"));
-		expected.add(new Student(3L, "fn-3", "ln-3", "123456987", "1234567892", "ln-3@unv.com", null, "cn-125"));
-		expected.add(new Student(4L, "fn-4", "ln-4", "123459876", "1234567893", "ln-4@unv.com", null, "cn-126"));
+		expected.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123"));
+		expected.add(new Student(3L, "fn-3", "ln-3", "123456987", "1234567892", "ln-3@unv.com", "cn-125"));
+		expected.add(new Student(4L, "fn-4", "ln-4", "123459876", "1234567893", "ln-4@unv.com", "cn-126"));
 
 		List<Student> actual = groupDao
-				.findGroupStudents(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
+				.findGroupStudents(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer")));
 
 		assertEquals(expected, actual);
 	}
 
 	@Test
 	void givenExistentGroupId_whenFindById_thenReturnOptionalOfGroup() {
-		Group group = new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null);
+		Group group = new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"));
 		List<Student> students = groupDao.findGroupStudents(group);
 		group.setStudents(students);
 		Optional<Group> expected = Optional.of(group);
@@ -64,9 +64,9 @@ class GroupDaoTest {
 	@Test
 	void whenFindAll_thenReturnListOfAllGroups() {
 		List<Group> expected = new ArrayList<>();
-		expected.add(new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), null));
-		expected.add(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
-		expected.add(new Group(3L, "cs-3", "cs", "cs", new Semester(2L, 2020, "winter"), null));
+		expected.add(new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer")));
+		expected.add(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer")));
+		expected.add(new Group(3L, "cs-3", "cs", "cs", new Semester(2L, 2020, "winter")));
 
 		List<Group> actual = groupDao.findAll();
 
@@ -76,10 +76,10 @@ class GroupDaoTest {
 	@Test
 	void givenGroup_whenDelete_thenDeleteGroup() {
 		List<Group> expected = new ArrayList<>();
-		expected.add(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"), null));
-		expected.add(new Group(3L, "cs-3", "cs", "cs", new Semester(2L, 2020, "winter"), null));
+		expected.add(new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer")));
+		expected.add(new Group(3L, "cs-3", "cs", "cs", new Semester(2L, 2020, "winter")));
 
-		groupDao.delete(new Group(1L, null, null, null, null, null));
+		groupDao.delete(new Group(1L, "", "", "", new Semester()));
 
 		List<Group> actual = groupDao.findAll();
 		assertEquals(expected, actual);
@@ -87,7 +87,7 @@ class GroupDaoTest {
 
 	@Test
 	void givenNewGroup_whenSave_thenInsertGroup() {
-		Group group = new Group(null, "cs-4", "css", "csg", new Semester(1L, 2020, "summer"), new ArrayList<>());
+		Group group = new Group("cs-4", "css", "csg", new Semester(1L, 2020, "summer"), new ArrayList<>());
 		List<Student> students = groupDao.findGroupStudents(group);
 		group.setStudents(students);
 
@@ -100,7 +100,7 @@ class GroupDaoTest {
 
 	@Test
 	void givenExistentGroup_whenUpdate_thenUpdateGroup() {
-		Group group = new Group(1L, "cs-4", "css", "csg", new Semester(2L, 2020, "winter"), null);
+		Group group = new Group(1L, "cs-4", "css", "csg", new Semester(2L, 2020, "winter"));
 		List<Student> students = groupDao.findGroupStudents(group);
 		group.setStudents(students);
 		Optional<Group> expected = Optional.of(group);
