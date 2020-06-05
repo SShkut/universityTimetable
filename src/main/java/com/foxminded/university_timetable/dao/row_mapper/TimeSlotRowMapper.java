@@ -42,13 +42,12 @@ public class TimeSlotRowMapper implements RowMapper<TimeSlot> {
 		timeSlot.setEndTime(rs.getTime("end_time").toLocalTime());
 
 		Optional<Course> course = courseDao.findById(rs.getLong("course_id"));
-		Optional<Teacher> teacher = teacherDao.findById(rs.getLong("teacher_id"));
-		Optional<Group> group = groupDao.findById(rs.getLong("group_id"));
-		Optional<Room> room = roomDao.findById(rs.getLong("room_id"));
-
 		timeSlot.setCourse(course.orElseThrow(NoSuchElementException::new));
+		Optional<Teacher> teacher = teacherDao.findById(rs.getLong("teacher_id"));
 		timeSlot.setTeacher(teacher.orElseThrow(NoSuchElementException::new));
+		Optional<Group> group = groupDao.findById(rs.getLong("group_id"));
 		timeSlot.setGroup(group.orElseThrow(NoSuchElementException::new));
+		Optional<Room> room = roomDao.findById(rs.getLong("room_id"));
 		timeSlot.setRoom(room.orElseThrow(NoSuchElementException::new));
 		return timeSlot;
 	}

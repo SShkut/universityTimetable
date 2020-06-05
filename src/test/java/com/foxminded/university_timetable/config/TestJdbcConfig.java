@@ -1,31 +1,21 @@
 package com.foxminded.university_timetable.config;
+
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import com.foxminded.university_timetable.util.JdbcConfig;
+
 @Configuration
-@ComponentScan("com.foxminded.university_timetable")
-public class TestJdbcConfig {
-	
+public class TestJdbcConfig extends JdbcConfig {
+
 	@Bean
-	public DataSource dataSource() {
-		return new EmbeddedDatabaseBuilder()
-		.setType(EmbeddedDatabaseType.H2)
-		.addScript("classpath:/schema.sql")
-		.addScript("classpath:/data.sql")
-		.build();
-	}
-	
-	@Bean
-	public JdbcTemplate jdbcTemplate(@Autowired DataSource dataSource) {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate();
-		jdbcTemplate.setDataSource(dataSource);
-		return jdbcTemplate;
+	public DataSource dataSource(Environment environment) {
+		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).addScript("classpath:/schema.sql")
+				.addScript("classpath:/data.sql").build();
 	}
 }
