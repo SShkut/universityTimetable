@@ -1,52 +1,65 @@
 package com.foxminded.university_timetable.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class DailyTimetable {
-	
-	private LocalDate date;
-	private List<TimeSlot> timeSlots;	
 
-	public DailyTimetable(LocalDate date) {
-		this.date = date;
-		this.timeSlots = new ArrayList<>();
+	private Long id;
+	private LocalDate date;
+	private List<TimeSlot> timeSlots;
+
+	public DailyTimetable() {
 	}
 
 	public DailyTimetable(LocalDate date, List<TimeSlot> timeSlots) {
 		this.date = date;
 		this.timeSlots = timeSlots;
 	}
-	
+
+	public DailyTimetable(Long id, LocalDate date) {
+		this.id = id;
+		this.date = date;
+	}
+
+	public DailyTimetable(Long id, LocalDate date, List<TimeSlot> timeSlots) {
+		this.id = id;
+		this.date = date;
+		this.timeSlots = timeSlots;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public LocalDate getDate() {
 		return date;
 	}
-	
+
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	
+
 	public List<TimeSlot> getTimeSlots() {
 		return timeSlots;
 	}
-	
+
 	public void setTimeSlots(List<TimeSlot> timeSlots) {
 		this.timeSlots = timeSlots;
 	}
-	
+
 	public void addTimeSlot(TimeSlot timeSlot) {
-		getTimeSlots().add(timeSlot);
+		this.getTimeSlots().add(timeSlot);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
-		result = prime * result + ((timeSlots == null) ? 0 : timeSlots.hashCode());
-		return result;
+		return Objects.hash(date, id, timeSlots);
 	}
 
 	@Override
@@ -58,22 +71,12 @@ public class DailyTimetable {
 		if (getClass() != obj.getClass())
 			return false;
 		DailyTimetable other = (DailyTimetable) obj;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
-		if (timeSlots == null) {
-			if (other.timeSlots != null)
-				return false;
-		} else if (!timeSlots.equals(other.timeSlots))
-			return false;
-		return true;
+		return Objects.equals(date, other.date) && Objects.equals(id, other.id)
+				&& Objects.equals(timeSlots, other.timeSlots);
 	}
 
 	@Override
 	public String toString() {
-		String newLine = System.lineSeparator();
-		return String.valueOf(date) + newLine + timeSlots.stream().map(TimeSlot::toString).collect(Collectors.joining());
-	}	
+		return "DailyTimetable id=" + id + ", date=" + date;
+	}
 }

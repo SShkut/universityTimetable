@@ -1,13 +1,33 @@
 package com.foxminded.university_timetable.model;
 
+import java.util.Objects;
+
 public class Room {
 
+	private Long id;
 	private String sybmol;
 	private Integer capacity;
-	
+
+	public Room() {
+	}
+
 	public Room(String sybmol, Integer capacity) {
 		this.sybmol = sybmol;
 		this.capacity = capacity;
+	}
+
+	public Room(Long id, String sybmol, Integer capacity) {
+		this.id = id;
+		this.sybmol = sybmol;
+		this.capacity = capacity;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getSybmol() {
@@ -28,11 +48,7 @@ public class Room {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((capacity == null) ? 0 : capacity.hashCode());
-		result = prime * result + ((sybmol == null) ? 0 : sybmol.hashCode());
-		return result;
+		return Objects.hash(capacity, id, sybmol);
 	}
 
 	@Override
@@ -44,21 +60,12 @@ public class Room {
 		if (getClass() != obj.getClass())
 			return false;
 		Room other = (Room) obj;
-		if (capacity == null) {
-			if (other.capacity != null)
-				return false;
-		} else if (!capacity.equals(other.capacity))
-			return false;
-		if (sybmol == null) {
-			if (other.sybmol != null)
-				return false;
-		} else if (!sybmol.equals(other.sybmol))
-			return false;
-		return true;
+		return Objects.equals(capacity, other.capacity) && Objects.equals(id, other.id)
+				&& Objects.equals(sybmol, other.sybmol);
 	}
 
 	@Override
 	public String toString() {
-		return sybmol;
-	}	
+		return "Room id=" + id + ", sybmol=" + sybmol + ", capacity=" + capacity;
+	}
 }
