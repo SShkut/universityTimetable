@@ -1,13 +1,33 @@
 package com.foxminded.university_timetable.model;
 
+import java.util.Objects;
+
 public class Semester {
 
+	private Long id;
 	private Integer yearOfStudy;
 	private String period;
-	
+
+	public Semester() {
+	}
+
 	public Semester(int yearOfStudy, String period) {
 		this.yearOfStudy = yearOfStudy;
 		this.period = period;
+	}
+
+	public Semester(Long id, Integer yearOfStudy, String period) {
+		this.id = id;
+		this.yearOfStudy = yearOfStudy;
+		this.period = period;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public int getYearOfStudy() {
@@ -28,11 +48,7 @@ public class Semester {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((period == null) ? 0 : period.hashCode());
-		result = prime * result + ((yearOfStudy == null) ? 0 : yearOfStudy.hashCode());
-		return result;
+		return Objects.hash(id, period, yearOfStudy);
 	}
 
 	@Override
@@ -44,21 +60,12 @@ public class Semester {
 		if (getClass() != obj.getClass())
 			return false;
 		Semester other = (Semester) obj;
-		if (period == null) {
-			if (other.period != null)
-				return false;
-		} else if (!period.equals(other.period))
-			return false;
-		if (yearOfStudy == null) {
-			if (other.yearOfStudy != null)
-				return false;
-		} else if (!yearOfStudy.equals(other.yearOfStudy))
-			return false;
-		return true;
+		return Objects.equals(id, other.id) && Objects.equals(period, other.period)
+				&& Objects.equals(yearOfStudy, other.yearOfStudy);
 	}
 
 	@Override
 	public String toString() {
-		return period + " " + yearOfStudy;
-	}	
+		return "Semester id=" + id + ", yearOfStudy=" + yearOfStudy + ", period=" + period;
+	}
 }
