@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import com.foxminded.university_timetable.dao.row_mapper.CourseRowMapper;
 import com.foxminded.university_timetable.model.Course;
 
 @Repository

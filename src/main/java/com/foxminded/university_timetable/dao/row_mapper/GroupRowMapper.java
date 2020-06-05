@@ -1,4 +1,4 @@
-package com.foxminded.university_timetable.dao;
+package com.foxminded.university_timetable.dao.row_mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import com.foxminded.university_timetable.dao.SemesterDao;
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Semester;
 
