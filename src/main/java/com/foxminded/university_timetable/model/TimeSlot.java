@@ -1,16 +1,21 @@
 package com.foxminded.university_timetable.model;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class TimeSlot {
 
+	private Long id;
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private Course course;
 	private Teacher teacher;
 	private Group group;
 	private Room room;
-	
+
+	public TimeSlot() {
+	}
+
 	public TimeSlot(LocalTime startTime, LocalTime endTime, Course course, Teacher teacher, Group group, Room room) {
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -18,6 +23,25 @@ public class TimeSlot {
 		this.teacher = teacher;
 		this.group = group;
 		this.room = room;
+	}
+
+	public TimeSlot(Long id, LocalTime startTime, LocalTime endTime, Course course, Teacher teacher, Group group,
+			Room room) {
+		this.id = id;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.course = course;
+		this.teacher = teacher;
+		this.group = group;
+		this.room = room;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public LocalTime getStartTime() {
@@ -70,15 +94,7 @@ public class TimeSlot {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((course == null) ? 0 : course.hashCode());
-		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
-		result = prime * result + ((group == null) ? 0 : group.hashCode());
-		result = prime * result + ((room == null) ? 0 : room.hashCode());
-		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
-		result = prime * result + ((teacher == null) ? 0 : teacher.hashCode());
-		return result;
+		return Objects.hash(course, endTime, group, id, room, startTime, teacher);
 	}
 
 	@Override
@@ -90,42 +106,16 @@ public class TimeSlot {
 		if (getClass() != obj.getClass())
 			return false;
 		TimeSlot other = (TimeSlot) obj;
-		if (course == null) {
-			if (other.course != null)
-				return false;
-		} else if (!course.equals(other.course))
-			return false;
-		if (endTime == null) {
-			if (other.endTime != null)
-				return false;
-		} else if (!endTime.equals(other.endTime))
-			return false;
-		if (group == null) {
-			if (other.group != null)
-				return false;
-		} else if (!group.equals(other.group))
-			return false;
-		if (room == null) {
-			if (other.room != null)
-				return false;
-		} else if (!room.equals(other.room))
-			return false;
-		if (startTime == null) {
-			if (other.startTime != null)
-				return false;
-		} else if (!startTime.equals(other.startTime))
-			return false;
-		if (teacher == null) {
-			if (other.teacher != null)
-				return false;
-		} else if (!teacher.equals(other.teacher))
-			return false;
-		return true;
+		return Objects.equals(course, other.course) && Objects.equals(endTime, other.endTime)
+				&& Objects.equals(group, other.group) && Objects.equals(id, other.id)
+				&& Objects.equals(room, other.room) && Objects.equals(startTime, other.startTime)
+				&& Objects.equals(teacher, other.teacher);
 	}
 
 	@Override
 	public String toString() {
-		String newLine = System.lineSeparator();
-		return startTime + " - " + endTime + ": " + course + " " + teacher + " " + group + " " + room + newLine;
-	}	
+		return "TimeSlot id=" + id + ", startTime=" + startTime + ", endTime=" + endTime + ", course=" + course
+				+ ", teacher=" + teacher + ", group=" + group + ", room=" + room;
+	}
+
 }
