@@ -22,16 +22,12 @@ public class CourseDao {
 	private static final String DELETE_BY_ID = "DELETE FROM courses WHERE id = ?";
 	private static final String SAVE = "INSERT INTO courses (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE courses SET name = ? WHERE id = ?";
-	private static final String FIND_PREREQUISITES_OF_COURSE = "WITH RECURSIVE course_prerequisites(course_id, prerequisite_id) AS ("
-			+ "SELECT course_id, prerequisite_id " 
-			+ "FROM course_hierarchy " + "WHERE course_id = ? " 
-			+ "UNION ALL "
-			+ "SELECT ch.course_id, ch.prerequisite_id " 
-			+ "FROM course_hierarchy ch "
-			+ "JOIN course_prerequisites cp ON ch.course_id = cp.prerequisite_id) " 
-			+ "SELECT DISTINCT c.id, c.name "
-			+ "FROM course_prerequisites cp " 
-			+ "JOIN courses c ON cp.prerequisite_id = c.id;";
+	private static final String FIND_COURSE_PREREQUISITES = "WITH RECURSIVE course_prerequisites(course_id, prerequisite_id) AS ("
+			+ "SELECT course_id, prerequisite_id " + "FROM course_hierarchy " + "WHERE course_id = ? " + "UNION ALL "
+			+ "SELECT ch.course_id, ch.prerequisite_id " + "FROM course_hierarchy ch "
+			+ "JOIN course_prerequisites cp ON ch.course_id = cp.prerequisite_id) " + "SELECT DISTINCT c.id, c.name "
+			+ "FROM course_prerequisites cp " + "JOIN courses c ON cp.prerequisite_id = c.id;";
+	private static final String ADD_COURSE_PREREQUISITE = "INSERT INTO course_hierarchy (course_id, prerequisite_id) values (?, ?)";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final CourseRowMapper courseRowMapper;
@@ -77,6 +73,10 @@ public class CourseDao {
 	}
 
 	public List<Course> findCoursePrerequisites(Course course) {
-		return jdbcTemplate.query(FIND_PREREQUISITES_OF_COURSE, new Object[] { course.getId() }, courseRowMapper);
+		return jdbcTemplate.query(FIND_COURSE_PREREQUISITES, new Object[] { course.getId() }, courseRowMapper);
+	}
+
+	public void addCoursePrerequisite(Course course, Course prerequisite) {
+		jdbcTemplate.update(ADD_COURSE_PREREQUISITE, course.getId(), prerequisite.getId());
 	}
 }
