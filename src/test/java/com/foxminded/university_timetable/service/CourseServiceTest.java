@@ -12,29 +12,27 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ActiveProfiles;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.foxminded.university_timetable.config.MockConfituration;
+import com.foxminded.university_timetable.config.TestServiceConfig;
 import com.foxminded.university_timetable.dao.CourseDao;
 import com.foxminded.university_timetable.model.Course;
 
-@ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { MockConfituration.class })
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class CourseServiceTest {
-	
-	@Autowired
-	private CourseService courseService;
+@ExtendWith(MockitoExtension.class)
+@ContextConfiguration(classes = { TestServiceConfig.class })
+class CourseServiceTest {	
 
-	@Autowired
+	@Mock
 	private CourseDao courseDao;
 
+	@InjectMocks
+	private CourseService courseService;
+	
 	@Test
 	void whenFindAll_thenReturnAllCourses() {
 		List<Course> expected = new ArrayList<>();
@@ -51,6 +49,17 @@ class CourseServiceTest {
 	void givenCourseId_whenFindById_thenReturnOptionalOfCourse() {
 		Course course = new Course(1L, "Math");
 		Optional<Course> expected = Optional.of(course);
+		when(courseDao.findById(course.getId())).thenReturn(expected);
+		
+		Optional<Course> actual = courseService.findById(course.getId());
+		
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenNonExistentCourseId_whenFindById_thenReturnEmptyOptional() {
+		Course course = new Course(-1L, "");
+		Optional<Course> expected = Optional.empty();
 		when(courseDao.findById(course.getId())).thenReturn(expected);
 		
 		Optional<Course> actual = courseService.findById(course.getId());

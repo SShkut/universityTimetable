@@ -41,8 +41,6 @@ public class CourseService {
 		return courseDao.findCoursePrerequisites(course);
 	}
 
-	
-	//TODO ask mentor about exception from DB
 	public void addCoursePrerequisite(Course course, Course prerequisite) {
 		List<Course> prerequisites = courseDao.findCoursePrerequisites(course);
 		Optional<Course> prereqisiteForCheck = prerequisites
