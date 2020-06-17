@@ -19,7 +19,7 @@ public class CourseDao {
 
 	private static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM courses";
-	private static final String DELETE_BY_ID = "DELETE FROM courses WHERE id = ?";
+	private static final String DELETE = "DELETE FROM courses WHERE id = ?";
 	private static final String SAVE = "INSERT INTO courses (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE courses SET name = ? WHERE id = ?";
 	private static final String FIND_COURSE_PREREQUISITES = "WITH RECURSIVE course_prerequisites(course_id, prerequisite_id) AS ("
@@ -53,7 +53,7 @@ public class CourseDao {
 	}
 
 	public void delete(Course course) {
-		jdbcTemplate.update(DELETE_BY_ID, course.getId());
+		jdbcTemplate.update(DELETE, course.getId());
 	}
 
 	public Course save(Course course) {

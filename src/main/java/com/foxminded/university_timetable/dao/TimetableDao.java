@@ -22,7 +22,7 @@ public class TimetableDao {
 	private static final String FIND_ALL = "SELECT * FROM timetables";
 	private static final String SAVE = "INSERT INTO timetables (name) VALUES (?)";
 	private static final String UPDATE = "UPDATE timetables SET name = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM timetables WHERE id = ?";
+	private static final String DELETE = "DELETE FROM timetables WHERE id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final TimetableRowMapper timetableRowMapper;
@@ -67,6 +67,6 @@ public class TimetableDao {
 	}
 
 	public void delete(Timetable timetable) {
-		jdbcTemplate.update(DELETE_BY_ID, timetable.getId());
+		jdbcTemplate.update(DELETE, timetable.getId());
 	}
 }
