@@ -91,7 +91,7 @@ class CourseServiceTest {
 	}	
 	
 	@Test
-	void givenCourseAndDublicatePrerequisite_whenAddCoursePrerequisite_thenAddPrerequisiteToCourse() {
+	void givenCourseAndDublicatePrerequisite_whenAddCoursePrerequisite_thenDontAddPrerequisiteToCourse() {
 		Course course = new Course(1L, "Math");
 		Course prerequisite = new Course(2L, "CS");
 		when(courseDao.findCoursePrerequisites(course)).thenReturn(Arrays.asList(prerequisite));
