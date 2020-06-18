@@ -14,15 +14,6 @@ import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.foxminded.university_timetable.dao.CourseDao;
-import com.foxminded.university_timetable.dao.DailyTimetableDao;
-import com.foxminded.university_timetable.dao.GroupDao;
-import com.foxminded.university_timetable.dao.RoomDao;
-import com.foxminded.university_timetable.dao.SemesterDao;
-import com.foxminded.university_timetable.dao.StudentDao;
-import com.foxminded.university_timetable.dao.TeacherDao;
-import com.foxminded.university_timetable.dao.TimeSlotDao;
-import com.foxminded.university_timetable.dao.TimetableDao;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.DailyTimetable;
 import com.foxminded.university_timetable.model.Group;
@@ -32,35 +23,44 @@ import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.model.Teacher;
 import com.foxminded.university_timetable.model.TimeSlot;
 import com.foxminded.university_timetable.model.Timetable;
+import com.foxminded.university_timetable.service.CourseService;
+import com.foxminded.university_timetable.service.DailyTimetableService;
+import com.foxminded.university_timetable.service.GroupService;
+import com.foxminded.university_timetable.service.RoomService;
+import com.foxminded.university_timetable.service.SemesterService;
+import com.foxminded.university_timetable.service.StudentService;
+import com.foxminded.university_timetable.service.TeacherService;
+import com.foxminded.university_timetable.service.TimeSlotService;
+import com.foxminded.university_timetable.service.TimetableService;
 
 @Component
 public class Menu {
 
 	private static final Scanner scanner = new Scanner(System.in);
 
-	private final StudentDao studentDao;
-	private final TeacherDao teacherDao;
-	private final CourseDao courseDao;
-	private final GroupDao groupDao;
-	private final RoomDao roomDao;
-	private final SemesterDao semesterDao;
-	private final TimetableDao timetableDao;
-	private final DailyTimetableDao dailyTimetableDao;
-	private final TimeSlotDao timeSlotDao;
+	private final StudentService studentService;
+	private final TeacherService teacherService;
+	private final CourseService courseService;
+	private final GroupService groupService;
+	private final RoomService roomService;
+	private final SemesterService semesterService;
+	private final TimetableService timetableService;
+	private final DailyTimetableService dailyTimetableService;
+	private final TimeSlotService timeSlotService;
 
 	@Autowired
-	public Menu(StudentDao studentDao, TeacherDao teacherDao, CourseDao courseDao, GroupDao groupDao, RoomDao roomDao,
-			SemesterDao semesterDao, TimetableDao timetableDao, DailyTimetableDao dailyTimetableDao,
-			TimeSlotDao timeSlotDao) {
-		this.studentDao = studentDao;
-		this.teacherDao = teacherDao;
-		this.courseDao = courseDao;
-		this.groupDao = groupDao;
-		this.roomDao = roomDao;
-		this.semesterDao = semesterDao;
-		this.timetableDao = timetableDao;
-		this.dailyTimetableDao = dailyTimetableDao;
-		this.timeSlotDao = timeSlotDao;
+	public Menu(StudentService studentService, TeacherService teacherService, CourseService courseService, GroupService groupService, RoomService roomService,
+			SemesterService semesterService, TimetableService timetableService, DailyTimetableService dailyTimetableService,
+			TimeSlotService timeSlotService) {
+		this.studentService = studentService;
+		this.teacherService = teacherService;
+		this.courseService = courseService;
+		this.groupService = groupService;
+		this.roomService = roomService;
+		this.semesterService = semesterService;
+		this.timetableService = timetableService;
+		this.dailyTimetableService = dailyTimetableService;
+		this.timeSlotService = timeSlotService;
 	}
 
 	public void showMenu() {
@@ -122,7 +122,7 @@ public class Menu {
 		String email = scanner.next();
 		System.out.print("Student card number: ");
 		String studentCardNumber = scanner.next();
-		studentDao.save(new Student(firstName, lastName, taxNumber, phoneNumber, email, null, studentCardNumber));
+		studentService.save(new Student(firstName, lastName, taxNumber, phoneNumber, email, null, studentCardNumber));
 	}
 
 	private void createTeacher() {
@@ -138,13 +138,13 @@ public class Menu {
 		String email = scanner.next();
 		System.out.print("Degree: ");
 		String degree = scanner.next();
-		teacherDao.save(new Teacher(firstName, lastName, taxNumber, phoneNumber, email, null, degree));
+		teacherService.save(new Teacher(firstName, lastName, taxNumber, phoneNumber, email, null, degree));
 	}
 
 	private void createCourse() {
 		System.out.print("Course name: ");
 		String name = scanner.next();
-		courseDao.save(new Course(null, name, null));
+		courseService.save(new Course(null, name, null));
 	}
 
 	private void createGroup() {
@@ -156,13 +156,13 @@ public class Menu {
 		String department = scanner.next();
 
 		boolean correct = false;
-		List<Semester> semesters = semesterDao.findAll();
+		List<Semester> semesters = semesterService.findAll();
 		Optional<Semester> semester;
 		do {
 			System.out.println("Chose from semesters by typing semester id.");
 			semesters.forEach(System.out::println);
 			Long id = scanner.nextLong();
-			semester = semesterDao.findById(id);
+			semester = semesterService.findById(id);
 			if (semester.isPresent()) {
 				correct = true;
 			} else {
@@ -170,12 +170,12 @@ public class Menu {
 			}
 		} while (!correct);
 		correct = false;
-		groupDao.save(new Group(name, major, department, semester.get(), null));
+		groupService.save(new Group(name, major, department, semester.get(), null));
 	}
 
 	private void assignStudentToGroup() {
 		boolean correct = false;
-		List<Group> groups = groupDao.findAll();
+		List<Group> groups = groupService.findAll();
 		Optional<Group> group;
 		Optional<Student> student;
 		do {
@@ -191,7 +191,7 @@ public class Menu {
 		} while (!correct);
 		correct = false;
 
-		List<Student> students = studentDao.findAll();
+		List<Student> students = studentService.findAll();
 		do {
 			System.out.println("Chose from students by typing student full name.");
 			students.forEach(System.out::println);
@@ -204,18 +204,18 @@ public class Menu {
 				System.out.println("There is no such student.");
 			}
 		} while (!correct);
-		studentDao.addStudentToGroup(student.orElseThrow(NoSuchElementException::new),
+		studentService.addStudentToGroup(student.orElseThrow(NoSuchElementException::new),
 				group.orElseThrow(NoSuchElementException::new));
 	}
 
 	private void createTimetable() {
 		System.out.println("Timetable name: ");
 		String name = scanner.next();
-		timetableDao.save(new Timetable(null, name, null));
+		timetableService.save(new Timetable(null, name, null));
 	}
 
 	private void createDailyTimetable() {
-		List<Timetable> timetables = timetableDao.findAll();
+		List<Timetable> timetables = timetableService.findAll();
 		Optional<Timetable> timetable;
 		Optional<DailyTimetable> dailyTimetable;
 		boolean correct = false;
@@ -237,11 +237,11 @@ public class Menu {
 				System.out.println("Enter date (YYYY-MM-DD): ");
 				String text = scanner.next();
 				LocalDate date = LocalDate.parse(text);
-				dailyTimetable = dailyTimetableDao.findByDate(date);
+				dailyTimetable = dailyTimetableService.findByDate(date);
 				if (!dailyTimetable.isPresent()) {
-					dailyTimetable = Optional.of(dailyTimetableDao.save(new DailyTimetable(null, date, null)));
+					dailyTimetable = Optional.of(dailyTimetableService.save(new DailyTimetable(null, date, null)));
 				}
-				dailyTimetableDao.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
+				dailyTimetableService.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
 						timetable.orElseThrow(NoSuchElementException::new));
 				correct = true;
 			} catch (DateTimeParseException e) {
@@ -251,11 +251,11 @@ public class Menu {
 	}
 
 	private void createTimeSlot() {
-		List<Course> courses = courseDao.findAll();
-		List<Group> groups = groupDao.findAll();
-		List<Teacher> teachers = teacherDao.findAll();
-		List<Room> rooms = roomDao.findAll();
-		List<Timetable> timetables = timetableDao.findAll();
+		List<Course> courses = courseService.findAll();
+		List<Group> groups = groupService.findAll();
+		List<Teacher> teachers = teacherService.findAll();
+		List<Room> rooms = roomService.findAll();
+		List<Timetable> timetables = timetableService.findAll();
 		Optional<Course> course;
 		Optional<Teacher> teacher;
 		Optional<Group> group;
@@ -334,8 +334,8 @@ public class Menu {
 				System.out.println("Enter date (YYYY-MM-DD): ");
 				String text = scanner.next();
 				LocalDate date = LocalDate.parse(text);
-				dailyTimetable = dailyTimetableDao.findByDate(date);
-				dailyTimetableDao.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
+				dailyTimetable = dailyTimetableService.findByDate(date);
+				dailyTimetableService.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
 						timetable.orElseThrow(NoSuchElementException::new));
 				correct = true;
 			} catch (DateTimeParseException e) {
@@ -352,9 +352,9 @@ public class Menu {
 			try {
 				LocalTime startTime = LocalTime.parse(start, DateTimeFormatter.ofPattern("HH:mm"));
 				LocalTime endTime = LocalTime.parse(end, DateTimeFormatter.ofPattern("HH:mm"));
-				TimeSlot timeSlot = timeSlotDao
+				TimeSlot timeSlot = timeSlotService
 						.save(new TimeSlot(startTime, endTime, course.get(), teacher.get(), group.get(), room.get()));
-				timeSlotDao.addTimeSlotToDailyTimetable(timeSlot,
+				timeSlotService.addTimeSlotToDailyTimetable(timeSlot,
 						dailyTimetable.orElseThrow(NoSuchElementException::new));
 				correct = true;
 			} catch (DateTimeParseException | NumberFormatException e) {
@@ -364,7 +364,7 @@ public class Menu {
 	}
 
 	private void printDailyTimetableForStudent() {
-		List<Student> students = studentDao.findAll();
+		List<Student> students = studentService.findAll();
 		LocalDate date = LocalDate.MIN;
 		boolean correct = false;
 		do {
@@ -386,7 +386,7 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Student> student = findStudent(firstName, lastName);
 			if (student.isPresent()) {
-				List<DailyTimetable> dailyTimetable = dailyTimetableDao
+				List<DailyTimetable> dailyTimetable = dailyTimetableService
 						.findTimetableForStudent(student.orElseThrow(NoSuchElementException::new), date, date);
 				if (!dailyTimetable.isEmpty()) {
 					System.out.println(dailyTimetable);
@@ -401,7 +401,7 @@ public class Menu {
 	}
 
 	private void printDailyTimetableForTeacher() {
-		List<Teacher> teachers = teacherDao.findAll();
+		List<Teacher> teachers = teacherService.findAll();
 		LocalDate date = LocalDate.MIN;
 		boolean correct = false;
 		do {
@@ -423,7 +423,7 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Teacher> teacher = findTeacher(firstName, lastName);
 			if (teacher.isPresent()) {
-				List<DailyTimetable> dailyTimetable = dailyTimetableDao
+				List<DailyTimetable> dailyTimetable = dailyTimetableService
 						.findTimetableForTeacher(teacher.orElseThrow(NoSuchElementException::new), date, date);
 				if (!dailyTimetable.isEmpty()) {
 					System.out.println(dailyTimetable);
@@ -438,7 +438,7 @@ public class Menu {
 	}
 
 	private void printMonthlyTimetableForStudent() {
-		List<Student> students = studentDao.findAll();
+		List<Student> students = studentService.findAll();
 		Month month;
 		boolean correct = false;
 		do {
@@ -456,7 +456,7 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Student> student = findStudent(firstName, lastName);
 			if (student.isPresent()) {
-				List<DailyTimetable> dailyTimetables = dailyTimetableDao
+				List<DailyTimetable> dailyTimetables = dailyTimetableService
 						.findTimetableForStudent(student.orElseThrow(NoSuchElementException::new), YearMonth.of(2020, month).atDay(1), YearMonth.of(2020, month).atEndOfMonth());
 				if (!dailyTimetables.isEmpty()) {
 					dailyTimetables.forEach(System.out::println);
@@ -472,7 +472,7 @@ public class Menu {
 	}
 
 	private void printMonthlyTimetableForTeacher() {
-		List<Teacher> teachers = teacherDao.findAll();
+		List<Teacher> teachers = teacherService.findAll();
 		Month month;
 		boolean correct = false;
 		do {
@@ -490,7 +490,7 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Teacher> teacher = findTeacher(firstName, lastName);
 			if (teacher.isPresent()) {
-				List<DailyTimetable> dailyTimetable = dailyTimetableDao
+				List<DailyTimetable> dailyTimetable = dailyTimetableService
 						.findTimetableForTeacher(teacher.orElseThrow(NoSuchElementException::new), YearMonth.of(2020, month).atDay(1), YearMonth.of(2020, month).atEndOfMonth());
 				if (!dailyTimetable.isEmpty()) {
 					dailyTimetable.forEach(System.out::println);
@@ -506,13 +506,13 @@ public class Menu {
 	}
 
 	private Optional<Student> findStudent(String firstName, String lastName) {
-		List<Student> students = studentDao.findAll();
+		List<Student> students = studentService.findAll();
 		return students.stream().filter(t -> t.getFirstName().equals(firstName) && t.getLastName().equals(lastName))
 				.findFirst();
 	}
 
 	private Optional<Teacher> findTeacher(String firstName, String lastName) {
-		List<Teacher> teachers = teacherDao.findAll();
+		List<Teacher> teachers = teacherService.findAll();
 		return teachers.stream().filter(t -> t.getFirstName().equals(firstName) && t.getLastName().equals(lastName))
 				.findFirst();
 	}
