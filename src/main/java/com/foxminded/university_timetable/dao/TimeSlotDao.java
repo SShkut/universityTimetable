@@ -24,7 +24,7 @@ public class TimeSlotDao {
 	private static final String SAVE = "INSERT INTO time_slots (start_time, end_time, course_id, teacher_id, group_id, room_id) "
 			+ "VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE time_slots SET start_time = ?, end_time = ?, course_id = ?, teacher_id = ?, group_id = ?, room_id = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM time_slots WHERE id = ?";
+	private static final String DELETE = "DELETE FROM time_slots WHERE id = ?";
 	private static final String FIND_ALL_DAILY_TIMETABLE_TIME_SLOTS = "SELECT * FROM time_slots WHERE daily_timetable_id = ?";
 	private static final String ADD_TIME_SLOT_TO_DAILY_TIMETABLE = "UPDATE time_slots SET daily_timetable_id = ? WHERE id = ?";
 
@@ -73,7 +73,7 @@ public class TimeSlotDao {
 	}
 
 	public void delete(TimeSlot timeSlot) {
-		jdbcTemplate.update(DELETE_BY_ID, timeSlot.getId());
+		jdbcTemplate.update(DELETE, timeSlot.getId());
 	}
 
 	public List<TimeSlot> findAllDailyTimetableTimeSlots(DailyTimetable dailyTimetable) {

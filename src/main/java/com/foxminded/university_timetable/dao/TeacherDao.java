@@ -23,7 +23,7 @@ public class TeacherDao {
 	private static final String FIND_ALL = "SELECT * FROM teachers";
 	private static final String SAVE = "INSERT INTO teachers (first_name, last_name, tax_number, phone_number, email, degree) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE teachers SET first_name = ?, last_name = ?, tax_number = ?, phone_number = ?, email = ?, degree = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
+	private static final String DELETE = "DELETE FROM teachers WHERE id = ?";
 	private static final String ADD_TEACHER_QUALIFICATION = "INSERT INTO teacher_course (teacher_id, course_id) VALUES (?, ?)";
 	private static final String DELETE_TEACHER_QUALIFICATION = "DELETE FROM teacher_course WHERE teacher_id = ? AND course_id = ?";
 	private static final String FIND_ALL_TEACHER_QUALIFICATIONS = "SELECT c.id, c.name " 
@@ -78,7 +78,7 @@ public class TeacherDao {
 	}
 
 	public void delete(Teacher teacher) {
-		jdbcTemplate.update(DELETE_BY_ID, teacher.getId());
+		jdbcTemplate.update(DELETE, teacher.getId());
 	}
 
 	public void addTeacherQualification(Teacher teacher, Course course) {

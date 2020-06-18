@@ -24,7 +24,7 @@ public class StudentDao {
 	private static final String FIND_ALL = "SELECT * FROM students";
 	private static final String SAVE = "INSERT INTO students (first_name, last_name, tax_number, phone_number, email, student_card_number) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE students SET first_name = ?, last_name = ?, tax_number = ?, phone_number = ?, email = ?, student_card_number = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM students WHERE id = ?";
+	private static final String DELETE = "DELETE FROM students WHERE id = ?";
 	private static final String ADD_STUDENT_TO_GROUP = "INSERT INTO student_group (student_id, group_id) values (?, ?)";
 	private static final String DELETE_STUDENT_FROM_GROUP = "DELETE FROM student_group WHERE student_id = ? and group_id = ?";
 	private static final String ENROLL_COURSE = "INSERT INTO student_course (student_id, course_id) values (?, ?)";
@@ -82,7 +82,7 @@ public class StudentDao {
 	}
 
 	public void delete(Student student) {
-		jdbcTemplate.update(DELETE_BY_ID, student.getId());
+		jdbcTemplate.update(DELETE, student.getId());
 	}
 
 	public void addStudentToGroup(Student student, Group group) {

@@ -20,7 +20,7 @@ public class RoomDao {
 	private static final String FIND_ALL = "SELECT * FROM rooms";
 	private static final String SAVE = "INSERT INTO rooms (symbol, capacity) VALUES (?, ?)";
 	private static final String UPDATE = "UPDATE rooms SET symbol = ?, capacity = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM rooms WHERE id = ?";
+	private static final String DELETE = "DELETE FROM rooms WHERE id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final RoomRowMapper roomRowMapper;
@@ -61,6 +61,6 @@ public class RoomDao {
 	}
 
 	public void delete(Room room) {
-		jdbcTemplate.update(DELETE_BY_ID, room.getId());
+		jdbcTemplate.update(DELETE, room.getId());
 	}
 }
