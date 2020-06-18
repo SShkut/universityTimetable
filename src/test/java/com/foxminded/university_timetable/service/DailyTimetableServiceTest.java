@@ -78,7 +78,7 @@ class DailyTimetableServiceTest {
 	
 	@Test
 	void givenDailyTimetable_whenUpdate_thenUpdateDailyTimetable() {
-		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 2));
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 6, 5));
 		
 		dailyTimetableService.update(dailyTimetable);
 		
@@ -86,13 +86,41 @@ class DailyTimetableServiceTest {
 	}
 	
 	@Test
+	void givenDailyTimetablesWithWeekendDate_whenUpdate_thenDontUpdateTimetable() {
+		DailyTimetable dailyTimetableSaturday = new DailyTimetable(1L, LocalDate.of(2020, 6, 6));
+		DailyTimetable dailyTimetableSunday = new DailyTimetable(1L, LocalDate.of(2020, 6, 7));
+		
+		dailyTimetableService.update(dailyTimetableSaturday);
+		
+		verify(dailyTimetableDao, times(0)).update(dailyTimetableSaturday);
+		
+		dailyTimetableService.update(dailyTimetableSunday);
+		
+		verify(dailyTimetableDao, times(0)).update(dailyTimetableSunday);
+	}
+	
+	@Test
 	void givenDailyTimetable_whenSave_thenSaveDailyTimetable() {
-		DailyTimetable expected = new DailyTimetable(1L, LocalDate.of(2020, 2, 2));
+		DailyTimetable expected = new DailyTimetable(1L, LocalDate.of(2020, 6, 5));
 		when(dailyTimetableDao.save(expected)).thenReturn(expected);
 		
 		DailyTimetable actual = dailyTimetableService.save(expected);
 		
 		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenDailyTimetableWithWeekendDate_whenSave_thenDontSaveDailyTimetable() {
+		DailyTimetable dailyTimetableSaturday = new DailyTimetable(1L, LocalDate.of(2020, 6, 6));
+		DailyTimetable dailyTimetableSunday = new DailyTimetable(1L, LocalDate.of(2020, 6, 7));
+		
+		dailyTimetableService.update(dailyTimetableSaturday);
+		
+		verify(dailyTimetableDao, times(0)).update(dailyTimetableSaturday);
+		
+		dailyTimetableService.update(dailyTimetableSunday);
+		
+		verify(dailyTimetableDao, times(0)).update(dailyTimetableSunday);
 	}
 	
 	@Test

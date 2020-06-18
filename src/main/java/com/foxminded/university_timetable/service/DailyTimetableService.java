@@ -1,8 +1,11 @@
 package com.foxminded.university_timetable.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,8 @@ import com.foxminded.university_timetable.model.Timetable;
 
 @Service
 public class DailyTimetableService {
+	
+	private final static Set<DayOfWeek> WEEKEND = EnumSet.of(DayOfWeek.SATURDAY , DayOfWeek.SUNDAY);
 	
 	private final DailyTimetableDao dailyTimetableDao;
 
@@ -34,11 +39,20 @@ public class DailyTimetableService {
 	}
 	
 	public void update(DailyTimetable dailyTimetable) {
-		dailyTimetableDao.update(dailyTimetable);
+		if (isNotWeekend(dailyTimetable)) {
+			dailyTimetableDao.update(dailyTimetable);
+		}
 	}
 	
 	public DailyTimetable save(DailyTimetable dailyTimetable) {
-		return dailyTimetableDao.save(dailyTimetable);
+		if (isNotWeekend(dailyTimetable)) {
+			return dailyTimetableDao.save(dailyTimetable);
+		}
+		return new DailyTimetable();
+	}
+	
+	private boolean isNotWeekend(DailyTimetable dailyTimetable) {
+		return !WEEKEND.contains(dailyTimetable.getDate().getDayOfWeek());
 	}
 	
 	public void addDailyTimetableToTimetable(DailyTimetable dailyTimetable, Timetable timetable) {
