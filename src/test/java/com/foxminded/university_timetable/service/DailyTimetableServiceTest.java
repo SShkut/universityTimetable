@@ -1,7 +1,7 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -73,7 +73,7 @@ class DailyTimetableServiceTest {
 		
 		dailyTimetableService.delete(dailyTimetable);
 		
-		verify(dailyTimetableDao, times(1)).delete(dailyTimetable);
+		verify(dailyTimetableDao).delete(dailyTimetable);
 	}
 	
 	@Test
@@ -82,7 +82,7 @@ class DailyTimetableServiceTest {
 		
 		dailyTimetableService.update(dailyTimetable);
 		
-		verify(dailyTimetableDao, times(1)).update(dailyTimetable);
+		verify(dailyTimetableDao).update(dailyTimetable);
 	}
 	
 	@Test
@@ -92,11 +92,11 @@ class DailyTimetableServiceTest {
 		
 		dailyTimetableService.update(dailyTimetableSaturday);
 		
-		verify(dailyTimetableDao, times(0)).update(dailyTimetableSaturday);
+		verify(dailyTimetableDao, never()).update(dailyTimetableSaturday);
 		
 		dailyTimetableService.update(dailyTimetableSunday);
 		
-		verify(dailyTimetableDao, times(0)).update(dailyTimetableSunday);
+		verify(dailyTimetableDao, never()).update(dailyTimetableSunday);
 	}
 	
 	@Test
@@ -116,11 +116,11 @@ class DailyTimetableServiceTest {
 		
 		dailyTimetableService.update(dailyTimetableSaturday);
 		
-		verify(dailyTimetableDao, times(0)).update(dailyTimetableSaturday);
+		verify(dailyTimetableDao, never()).update(dailyTimetableSaturday);
 		
 		dailyTimetableService.update(dailyTimetableSunday);
 		
-		verify(dailyTimetableDao, times(0)).update(dailyTimetableSunday);
+		verify(dailyTimetableDao, never()).update(dailyTimetableSunday);
 	}
 	
 	@Test
@@ -145,7 +145,7 @@ class DailyTimetableServiceTest {
 		
 		dailyTimetableService.addDailyTimetableToTimetable(dailyTimetable, timetable);
 		
-		verify(dailyTimetableDao, times(0)).addDailyTimetableToTimetable(dailyTimetable, timetable);
+		verify(dailyTimetableDao, never()).addDailyTimetableToTimetable(dailyTimetable, timetable);
 	}
 	
 	@Test
@@ -158,7 +158,7 @@ class DailyTimetableServiceTest {
 		
 		dailyTimetableService.addDailyTimetableToTimetable(newDailyTimetable, timetable);
 		
-		verify(dailyTimetableDao, times(1)).addDailyTimetableToTimetable(newDailyTimetable, timetable);
+		verify(dailyTimetableDao).addDailyTimetableToTimetable(newDailyTimetable, timetable);
 	}
 	
 	@Test

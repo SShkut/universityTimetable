@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -69,7 +68,7 @@ class TeacherServiceTest {
 		
 		teacherService.delete(teacher);
 		
-		verify(teacherDao, times(1)).delete(teacher);
+		verify(teacherDao).delete(teacher);
 	}
 	
 	@Test
@@ -78,7 +77,7 @@ class TeacherServiceTest {
 		
 		teacherService.update(teacher);
 		
-		verify(teacherDao, times(1)).update(teacher);
+		verify(teacherDao).update(teacher);
 	}
 	
 	@Test
@@ -98,7 +97,7 @@ class TeacherServiceTest {
 		
 		teacherDao.addTeacherQualification(teacher, course);
 		
-		verify(teacherDao, times(1)).addTeacherQualification(teacher, course);
+		verify(teacherDao).addTeacherQualification(teacher, course);
 	}
 	
 	@Test
@@ -108,7 +107,7 @@ class TeacherServiceTest {
 		
 		teacherDao.deleteTeacherQualification(teacher, course);
 		
-		verify(teacherDao, times(1)).deleteTeacherQualification(teacher, course);
+		verify(teacherDao).deleteTeacherQualification(teacher, course);
 	}
 	
 	@Test

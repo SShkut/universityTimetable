@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -69,7 +68,7 @@ class GroupServiceTest {
 		
 		groupService.delete(group);
 		
-		verify(groupDao, times(1)).delete(group);
+		verify(groupDao).delete(group);
 	}
 	
 	@Test
@@ -78,7 +77,7 @@ class GroupServiceTest {
 		
 		groupService.update(group);
 		
-		verify(groupDao, times(1)).update(group);
+		verify(groupDao).update(group);
 	}
 	
 	@Test

@@ -1,7 +1,7 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -80,7 +80,7 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.delete(timeSlot);
 		
-		verify(timeSlotDao, times(1)).delete(timeSlot);
+		verify(timeSlotDao).delete(timeSlot);
 	}
 	
 	@Test
@@ -89,7 +89,7 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.update(timeSlot);
 		
-		verify(timeSlotDao, times(1)).update(timeSlot);
+		verify(timeSlotDao).update(timeSlot);
 	}
 	
 	@Test
@@ -103,7 +103,7 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.save(timeSlot);
 		
-		verify(timeSlotDao, times(1)).save(timeSlot);
+		verify(timeSlotDao).save(timeSlot);
 	}
 	
 	@Test
@@ -117,7 +117,7 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.save(timeSlot);
 		
-		verify(timeSlotDao, times(0)).save(timeSlot);
+		verify(timeSlotDao, never()).save(timeSlot);
 	}
 	
 	@Test
@@ -144,7 +144,7 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
-		verify(timeSlotDao, times(0)).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
+		verify(timeSlotDao, never()).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 	}
 	
 	@Test
@@ -158,7 +158,7 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
-		verify(timeSlotDao, times(0)).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
+		verify(timeSlotDao, never()).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 	}
 	
 	@Test
@@ -172,7 +172,7 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
-		verify(timeSlotDao, times(0)).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
+		verify(timeSlotDao, never()).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 	}
 	
 	@Test
@@ -188,7 +188,7 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
-		verify(timeSlotDao, times(0)).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
+		verify(timeSlotDao, never()).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 	}
 	
 	@Test
@@ -208,6 +208,6 @@ class TimeSlotServiceTest {
 		
 		timeSlotService.addTimeSlotToDailyTimetable(newTimeSlot, dailyTimetable);
 		
-		verify(timeSlotDao, times(1)).addTimeSlotToDailyTimetable(newTimeSlot, dailyTimetable);
+		verify(timeSlotDao).addTimeSlotToDailyTimetable(newTimeSlot, dailyTimetable);
 	}
 }

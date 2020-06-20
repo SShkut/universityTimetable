@@ -1,7 +1,7 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,7 +77,7 @@ class StudentServiceTest {
 		
 		studentService.delete(student);
 		
-		verify(studentDao, times(1)).delete(student);
+		verify(studentDao).delete(student);
 	}
 	
 	@Test
@@ -86,7 +86,7 @@ class StudentServiceTest {
 		
 		studentService.update(student);
 		
-		verify(studentDao, times(1)).update(student);
+		verify(studentDao).update(student);
 	}
 	
 	@Test
@@ -110,7 +110,7 @@ class StudentServiceTest {
 
 		studentService.addStudentToGroup(student, group);
 		
-		verify(studentDao, times(1)).addStudentToGroup(student, group);
+		verify(studentDao).addStudentToGroup(student, group);
 	}
 	
 	@Test
@@ -124,7 +124,7 @@ class StudentServiceTest {
 
 		studentService.addStudentToGroup(student, group);
 		
-		verify(studentDao, times(0)).addStudentToGroup(student, group);
+		verify(studentDao, never()).addStudentToGroup(student, group);
 	}
 	
 	@Test
@@ -134,7 +134,7 @@ class StudentServiceTest {
 		
 		studentService.deleteStudentFromGroup(student, group);
 		
-		verify(studentDao, times(1)).deleteStudentFromGroup(student, group);
+		verify(studentDao).deleteStudentFromGroup(student, group);
 	}
 	
 	@Test
@@ -144,7 +144,7 @@ class StudentServiceTest {
 		
 		studentService.addStudentToCourse(student, course);	
 		
-		verify(studentDao, times(1)).addStudentToCourse(student, course);
+		verify(studentDao).addStudentToCourse(student, course);
 	}
 	
 	@Test
@@ -154,7 +154,7 @@ class StudentServiceTest {
 		
 		studentService.deleteStudentFromCourse(student, course);
 		
-		verify(studentDao, times(1)).deleteStudentFromCourse(student, course);
+		verify(studentDao).deleteStudentFromCourse(student, course);
 	}
 	
 	@Test

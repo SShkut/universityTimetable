@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -68,7 +67,7 @@ class RoomServiceTest {
 		
 		roomService.delete(room);
 		
-		verify(roomDao, times(1)).delete(room);
+		verify(roomDao).delete(room);
 	}
 	
 	@Test
@@ -77,7 +76,7 @@ class RoomServiceTest {
 		
 		roomService.update(room);
 		
-		verify(roomDao, times(1)).update(room);
+		verify(roomDao).update(room);
 	}
 	
 	@Test

@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,8 +34,7 @@ class SemesterServiceTest {
 
 		when(semesterDao.findAll()).thenReturn(expected);
 		
-		List<Semester> actual = semesterDao.findAll();
-		
+		List<Semester> actual = semesterDao.findAll();		
 		assertEquals(expected, actual);
 	}
 	
@@ -68,7 +66,7 @@ class SemesterServiceTest {
 		
 		semesterService.delete(semester);
 		
-		verify(semesterDao, times(1)).delete(semester);
+		verify(semesterDao).delete(semester);
 	}
 	
 	@Test
@@ -77,7 +75,7 @@ class SemesterServiceTest {
 		
 		semesterService.update(semester);
 		
-		verify(semesterDao, times(1)).update(semester);
+		verify(semesterDao).update(semester);
 	}
 	
 	@Test
