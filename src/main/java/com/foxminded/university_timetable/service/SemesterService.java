@@ -33,7 +33,7 @@ public class SemesterService {
 		semesterDao.update(semester);
 	}
 	
-	public Semester save(Semester semester) {
-		return semesterDao.save(semester);
+	public void save(Semester semester) {
+		semesterDao.save(semester);
 	}
 }

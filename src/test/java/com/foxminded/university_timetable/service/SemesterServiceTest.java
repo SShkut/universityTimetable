@@ -80,11 +80,10 @@ class SemesterServiceTest {
 	
 	@Test
 	void givenSemester_whenSave_thenSaveSemester() {
-		Semester expected = new Semester(1L, 0, "");
-		when(semesterDao.save(expected)).thenReturn(expected);
+		Semester semester = new Semester(1L, 0, "");
 		
-		Semester actual = semesterService.save(expected);
+		semesterService.save(semester);
 		
-		assertEquals(expected, actual);
+		verify(semesterDao).save(semester);
 	}
 }
