@@ -81,11 +81,10 @@ class TimetableServiceTest {
 	
 	@Test
 	void givenTimetable_whenSave_thenSaveTimetable() {
-		Timetable expected = new Timetable(1L, "");
-		when(timetableDao.save(expected)).thenReturn(expected);
+		Timetable timetable = new Timetable(1L, "");
 		
-		Timetable actual = timetableService.save(expected);
+		timetableService.save(timetable);
 		
-		assertEquals(expected, actual);
+		verify(timetableDao).save(timetable);
 	}
 }

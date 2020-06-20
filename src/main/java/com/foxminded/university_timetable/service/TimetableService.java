@@ -33,7 +33,7 @@ public class TimetableService {
 		timetableDao.update(timetable);
 	}
 	
-	public Timetable save(Timetable timetable) {
-		return timetableDao.save(timetable);
+	public void save(Timetable timetable) {
+		timetableDao.save(timetable);
 	}
 }
