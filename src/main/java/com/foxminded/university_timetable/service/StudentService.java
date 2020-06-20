@@ -14,7 +14,7 @@ import com.foxminded.university_timetable.model.Student;
 @Service
 public class StudentService {
 	
-	private static final int MAX_STUDENTS_IN_GROUP = 30;
+	private final static int MAX_GROUP_SIZE = 30;
 
 	private final StudentDao studentDao;
 	private final GroupDao groupDao;
@@ -46,7 +46,7 @@ public class StudentService {
 
 	public void addStudentToGroup(Student student, Group group) {
 		int groupSize = groupDao.findGroupStudents(group).size();
-		if (groupSize < 30) {
+		if (groupSize < MAX_GROUP_SIZE) {
 			studentDao.addStudentToGroup(student, group);
 		}
 	}
