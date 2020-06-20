@@ -82,12 +82,11 @@ class TeacherServiceTest {
 	
 	@Test
 	void givenTeacher_whenSave_thenSaveTeacher() {
-		Teacher expected = new Teacher(1L, "", "", "", "", "", "");
-		when(teacherDao.save(expected)).thenReturn(expected);
+		Teacher teacher = new Teacher(1L, "", "", "", "", "", "");
 		
-		Teacher actual = teacherService.save(expected);
+		teacherService.save(teacher);
 		
-		assertEquals(expected, actual);
+		verify(teacherDao).save(teacher);
 	}
 	
 	@Test

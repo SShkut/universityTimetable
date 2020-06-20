@@ -2,7 +2,6 @@ package com.foxminded.university_timetable.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -92,11 +91,11 @@ class TeacherDaoTest {
 	void givenTeacher_whenSave_thenInsertTeacher() {
 		Teacher teacher = new Teacher("fnt-3", "lnt-3", "343456789", "6634567890", "lnt-3@unv.com", new ArrayList<>(),
 				"phD");
+		int expected = teacherDao.findAll().size() + 1;
 
-		Teacher inserted = teacherDao.save(teacher);
+		teacherDao.save(teacher);
 
-		Optional<Teacher> expected = Optional.of(inserted);
-		Optional<Teacher> actual = teacherDao.findById(teacher.getId());
+		int actual = teacherDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 

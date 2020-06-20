@@ -34,8 +34,8 @@ public class TeacherService {
 		teacherDao.update(teacher);
 	}
 	
-	public Teacher save(Teacher teacher) {
-		return teacherDao.save(teacher);
+	public void save(Teacher teacher) {
+		teacherDao.save(teacher);
 	}
 	
 	public void addTeacherQualification(Teacher teacher, Course course) {

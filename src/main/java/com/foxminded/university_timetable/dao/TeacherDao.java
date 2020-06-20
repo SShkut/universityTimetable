@@ -1,14 +1,10 @@
 package com.foxminded.university_timetable.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.dao.row_mapper.CourseRowMapper;
@@ -55,21 +51,9 @@ public class TeacherDao {
 		return jdbcTemplate.query(FIND_ALL, teacherRowMapper);
 	}
 
-	public Teacher save(Teacher teacher) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(connection -> {
-			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, teacher.getFirstName());
-			ps.setString(2, teacher.getLastName());
-			ps.setString(3, teacher.getTaxNumber());
-			ps.setString(4, teacher.getPhoneNumber());
-			ps.setString(5, teacher.getEmail());
-			ps.setString(6, teacher.getDegree());
-			return ps;
-		}, keyHolder);
-		Long id = keyHolder.getKey().longValue();
-		teacher.setId(id);
-		return teacher;
+	public void save(Teacher teacher) {
+		jdbcTemplate.update(SAVE, teacher.getFirstName(), teacher.getLastName(), teacher.getTaxNumber(),
+				teacher.getPhoneNumber(), teacher.getEmail(), teacher.getDegree());
 	}
 
 	public void update(Teacher teacher) {
