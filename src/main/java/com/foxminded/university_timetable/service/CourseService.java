@@ -43,11 +43,10 @@ public class CourseService {
 
 	public void addCoursePrerequisite(Course course, Course prerequisite) {
 		List<Course> prerequisites = courseDao.findCoursePrerequisites(course);
-		Optional<Course> prereqisiteForCheck = prerequisites
+		boolean isPrerequisitePresent = prerequisites
 				.stream()
-				.filter(c -> c.equals(prerequisite))
-				.findFirst();
-		if (!prereqisiteForCheck.isPresent()) {
+				.anyMatch(c -> c.equals(prerequisite));
+		if (!isPrerequisitePresent) {
 			courseDao.addCoursePrerequisite(course, prerequisite);
 		}
 	}
