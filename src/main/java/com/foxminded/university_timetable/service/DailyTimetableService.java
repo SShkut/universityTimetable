@@ -44,11 +44,10 @@ public class DailyTimetableService {
 		}
 	}
 	
-	public DailyTimetable save(DailyTimetable dailyTimetable) {
+	public void save(DailyTimetable dailyTimetable) {
 		if (isNotWeekend(dailyTimetable)) {
-			return dailyTimetableDao.save(dailyTimetable);
+			dailyTimetableDao.save(dailyTimetable);
 		}
-		return new DailyTimetable();
 	}
 	
 	private boolean isNotWeekend(DailyTimetable dailyTimetable) {

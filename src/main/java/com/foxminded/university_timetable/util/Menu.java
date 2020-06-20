@@ -239,7 +239,8 @@ public class Menu {
 				LocalDate date = LocalDate.parse(text);
 				dailyTimetable = dailyTimetableService.findByDate(date);
 				if (!dailyTimetable.isPresent()) {
-					dailyTimetable = Optional.of(dailyTimetableService.save(new DailyTimetable(null, date, null)));
+					dailyTimetableService.save(new DailyTimetable(null, date, null));
+					dailyTimetable = dailyTimetableService.findByDate(date);
 				}
 				dailyTimetableService.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
 						timetable.orElseThrow(NoSuchElementException::new));

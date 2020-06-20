@@ -101,12 +101,11 @@ class DailyTimetableServiceTest {
 	
 	@Test
 	void givenDailyTimetable_whenSave_thenSaveDailyTimetable() {
-		DailyTimetable expected = new DailyTimetable(1L, LocalDate.of(2020, 6, 5));
-		when(dailyTimetableDao.save(expected)).thenReturn(expected);
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 6, 5));
 		
-		DailyTimetable actual = dailyTimetableService.save(expected);
+		dailyTimetableService.save(dailyTimetable);
 		
-		assertEquals(expected, actual);
+		verify(dailyTimetableDao).save(dailyTimetable);
 	}
 	
 	@Test

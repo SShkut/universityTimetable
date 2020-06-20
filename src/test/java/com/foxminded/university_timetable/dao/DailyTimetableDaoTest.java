@@ -91,11 +91,11 @@ class DailyTimetableDaoTest {
 	@Test
 	void givenDailyTimetable_whenSave_thenInsertDailyTimetable() {
 		DailyTimetable dailyTimetable = new DailyTimetable(LocalDate.of(2020, 3, 1), new ArrayList<>());
+		int expected = dailyTimetableDao.findAll().size() + 1;
 
-		DailyTimetable inserted = dailyTimetableDao.save(dailyTimetable);
+		dailyTimetableDao.save(dailyTimetable);
 
-		Optional<DailyTimetable> expected = Optional.of(inserted);
-		Optional<DailyTimetable> actual = dailyTimetableDao.findById(dailyTimetable.getId());
+		int actual = dailyTimetableDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 
