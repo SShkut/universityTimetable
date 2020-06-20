@@ -82,12 +82,11 @@ class GroupServiceTest {
 	
 	@Test
 	void givenGroup_whenSave_thenSaveGroup() {
-		Group expected = new Group(1L, "", "", "", new Semester());
-		when(groupDao.save(expected)).thenReturn(expected);
+		Group group = new Group(1L, "", "", "", new Semester());
 		
-		Group actual = groupService.save(expected);
+		groupService.save(group);
 		
-		assertEquals(expected, actual);
+		verify(groupDao).save(group);
 	}
 	
 	@Test

@@ -34,8 +34,8 @@ public class GroupService {
 		groupDao.update(group);
 	}
 	
-	public Group save(Group group) {
-		return groupDao.save(group);
+	public void save(Group group) {
+		groupDao.save(group);
 	}
 	
 	public List<Student> findGroupStudents(Group group) {
