@@ -82,12 +82,11 @@ class CourseServiceTest {
 	
 	@Test
 	void givenCourse_whenSave_thenSaveCourse() {
-		Course expected = new Course(1L, "Math");		
-		when(courseDao.save(expected)).thenReturn(expected);
+		Course course = new Course(1L, "Math");		
 		
-		Course actual = courseService.save(expected);
+		courseService.save(course);
 		
-		assertEquals(expected, actual);
+		verify(courseDao).save(course);
 	}	
 	
 	@Test

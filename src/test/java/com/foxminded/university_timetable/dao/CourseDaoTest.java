@@ -89,12 +89,12 @@ class CourseDaoTest {
 
 	@Test
 	void givenNewCourse_whenSave_thenInsertCourse() {
-		Course course = new Course("Calculus", new ArrayList<>());
+		Course course = new Course(1L, "Calculus", new ArrayList<>());
+		int expected = courseDao.findAll().size() + 1;
 
-		Course inserted = courseDao.save(course);
-
-		Optional<Course> expected = Optional.of(inserted);
-		Optional<Course> actual = courseDao.findById(course.getId());
+		courseDao.save(course);
+		
+		int actual = courseDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 

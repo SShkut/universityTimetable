@@ -33,8 +33,8 @@ public class CourseService {
 		courseDao.update(course);
 	}
 	
-	public Course save(Course course) {
-		return courseDao.save(course);
+	public void save(Course course) {
+		courseDao.save(course);
 	}
 
 	public List<Course> findPrerequisites(Course course) {
