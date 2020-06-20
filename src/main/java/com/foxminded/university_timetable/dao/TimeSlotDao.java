@@ -3,6 +3,7 @@ package com.foxminded.university_timetable.dao;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.dao.row_mapper.TimeSlotRowMapper;
 import com.foxminded.university_timetable.model.DailyTimetable;
+import com.foxminded.university_timetable.model.Group;
+import com.foxminded.university_timetable.model.Room;
+import com.foxminded.university_timetable.model.Teacher;
 import com.foxminded.university_timetable.model.TimeSlot;
 
 @Repository
@@ -27,6 +31,10 @@ public class TimeSlotDao {
 	private static final String DELETE = "DELETE FROM time_slots WHERE id = ?";
 	private static final String FIND_ALL_DAILY_TIMETABLE_TIME_SLOTS = "SELECT * FROM time_slots WHERE daily_timetable_id = ?";
 	private static final String ADD_TIME_SLOT_TO_DAILY_TIMETABLE = "UPDATE time_slots SET daily_timetable_id = ? WHERE id = ?";
+	private static final String IS_TEACHER_AVAILABLE = "SELECT NOT EXISTS(SELECT 1 FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND teacher_id = ?)";
+	private static final String IS_GROUP_AVAILABLE = "SELECT NOT EXISTS(SELECT 1 FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND group_id = ?)";
+	private static final String IS_ROOM_AVAILABLE = "SELECT NOT EXISTS(SELECT 1 FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND room_id = ?)";
+	
 
 	private final JdbcTemplate jdbcTemplate;
 	private final TimeSlotRowMapper timeSlotRowMapper;
@@ -83,5 +91,17 @@ public class TimeSlotDao {
 
 	public void addTimeSlotToDailyTimetable(TimeSlot timeSlot, DailyTimetable dailyTimetable) {
 		jdbcTemplate.update(ADD_TIME_SLOT_TO_DAILY_TIMETABLE, dailyTimetable.getId(), timeSlot.getId());
+	}
+	
+	public Boolean isTeacherAvailable(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Teacher teacher) {
+		return jdbcTemplate.queryForObject(IS_TEACHER_AVAILABLE, new Object[] {dailyTimetable.getId(), startTime, endTime, teacher.getId()}, Boolean.class);
+	}
+	
+	public Boolean isGroupAvailable(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Group group) {
+		return jdbcTemplate.queryForObject(IS_GROUP_AVAILABLE, new Object[] {dailyTimetable.getId(), startTime, endTime, group.getId()}, Boolean.class);
+	}
+	
+	public Boolean isRoomAvailable(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Room room) {
+		return jdbcTemplate.queryForObject(IS_ROOM_AVAILABLE, new Object[] {dailyTimetable.getId(), startTime, endTime, room.getId()}, Boolean.class);
 	}
 }

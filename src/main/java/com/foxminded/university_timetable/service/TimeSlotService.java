@@ -53,33 +53,11 @@ public class TimeSlotService {
 	}
 	
 	public void addTimeSlotToDailyTimetable(TimeSlot timeSlot, DailyTimetable dailyTimetable) {
-		List<TimeSlot> alreadyExistentTimeSlots = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
-		boolean isGroupFit = alreadyExistentTimeSlots.stream()
-				.anyMatch(t -> isGroupFitPredicate(t, timeSlot));
-		boolean isTeacherFit = alreadyExistentTimeSlots.stream()
-				.anyMatch(t -> isTeacherFitPredicate(t, timeSlot));
-		boolean isRoomFree = alreadyExistentTimeSlots.stream()
-				.anyMatch(t -> isRoomFreePredicate(t, timeSlot));
-		if (isGroupFit && isTeacherFit && isRoomFree) {
+		boolean isGroupAvailable = timeSlotDao.isGroupAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getGroup());
+		boolean isTeacherAvalable = timeSlotDao.isTeacherAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getTeacher());
+		boolean isRoomAvailable = timeSlotDao.isRoomAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getRoom());
+		if (isGroupAvailable && isTeacherAvalable && isRoomAvailable) {
 			timeSlotDao.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		}
-	}
-
-	private boolean isGroupFitPredicate(TimeSlot timeSlotNew, TimeSlot timeSlotExistent) {
-		return !(timeSlotNew.getStartTime().equals(timeSlotExistent.getStartTime()) && 
-				timeSlotNew.getEndTime().equals(timeSlotExistent.getEndTime()) && 
-				timeSlotNew.getGroup().equals(timeSlotExistent.getGroup()));
-	}	
-	
-	private boolean isTeacherFitPredicate(TimeSlot timeSlotNew, TimeSlot timeSlotExistent) {
-		return !(timeSlotNew.getStartTime().equals(timeSlotExistent.getStartTime()) && 
-				timeSlotNew.getEndTime().equals(timeSlotExistent.getEndTime()) && 
-				timeSlotNew.getTeacher().equals(timeSlotExistent.getTeacher()));
-	}
-
-	private boolean isRoomFreePredicate(TimeSlot timeSlotNew, TimeSlot timeSlotExistent) {
-		return !(timeSlotNew.getStartTime().equals(timeSlotExistent.getStartTime()) && 
-				timeSlotNew.getEndTime().equals(timeSlotExistent.getEndTime()) && 
-				timeSlotNew.getRoom().equals(timeSlotExistent.getRoom()));
 	}
 }

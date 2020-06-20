@@ -1,6 +1,7 @@
 package com.foxminded.university_timetable.dao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -221,5 +222,77 @@ class TimeSlotDaoTest {
 
 		List<TimeSlot> actual = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
 		assertEquals(expected, actual);
+	}
+	
+	@Test
+	void givenCorrectStartTimeEndTimeTeacher_whenIsTeacherAvailable_returnTrue() {
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
+		LocalTime startTime = LocalTime.of(12, 00);
+		LocalTime endTime = LocalTime.of(13, 30);
+		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", "phD");
+		
+		Boolean isTeacherAvailable = timeSlotDao.isTeacherAvailable(dailyTimetable, startTime, endTime, teacher);
+		
+		assertTrue(isTeacherAvailable);
+	}
+	
+	@Test
+	void givenIncorrectStartTimeEndTimeTeacher_whenIsTeacherAvailable_returnFalse() {
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
+		LocalTime startTime = LocalTime.of(9, 00);
+		LocalTime endTime = LocalTime.of(9, 30);
+		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", "phD");
+		
+		Boolean isTeacherAvailable = timeSlotDao.isTeacherAvailable(dailyTimetable, startTime, endTime, teacher);
+		
+		assertFalse(isTeacherAvailable);
+	}
+	
+	@Test
+	void givenCorrectStartTimeEndTimeGroup_whenIsGroupAvailable_returnTrue() {
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
+		LocalTime startTime = LocalTime.of(10, 00);
+		LocalTime endTime = LocalTime.of(11, 50);
+		Group group = new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"));
+		
+		Boolean isGroupAvailable = timeSlotDao.isGroupAvailable(dailyTimetable, startTime, endTime, group);
+		
+		assertTrue(isGroupAvailable);
+	}
+	
+	@Test
+	void givenIncorrectStartTimeEndTimeGroup_whenIsGroupAvailable_returnFalse() {
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
+		LocalTime startTime = LocalTime.of(9, 00);
+		LocalTime endTime = LocalTime.of(9, 30);
+		Group group = new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"));
+		
+		Boolean isGroupAvailable = timeSlotDao.isGroupAvailable(dailyTimetable, startTime, endTime, group);
+		
+		assertFalse(isGroupAvailable);
+	}
+	
+	@Test
+	void givenCorrectStartTimeEndTimeRoom_whenIsRoomAvailable_returnTrue() {
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
+		LocalTime startTime = LocalTime.of(10, 00);
+		LocalTime endTime = LocalTime.of(11, 50);
+		Room room = new Room(2L, "b-1", 70);
+		
+		Boolean isRoomAvailable = timeSlotDao.isRoomAvailable(dailyTimetable, startTime, endTime, room);
+		
+		assertTrue(isRoomAvailable);
+	}
+	
+	@Test
+	void givenIncorrectStartTimeEndTimeRoom_whenIsRoomAvailable_returnFalse() {
+		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
+		LocalTime startTime = LocalTime.of(9, 00);
+		LocalTime endTime = LocalTime.of(9, 30);
+		Room room = new Room(1L, "a-1", 100);
+		
+		Boolean isRoomAvailable = timeSlotDao.isRoomAvailable(dailyTimetable, startTime, endTime, room);
+		
+		assertFalse(isRoomAvailable);
 	}
 }

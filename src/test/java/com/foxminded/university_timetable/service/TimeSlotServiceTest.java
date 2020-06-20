@@ -137,10 +137,8 @@ class TimeSlotServiceTest {
 	void givenTimeSlotWithNotFittedGroupAndDailyTimetable_whenAddTimeSlotToDailyTimetable_thenDontAddTimeSlotToTimetable() {
 		Group group = new Group(1L, "", "", "", new Semester());
 		TimeSlot timeSlot = new TimeSlot(1L, LocalTime.of(1, 0), LocalTime.of(2, 0), new Course(), new Teacher(), group, new Room());
-		List<TimeSlot> timeSlots = new ArrayList<>();
-		timeSlots.add(timeSlot);
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 3));
-		when(timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable)).thenReturn(timeSlots);
+		when(timeSlotDao.isGroupAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), group)).thenReturn(false);
 		
 		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
@@ -151,10 +149,8 @@ class TimeSlotServiceTest {
 	void givenTimeSlotWithNotFittedTeacherpAndDailyTimetable_whenAddTimeSlotToDailyTimetable_thenDontAddTimeSlotToTimetable() {
 		Teacher teacher = new Teacher(1L, "", "", "", "", "", "");
 		TimeSlot timeSlot = new TimeSlot(1L, LocalTime.of(1, 0), LocalTime.of(2, 0), new Course(), teacher, new Group(), new Room());
-		List<TimeSlot> timeSlots = new ArrayList<>();
-		timeSlots.add(timeSlot);
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 3));
-		when(timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable)).thenReturn(timeSlots);
+		when(timeSlotDao.isTeacherAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), teacher)).thenReturn(false);
 		
 		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
@@ -165,10 +161,8 @@ class TimeSlotServiceTest {
 	void givenTimeSlotWithNotFittedRoomAndDailyTimetable_whenAddTimeSlotToDailyTimetable_thenDontAddTimeSlotToTimetable() {
 		Room room = new Room(1L, "", 1);
 		TimeSlot timeSlot = new TimeSlot(1L, LocalTime.of(1, 0), LocalTime.of(2, 0), new Course(), new Teacher(), new Group(), room);
-		List<TimeSlot> timeSlots = new ArrayList<>();
-		timeSlots.add(timeSlot);
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 3));
-		when(timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable)).thenReturn(timeSlots);
+		when(timeSlotDao.isRoomAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), room)).thenReturn(false);
 		
 		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
@@ -181,10 +175,10 @@ class TimeSlotServiceTest {
 		Teacher teacher = new Teacher(1L, "", "", "", "", "", "");
 		Room room = new Room(1L, "", 1);
 		TimeSlot timeSlot = new TimeSlot(1L, LocalTime.of(1, 0), LocalTime.of(2, 0), new Course(), teacher, group, room);
-		List<TimeSlot> timeSlots = new ArrayList<>();
-		timeSlots.add(timeSlot);
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 3));
-		when(timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable)).thenReturn(timeSlots);
+		when(timeSlotDao.isGroupAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), group)).thenReturn(false);
+		when(timeSlotDao.isTeacherAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), teacher)).thenReturn(false);
+		when(timeSlotDao.isRoomAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), room)).thenReturn(false);
 		
 		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
@@ -192,22 +186,18 @@ class TimeSlotServiceTest {
 	}
 	
 	@Test
-	void givenFittedTimeSlotAndDailyTimetable_whenAddTimeSlotToDailyTimetable_thenDontAddTimeSlotToTimetable() {
+	void givenFittedTimeSlotAndDailyTimetable_whenAddTimeSlotToDailyTimetable_thenAddTimeSlotToTimetable() {
 		Group group = new Group(1L, "", "", "", new Semester());
 		Teacher teacher = new Teacher(1L, "", "", "", "", "", "");
 		Room room = new Room(1L, "", 1);
-		Group newGroup = new Group(2L, "", "", "", new Semester());
-		Teacher newTeacher = new Teacher(2L, "", "", "", "", "", "");
-		Room newRoom = new Room(2L, "", 1);
 		TimeSlot timeSlot = new TimeSlot(1L, LocalTime.of(1, 0), LocalTime.of(2, 0), new Course(), teacher, group, room);
-		TimeSlot newTimeSlot = new TimeSlot(2L, LocalTime.of(1, 0), LocalTime.of(2, 0), new Course(), newTeacher, newGroup, newRoom);
-		List<TimeSlot> timeSlots = new ArrayList<>();
-		timeSlots.add(timeSlot);
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 3));
-		when(timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable)).thenReturn(timeSlots);
+		when(timeSlotDao.isGroupAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), group)).thenReturn(true);
+		when(timeSlotDao.isTeacherAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), teacher)).thenReturn(true);
+		when(timeSlotDao.isRoomAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), room)).thenReturn(true);
 		
-		timeSlotService.addTimeSlotToDailyTimetable(newTimeSlot, dailyTimetable);
+		timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 		
-		verify(timeSlotDao).addTimeSlotToDailyTimetable(newTimeSlot, dailyTimetable);
+		verify(timeSlotDao).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 	}
 }
