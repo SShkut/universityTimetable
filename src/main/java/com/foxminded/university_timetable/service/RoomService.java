@@ -33,7 +33,7 @@ public class RoomService {
 		roomDao.update(room);
 	}
 	
-	public Room save(Room room) {
-		return roomDao.save(room);
+	public void save(Room room) {
+		roomDao.save(room);
 	}
 }

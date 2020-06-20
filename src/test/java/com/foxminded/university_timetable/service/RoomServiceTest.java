@@ -81,11 +81,10 @@ class RoomServiceTest {
 	
 	@Test
 	void givenRoom_whenSave_thenSaveRoom() {
-		Room expected = new Room(1L, "", 0);
-		when(roomDao.save(expected)).thenReturn(expected);
+		Room room = new Room(1L, "", 0);
 		
-		Room actual = roomService.save(expected);
+		roomService.save(room);
 		
-		assertEquals(expected, actual);
+		verify(roomDao).save(room);
 	}
 }
