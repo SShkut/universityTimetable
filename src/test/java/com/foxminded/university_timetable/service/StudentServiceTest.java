@@ -91,12 +91,11 @@ class StudentServiceTest {
 	
 	@Test
 	void givenStudent_whenSave_thenSaveStudent() {
-		Student expected = new Student(1L, "", "", "", "", "", "");
-		when(studentDao.save(expected)).thenReturn(expected);
+		Student student = new Student(1L, "", "", "", "", "", "");
 		
-		Student actual = studentService.save(expected);
+		studentService.save(student);
 		
-		assertEquals(expected, actual);
+		verify(studentDao).save(student);
 	}
 	
 	@Test
