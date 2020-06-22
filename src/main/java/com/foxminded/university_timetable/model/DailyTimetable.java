@@ -13,6 +13,10 @@ public class DailyTimetable {
 	public DailyTimetable() {
 	}
 
+	public DailyTimetable(LocalDate date) {
+		this.date = date;
+	}
+
 	public DailyTimetable(LocalDate date, List<TimeSlot> timeSlots) {
 		this.date = date;
 		this.timeSlots = timeSlots;

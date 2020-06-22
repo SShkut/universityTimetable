@@ -1,6 +1,6 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,11 +69,11 @@ class RoomDaoTest {
 	@Test
 	void givenNewRoom_whenSave_thenInsertRoom() {
 		Room room = new Room("c-1", 60);
+		int expected = roomDao.findAll().size() + 1;
 
-		Room inserted = roomDao.save(room);
+		roomDao.save(room);
 
-		Optional<Room> expected = Optional.of(inserted);
-		Optional<Room> actual = roomDao.findById(room.getId());
+		int actual = roomDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 
