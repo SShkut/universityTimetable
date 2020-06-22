@@ -1,10 +1,14 @@
 package com.foxminded.university_timetable.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.dao.row_mapper.GroupRowMapper;
@@ -54,8 +58,17 @@ public class GroupDao {
 	}
 
 	public void save(Group group) {
-		jdbcTemplate.update(SAVE, group.getName(), group.getMajor(), group.getDepartment(),
-				group.getSemester().getId());
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, group.getName());
+			ps.setString(2, group.getMajor());
+			ps.setString(3, group.getDepartment());
+			ps.setLong(4, group.getSemester().getId());
+			return ps;
+		}, keyHolder);
+		Long id = (Long) keyHolder.getKeys().get("id");
+		group.setId(id);
 	}
 
 	public void update(Group group) {

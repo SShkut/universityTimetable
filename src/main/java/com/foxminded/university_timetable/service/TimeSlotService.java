@@ -38,14 +38,13 @@ public class TimeSlotService {
 		timeSlotDao.update(timeSlot);
 	}
 	
-	public TimeSlot save(TimeSlot timeSlot) {
+	public void save(TimeSlot timeSlot) {
 		List<Course> teacherQualifications = teacherDao.findAllTeacherQualifications(timeSlot.getTeacher());
 		boolean hasQualification = teacherQualifications.stream()
 				.anyMatch(c -> c.equals(timeSlot.getCourse()));
 		if (hasQualification) {
-			return timeSlotDao.save(timeSlot);
+			timeSlotDao.save(timeSlot);
 		}
-		return new TimeSlot();
 	}
 	
 	public List<TimeSlot> findAllDailyTimetableTimeSlots(DailyTimetable dailyTimetable) {

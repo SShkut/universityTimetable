@@ -1,10 +1,14 @@
 package com.foxminded.university_timetable.dao;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.dao.row_mapper.CourseRowMapper;
@@ -56,8 +60,19 @@ public class StudentDao {
 	}
 
 	public void save(Student student) {
-		jdbcTemplate.update(SAVE, student.getFirstName(), student.getLastName(), student.getTaxNumber(),
-				student.getPhoneNumber(), student.getEmail(), student.getStudentCardNumber());
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, student.getFirstName());
+			ps.setString(2, student.getLastName());
+			ps.setString(3, student.getTaxNumber());
+			ps.setString(4, student.getPhoneNumber());
+			ps.setString(5, student.getEmail());
+			ps.setString(6, student.getStudentCardNumber());
+			return ps;
+		}, keyHolder);
+		Long id = (Long) keyHolder.getKeys().get("id");
+		student.setId(id);
 	}
 
 	public void update(Student student) {

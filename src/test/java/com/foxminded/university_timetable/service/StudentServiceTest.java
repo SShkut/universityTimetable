@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.foxminded.university_timetable.dao.GroupDao;
 import com.foxminded.university_timetable.dao.StudentDao;
@@ -34,7 +35,7 @@ class StudentServiceTest {
 	private GroupDao groupDao;
 	
 	@InjectMocks
-	private StudentService studentService;
+	private StudentService studentService;	
 
 	@Test
 	void whenFindAll_thenReturnAllStudents() {
@@ -100,6 +101,7 @@ class StudentServiceTest {
 	
 	@Test
 	void givenStudentAndFreeGroup_whenAddStudentToGroup_thenAddStudentToGroup() {
+		ReflectionTestUtils.setField(studentService, "groupMaxSize", 30);
 		Student student = new Student(1L, "", "", "", "", "", "");
 		Group group = new Group(1L, "", "", "", new Semester());
 		List<Student> students = LongStream.rangeClosed(1, 29)
@@ -114,6 +116,7 @@ class StudentServiceTest {
 	
 	@Test
 	void givenStudentAndFullGroup_whenAddStudentToGroup_thenDontAddStudentToGroup() {
+		ReflectionTestUtils.setField(studentService, "groupMaxSize", 30);
 		Student student = new Student(1L, "", "", "", "", "", "");
 		Group group = new Group(1L, "", "", "", new Semester());
 		List<Student> students = LongStream.rangeClosed(1, 30)

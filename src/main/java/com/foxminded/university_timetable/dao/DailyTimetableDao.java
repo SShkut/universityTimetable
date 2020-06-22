@@ -1,11 +1,16 @@
 package com.foxminded.university_timetable.dao;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.dao.row_mapper.DailyTimetableRowMapper;
@@ -59,7 +64,14 @@ public class DailyTimetableDao {
 	}
 
 	public void save(DailyTimetable dailyTimetable) {
-		jdbcTemplate.update(SAVE, dailyTimetable.getDate());
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		jdbcTemplate.update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
+			ps.setDate(1, Date.valueOf(dailyTimetable.getDate()));
+			return ps;
+		}, keyHolder);
+		Long id = (Long) keyHolder.getKeys().get("id");
+		dailyTimetable.setId(id);
 	}
 
 	public void update(DailyTimetable dailyTimetable) {

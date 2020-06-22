@@ -239,8 +239,9 @@ public class Menu {
 				LocalDate date = LocalDate.parse(text);
 				dailyTimetable = dailyTimetableService.findByDate(date);
 				if (!dailyTimetable.isPresent()) {
-					dailyTimetableService.save(new DailyTimetable(null, date, null));
-					dailyTimetable = dailyTimetableService.findByDate(date);
+					DailyTimetable dt = new DailyTimetable(date);
+					dailyTimetableService.save(dt);
+					dailyTimetable = Optional.of(dt);
 				}
 				dailyTimetableService.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
 						timetable.orElseThrow(NoSuchElementException::new));
@@ -353,8 +354,8 @@ public class Menu {
 			try {
 				LocalTime startTime = LocalTime.parse(start, DateTimeFormatter.ofPattern("HH:mm"));
 				LocalTime endTime = LocalTime.parse(end, DateTimeFormatter.ofPattern("HH:mm"));
-				TimeSlot timeSlot = timeSlotService
-						.save(new TimeSlot(startTime, endTime, course.get(), teacher.get(), group.get(), room.get()));
+				TimeSlot timeSlot = new TimeSlot(startTime, endTime, course.get(), teacher.get(), group.get(), room.get());
+				timeSlotService.save(timeSlot);
 				timeSlotService.addTimeSlotToDailyTimetable(timeSlot,
 						dailyTimetable.orElseThrow(NoSuchElementException::new));
 				correct = true;

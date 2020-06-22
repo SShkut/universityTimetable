@@ -3,6 +3,8 @@ package com.foxminded.university_timetable.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.foxminded.university_timetable.dao.GroupDao;
@@ -13,13 +15,14 @@ import com.foxminded.university_timetable.model.Student;
 
 @Service
 public class StudentService {
-	
-	private final static int MAX_GROUP_SIZE = 30;
 
 	private final StudentDao studentDao;
 	private final GroupDao groupDao;
+	
+	@Value("${group.max_size}")
+	private int groupMaxSize;
 
-	public StudentService(StudentDao studentDao, GroupDao groupDao) {
+	public StudentService(StudentDao studentDao, GroupDao groupDao, Environment environment) {
 		this.studentDao = studentDao;
 		this.groupDao = groupDao;
 	}
@@ -46,7 +49,7 @@ public class StudentService {
 
 	public void addStudentToGroup(Student student, Group group) {
 		int groupSize = groupDao.findGroupStudents(group).size();
-		if (groupSize < MAX_GROUP_SIZE) {
+		if (groupSize < groupMaxSize) {
 			studentDao.addStudentToGroup(student, group);
 		}
 	}

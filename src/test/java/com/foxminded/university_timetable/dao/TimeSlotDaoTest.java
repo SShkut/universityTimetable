@@ -110,23 +110,15 @@ class TimeSlotDaoTest {
 
 	@Test
 	void givenTimeSlot_whenSave_thenInsertTimeSlot() {
-		List<Course> courses = new ArrayList<>();
-		courses.add(new Course(1L, "CS"));
-		courses.add(new Course(3L, "Physics"));
-		List<Course> prerequisites = new ArrayList<>();
-		prerequisites.add(new Course(2L, "Math"));
-		prerequisites.add(new Course(4L, "History"));
-		prerequisites.add(new Course(5L, "Chemistry"));
-		List<Student> students = new ArrayList<>();
-		students.add(new Student(1L, "fn-1", "ln-1", "123456789", "1234567890", "ln-1@unv.com", "cn-123"));
-		students.add(new Student(2L, "fn-2", "ln-2", "123456798", "1234567891", "ln-2@unv.com", "cn-124"));
-		TimeSlot timeSlot = this.timeSlotDao
-				.save(new TimeSlot(LocalTime.of(19, 0), LocalTime.of(19, 30), new Course(1L, "CS", prerequisites),
-						new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", courses, "phD"),
-						new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"), students),
-						new Room(1L, "a-1", 100)));
-		Optional<TimeSlot> expected = Optional.of(timeSlot);
-		Optional<TimeSlot> actual = timeSlotDao.findById(timeSlot.getId());
+		TimeSlot timeSlot = new TimeSlot(LocalTime.of(19, 0), LocalTime.of(19, 30), new Course(1L, ""),
+						new Teacher(1L, "", "", "", "", "", "phD"),
+						new Group(1L, "", "", "", new Semester(1L, 2020, "")),
+						new Room(1L, "", 1));
+		int expected = timeSlotDao.findAll().size() + 1;
+		
+		timeSlotDao.save(timeSlot);
+		
+		int actual = timeSlotDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 

@@ -57,7 +57,7 @@ public class TimeSlotDao {
 		return jdbcTemplate.query(FIND_ALL, timeSlotRowMapper);
 	}
 
-	public TimeSlot save(TimeSlot timeSlot) {
+	public void save(TimeSlot timeSlot) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -69,9 +69,8 @@ public class TimeSlotDao {
 			ps.setLong(6, timeSlot.getRoom().getId());
 			return ps;
 		}, keyHolder);
-		Long id = keyHolder.getKey().longValue();
+		Long id = (Long) keyHolder.getKeys().get("id");
 		timeSlot.setId(id);
-		return timeSlot;
 	}
 
 	public void update(TimeSlot timeSlot) {
