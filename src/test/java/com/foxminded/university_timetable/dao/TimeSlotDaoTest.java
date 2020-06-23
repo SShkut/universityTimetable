@@ -217,74 +217,74 @@ class TimeSlotDaoTest {
 	}
 	
 	@Test
-	void givenCorrectStartTimeEndTimeTeacher_whenIsTeacherAvailable_returnTrue() {
+	void givenCorrectStartTimeEndTimeTeacher_whenFindByTeacherAndTime_returnTrue() {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
 		LocalTime startTime = LocalTime.of(12, 00);
 		LocalTime endTime = LocalTime.of(13, 30);
 		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", "phD");
 		
-		Boolean isTeacherAvailable = timeSlotDao.isTeacherAvailable(dailyTimetable, startTime, endTime, teacher);
+		Optional<TimeSlot> timeSlot = timeSlotDao.findByTeacherAndTime(dailyTimetable, startTime, endTime, teacher);
 		
-		assertTrue(isTeacherAvailable);
+		assertFalse(timeSlot.isPresent());
 	}
 	
 	@Test
-	void givenIncorrectStartTimeEndTimeTeacher_whenIsTeacherAvailable_returnFalse() {
+	void givenIncorrectStartTimeEndTimeTeacher_whenFindByTeacherAndTime_returnFalse() {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
 		LocalTime startTime = LocalTime.of(9, 00);
 		LocalTime endTime = LocalTime.of(9, 30);
 		Teacher teacher = new Teacher(1L, "fnt-1", "lnt-1", "223456789", "4234567890", "lnt-1@unv.com", "phD");
 		
-		Boolean isTeacherAvailable = timeSlotDao.isTeacherAvailable(dailyTimetable, startTime, endTime, teacher);
+		Optional<TimeSlot> timeSlot = timeSlotDao.findByTeacherAndTime(dailyTimetable, startTime, endTime, teacher);
 		
-		assertFalse(isTeacherAvailable);
+		assertTrue(timeSlot.isPresent());
 	}
 	
 	@Test
-	void givenCorrectStartTimeEndTimeGroup_whenIsGroupAvailable_returnTrue() {
+	void givenCorrectStartTimeEndTimeGroup_whenFindByGroupAndTime_returnTrue() {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
 		LocalTime startTime = LocalTime.of(10, 00);
 		LocalTime endTime = LocalTime.of(11, 50);
 		Group group = new Group(2L, "cs-2", "cs", "cs", new Semester(1L, 2020, "summer"));
 		
-		Boolean isGroupAvailable = timeSlotDao.isGroupAvailable(dailyTimetable, startTime, endTime, group);
+		Optional<TimeSlot> timeSlot = timeSlotDao.findByGroupAndTime(dailyTimetable, startTime, endTime, group);
 		
-		assertTrue(isGroupAvailable);
+		assertFalse(timeSlot.isPresent());
 	}
 	
 	@Test
-	void givenIncorrectStartTimeEndTimeGroup_whenIsGroupAvailable_returnFalse() {
+	void givenIncorrectStartTimeEndTimeGroup_whenFindByGroupAndTime_returnFalse() {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
 		LocalTime startTime = LocalTime.of(9, 00);
 		LocalTime endTime = LocalTime.of(9, 30);
 		Group group = new Group(1L, "cs-1", "cs", "cs", new Semester(1L, 2020, "summer"));
 		
-		Boolean isGroupAvailable = timeSlotDao.isGroupAvailable(dailyTimetable, startTime, endTime, group);
+		Optional<TimeSlot> timeSlot = timeSlotDao.findByGroupAndTime(dailyTimetable, startTime, endTime, group);
 		
-		assertFalse(isGroupAvailable);
+		assertTrue(timeSlot.isPresent());
 	}
 	
 	@Test
-	void givenCorrectStartTimeEndTimeRoom_whenIsRoomAvailable_returnTrue() {
+	void givenCorrectStartTimeEndTimeRoom_whenFindByRoomAndTime_returnTrue() {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
 		LocalTime startTime = LocalTime.of(10, 00);
 		LocalTime endTime = LocalTime.of(11, 50);
 		Room room = new Room(2L, "b-1", 70);
 		
-		Boolean isRoomAvailable = timeSlotDao.isRoomAvailable(dailyTimetable, startTime, endTime, room);
+		Optional<TimeSlot> timeSlot = timeSlotDao.findByRoomAndTime(dailyTimetable, startTime, endTime, room);
 		
-		assertTrue(isRoomAvailable);
+		assertFalse(timeSlot.isPresent());
 	}
 	
 	@Test
-	void givenIncorrectStartTimeEndTimeRoom_whenIsRoomAvailable_returnFalse() {
+	void givenIncorrectStartTimeEndTimeRoom_whenFindByRoomAndTime_returnFalse() {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 12));
 		LocalTime startTime = LocalTime.of(9, 00);
 		LocalTime endTime = LocalTime.of(9, 30);
 		Room room = new Room(1L, "a-1", 100);
 		
-		Boolean isRoomAvailable = timeSlotDao.isRoomAvailable(dailyTimetable, startTime, endTime, room);
+		Optional<TimeSlot> timeSlot = timeSlotDao.findByRoomAndTime(dailyTimetable, startTime, endTime, room);
 		
-		assertFalse(isRoomAvailable);
+		assertTrue(timeSlot.isPresent());
 	}
 }

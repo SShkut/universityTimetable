@@ -52,11 +52,15 @@ public class TimeSlotService {
 	}
 	
 	public void addTimeSlotToDailyTimetable(TimeSlot timeSlot, DailyTimetable dailyTimetable) {
-		boolean isGroupAvailable = timeSlotDao.isGroupAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getGroup());
-		boolean isTeacherAvalable = timeSlotDao.isTeacherAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getTeacher());
-		boolean isRoomAvailable = timeSlotDao.isRoomAvailable(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getRoom());
-		if (isGroupAvailable && isTeacherAvalable && isRoomAvailable) {
-			timeSlotDao.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
+		boolean isGroupAvailable = !timeSlotDao.findByGroupAndTime(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getGroup()).isPresent();
+		if (isGroupAvailable) {
+			boolean isTeacherAvalable = !timeSlotDao.findByTeacherAndTime(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getTeacher()).isPresent();
+			if(isTeacherAvalable) {
+				boolean isRoomAvailable = !timeSlotDao.findByRoomAndTime(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getRoom()).isPresent();
+				if (isRoomAvailable) {
+					timeSlotDao.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
+				}
+			}
 		}
 	}
 }

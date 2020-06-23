@@ -31,9 +31,9 @@ public class TimeSlotDao {
 	private static final String DELETE = "DELETE FROM time_slots WHERE id = ?";
 	private static final String FIND_ALL_DAILY_TIMETABLE_TIME_SLOTS = "SELECT * FROM time_slots WHERE daily_timetable_id = ?";
 	private static final String ADD_TIME_SLOT_TO_DAILY_TIMETABLE = "UPDATE time_slots SET daily_timetable_id = ? WHERE id = ?";
-	private static final String IS_TEACHER_AVAILABLE = "SELECT NOT EXISTS(SELECT 1 FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND teacher_id = ?)";
-	private static final String IS_GROUP_AVAILABLE = "SELECT NOT EXISTS(SELECT 1 FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND group_id = ?)";
-	private static final String IS_ROOM_AVAILABLE = "SELECT NOT EXISTS(SELECT 1 FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND room_id = ?)";
+	private static final String FIND_BY_TEACHER_AND_TIME = "SELECT * FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND teacher_id = ?";
+	private static final String FIND_BY_GROUP_AND_TIME = "SELECT * FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND group_id = ?";
+	private static final String FIND_BY_ROOM_AND_TIME = "SELECT * FROM time_slots WHERE daily_timetable_id = ? AND start_time = ? AND end_time = ? AND room_id = ?";
 	
 
 	private final JdbcTemplate jdbcTemplate;
@@ -92,15 +92,30 @@ public class TimeSlotDao {
 		jdbcTemplate.update(ADD_TIME_SLOT_TO_DAILY_TIMETABLE, dailyTimetable.getId(), timeSlot.getId());
 	}
 	
-	public Boolean isTeacherAvailable(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Teacher teacher) {
-		return jdbcTemplate.queryForObject(IS_TEACHER_AVAILABLE, new Object[] {dailyTimetable.getId(), startTime, endTime, teacher.getId()}, Boolean.class);
+	public Optional<TimeSlot> findByTeacherAndTime(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Teacher teacher) {
+		try {
+			TimeSlot timeSlot =  jdbcTemplate.queryForObject(FIND_BY_TEACHER_AND_TIME, new Object[] {dailyTimetable.getId(), startTime, endTime, teacher.getId()}, timeSlotRowMapper);
+			return Optional.of(timeSlot);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
 	}
 	
-	public Boolean isGroupAvailable(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Group group) {
-		return jdbcTemplate.queryForObject(IS_GROUP_AVAILABLE, new Object[] {dailyTimetable.getId(), startTime, endTime, group.getId()}, Boolean.class);
+	public Optional<TimeSlot> findByGroupAndTime(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Group group) {
+		try {
+			TimeSlot timeSlot = jdbcTemplate.queryForObject(FIND_BY_GROUP_AND_TIME, new Object[] {dailyTimetable.getId(), startTime, endTime, group.getId()}, timeSlotRowMapper);
+			return Optional.of(timeSlot);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
 	}
 	
-	public Boolean isRoomAvailable(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Room room) {
-		return jdbcTemplate.queryForObject(IS_ROOM_AVAILABLE, new Object[] {dailyTimetable.getId(), startTime, endTime, room.getId()}, Boolean.class);
+	public Optional<TimeSlot> findByRoomAndTime(DailyTimetable dailyTimetable, LocalTime startTime, LocalTime endTime, Room room) {
+		try {
+			TimeSlot timeSlot = jdbcTemplate.queryForObject(FIND_BY_ROOM_AND_TIME, new Object[] {dailyTimetable.getId(), startTime, endTime, room.getId()}, timeSlotRowMapper);
+			return Optional.of(timeSlot);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
 	}
 }
