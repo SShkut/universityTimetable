@@ -1,6 +1,6 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,11 +69,11 @@ class SemesterDaoTest {
 	@Test
 	void givenNewSemester_whenSave_thenInsertSemester() {
 		Semester semester = new Semester(2021, "winter");
+		int expected = semesterDao.findAll().size() + 1;
 
-		Semester inserted = semesterDao.save(semester);
+		semesterDao.save(semester);
 
-		Optional<Semester> expected = Optional.of(inserted);
-		Optional<Semester> actual = semesterDao.findById(semester.getId());
+		int actual = semesterDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 

@@ -44,7 +44,7 @@ public class SemesterDao {
 		return jdbcTemplate.query(FIND_ALL, semesterRowMapper);
 	}
 
-	public Semester save(Semester semester) {
+	public void save(Semester semester) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -52,9 +52,8 @@ public class SemesterDao {
 			ps.setString(2, semester.getPeriod());
 			return ps;
 		}, keyHolder);
-		Long id = keyHolder.getKey().longValue();
+		Long id = (Long) keyHolder.getKeys().get("id");
 		semester.setId(id);
-		return semester;
 	}
 
 	public void update(Semester semester) {

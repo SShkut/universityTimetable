@@ -13,7 +13,7 @@ DROP TABLE IF EXISTS semesters;
 DROP TABLE IF EXISTS rooms;
 
 CREATE TABLE courses (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	name VARCHAR(255) NOT NULL
 );
 
@@ -26,13 +26,13 @@ CREATE TABLE course_hierarchy (
 );
 
 CREATE TABLE semesters (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	year_of_study INTEGER NOT NULL,
 	period VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE groups (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
 	major VARCHAR(255) NOT NULL,
 	department VARCHAR(255) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE groups (
 );
 
 CREATE TABLE students (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
 	tax_number VARCHAR(20) NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE student_course (
 );
 
 CREATE TABLE teachers (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
 	tax_number VARCHAR(20) NOT NULL,
@@ -85,25 +85,25 @@ CREATE TABLE teacher_course (
 );
 
 CREATE TABLE rooms (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	symbol VARCHAR(30) NOT NULL,
 	capacity INTEGER
 );
 
 CREATE TABLE timetables (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	name VARCHAR(255)
 );
 
 CREATE TABLE daily_timetables (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	date DATE,
 	timetable_id INTEGER,
 	FOREIGN KEY (timetable_id) REFERENCES timetables(id) ON DELETE CASCADE
 );
 
 CREATE TABLE time_slots (
-	id serial PRIMARY KEY,
+	id bigserial PRIMARY KEY,
 	start_time TIME NOT NULL,
 	end_time TIME NOT NULL,
 	course_id INTEGER,

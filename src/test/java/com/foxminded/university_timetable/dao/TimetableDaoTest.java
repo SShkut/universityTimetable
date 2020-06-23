@@ -1,6 +1,6 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -87,11 +87,11 @@ class TimetableDaoTest {
 
 	@Test
 	void givenTimetable_whenSave_thenInsertTimetable() {
+		int expected = timetableDao.findAll().size() + 1;
+		
+		timetableDao.save(new Timetable("new", new ArrayList<>()));
 
-		Timetable timetable = timetableDao.save(new Timetable("new", new ArrayList<>()));
-
-		Optional<Timetable> expected = Optional.of(timetable);
-		Optional<Timetable> actual = timetableDao.findById(timetable.getId());
+		int actual = timetableDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 

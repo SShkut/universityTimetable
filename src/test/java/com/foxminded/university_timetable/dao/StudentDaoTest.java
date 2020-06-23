@@ -1,6 +1,6 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,13 +80,11 @@ class StudentDaoTest {
 	void givenStudent_whenSave_thenInsertStudent() {
 		Student student = new Student("fn-6", "ln-6", "623456789", "6234567890", "ln-6@unv.com", new ArrayList<>(),
 				"cn-623");
-		List<Course> courses = studentDao.findAllStudentCourses(student);
-		student.setCourses(courses);
+		int expected = studentDao.findAll().size() + 1;
 
-		Student inserted = studentDao.save(student);
+		studentDao.save(student);
 
-		Optional<Student> expected = Optional.of(inserted);
-		Optional<Student> actual = studentDao.findById(student.getId());
+		int actual = studentDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 

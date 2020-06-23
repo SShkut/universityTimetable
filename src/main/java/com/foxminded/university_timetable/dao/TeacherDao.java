@@ -23,7 +23,7 @@ public class TeacherDao {
 	private static final String FIND_ALL = "SELECT * FROM teachers";
 	private static final String SAVE = "INSERT INTO teachers (first_name, last_name, tax_number, phone_number, email, degree) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE teachers SET first_name = ?, last_name = ?, tax_number = ?, phone_number = ?, email = ?, degree = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM teachers WHERE id = ?";
+	private static final String DELETE = "DELETE FROM teachers WHERE id = ?";
 	private static final String ADD_TEACHER_QUALIFICATION = "INSERT INTO teacher_course (teacher_id, course_id) VALUES (?, ?)";
 	private static final String DELETE_TEACHER_QUALIFICATION = "DELETE FROM teacher_course WHERE teacher_id = ? AND course_id = ?";
 	private static final String FIND_ALL_TEACHER_QUALIFICATIONS = "SELECT c.id, c.name " 
@@ -55,7 +55,7 @@ public class TeacherDao {
 		return jdbcTemplate.query(FIND_ALL, teacherRowMapper);
 	}
 
-	public Teacher save(Teacher teacher) {
+	public void save(Teacher teacher) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -67,9 +67,8 @@ public class TeacherDao {
 			ps.setString(6, teacher.getDegree());
 			return ps;
 		}, keyHolder);
-		Long id = keyHolder.getKey().longValue();
+		Long id = (Long) keyHolder.getKeys().get("id");
 		teacher.setId(id);
-		return teacher;
 	}
 
 	public void update(Teacher teacher) {
@@ -78,7 +77,7 @@ public class TeacherDao {
 	}
 
 	public void delete(Teacher teacher) {
-		jdbcTemplate.update(DELETE_BY_ID, teacher.getId());
+		jdbcTemplate.update(DELETE, teacher.getId());
 	}
 
 	public void addTeacherQualification(Teacher teacher, Course course) {
