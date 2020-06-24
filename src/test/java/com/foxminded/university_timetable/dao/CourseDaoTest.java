@@ -1,6 +1,6 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,12 +89,12 @@ class CourseDaoTest {
 
 	@Test
 	void givenNewCourse_whenSave_thenInsertCourse() {
-		Course course = new Course("Calculus", new ArrayList<>());
+		Course course = new Course(1L, "Calculus", new ArrayList<>());
+		int expected = courseDao.findAll().size() + 1;
 
-		Course inserted = courseDao.save(course);
-
-		Optional<Course> expected = Optional.of(inserted);
-		Optional<Course> actual = courseDao.findById(course.getId());
+		courseDao.save(course);
+		
+		int actual = courseDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 
@@ -108,6 +108,19 @@ class CourseDaoTest {
 
 		Optional<Course> expected = Optional.of(course);
 		Optional<Course> actual = courseDao.findById(course.getId());
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	void givenCourseAndPrerequisite_whenAddCoursePrerequisite_thenAddPrerequisiteToCourse() {
+		Course course = new Course(4L, "History");
+		Course prerequisite = new Course(5L, "Chemistry");
+		List<Course> expected = new ArrayList<>();
+		expected.add(prerequisite);
+
+		courseDao.addCoursePrerequisite(course, prerequisite);
+
+		List<Course> actual = courseDao.findCoursePrerequisites(course);
 		assertEquals(expected, actual);
 	}
 }

@@ -26,7 +26,7 @@ public class DailyTimetableDao {
 	private static final String FIND_ALL = "SELECT * FROM daily_timetables";
 	private static final String SAVE = "INSERT INTO daily_timetables (date) VALUES (?)";
 	private static final String UPDATE = "UPDATE daily_timetables SET date = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM daily_timetables WHERE id = ?";
+	private static final String DELETE = "DELETE FROM daily_timetables WHERE id = ?";
 	private static final String ADD_DAILY_TIMETABLE_TO_TIMETABLE = "UPDATE daily_timetables SET timetable_id = ? WHERE id = ?";
 	private static final String FIND_BY_DATE = "SELECT * FROM daily_timetables WHERE date = ?";
 	private static final String FIND_TIMETABLE_FOR_STUDENT = "SELECT dt.id, dt.date, dt.timetable_id "
@@ -63,16 +63,15 @@ public class DailyTimetableDao {
 		return jdbcTemplate.query(FIND_ALL, dailyTimetableRowMapper);
 	}
 
-	public DailyTimetable save(DailyTimetable dailyTimetable) {
+	public void save(DailyTimetable dailyTimetable) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
 			ps.setDate(1, Date.valueOf(dailyTimetable.getDate()));
 			return ps;
 		}, keyHolder);
-		Long id = keyHolder.getKey().longValue();
+		Long id = (Long) keyHolder.getKeys().get("id");
 		dailyTimetable.setId(id);
-		return dailyTimetable;
 	}
 
 	public void update(DailyTimetable dailyTimetable) {
@@ -80,7 +79,7 @@ public class DailyTimetableDao {
 	}
 
 	public void delete(DailyTimetable dailyTimetable) {
-		jdbcTemplate.update(DELETE_BY_ID, dailyTimetable.getId());
+		jdbcTemplate.update(DELETE, dailyTimetable.getId());
 	}
 
 	public void addDailyTimetableToTimetable(DailyTimetable dailyTimetable, Timetable timetable) {

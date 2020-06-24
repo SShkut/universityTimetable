@@ -21,7 +21,7 @@ public class GroupDao {
 
 	private static final String FIND_ALL = "SELECT * FROM groups";
 	private static final String FIND_BY_ID = "SELECT * FROM groups WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM groups WHERE id = ?";
+	private static final String DELETE = "DELETE FROM groups WHERE id = ?";
 	private static final String SAVE = "INSERT INTO groups (name, major, department, semester_id) values(?, ?, ?, ?)";
 	private static final String UPDATE = "UPDATE groups SET name = ?, major = ?, department = ?, semester_id = ? WHERE id = ?";
 	private static final String FIND_GROUP_STUDENTS = "SELECT s.id, s.first_name, s.last_name, s.tax_number, s.phone_number, s.email, s.student_card_number "
@@ -54,10 +54,10 @@ public class GroupDao {
 	}
 
 	public void delete(Group group) {
-		jdbcTemplate.update(DELETE_BY_ID, group.getId());
+		jdbcTemplate.update(DELETE, group.getId());
 	}
 
-	public Group save(Group group) {
+	public void save(Group group) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -67,9 +67,8 @@ public class GroupDao {
 			ps.setLong(4, group.getSemester().getId());
 			return ps;
 		}, keyHolder);
-		Long id = keyHolder.getKey().longValue();
+		Long id = (Long) keyHolder.getKeys().get("id");
 		group.setId(id);
-		return group;
 	}
 
 	public void update(Group group) {

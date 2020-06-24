@@ -20,7 +20,7 @@ public class RoomDao {
 	private static final String FIND_ALL = "SELECT * FROM rooms";
 	private static final String SAVE = "INSERT INTO rooms (symbol, capacity) VALUES (?, ?)";
 	private static final String UPDATE = "UPDATE rooms SET symbol = ?, capacity = ? WHERE id = ?";
-	private static final String DELETE_BY_ID = "DELETE FROM rooms WHERE id = ?";
+	private static final String DELETE = "DELETE FROM rooms WHERE id = ?";
 
 	private final JdbcTemplate jdbcTemplate;
 	private final RoomRowMapper roomRowMapper;
@@ -43,7 +43,7 @@ public class RoomDao {
 		return jdbcTemplate.query(FIND_ALL, roomRowMapper);
 	}
 
-	public Room save(Room room) {
+	public void save(Room room) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -51,9 +51,8 @@ public class RoomDao {
 			ps.setInt(2, room.getCapacity());
 			return ps;
 		}, keyHolder);
-		Long id = keyHolder.getKey().longValue();
+		Long id = (Long) keyHolder.getKeys().get("id");
 		room.setId(id);
-		return room;
 	}
 
 	public void update(Room room) {
@@ -61,6 +60,6 @@ public class RoomDao {
 	}
 
 	public void delete(Room room) {
-		jdbcTemplate.update(DELETE_BY_ID, room.getId());
+		jdbcTemplate.update(DELETE, room.getId());
 	}
 }

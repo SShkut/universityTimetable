@@ -1,6 +1,6 @@
 package com.foxminded.university_timetable.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,14 +87,12 @@ class GroupDaoTest {
 
 	@Test
 	void givenNewGroup_whenSave_thenInsertGroup() {
-		Group group = new Group("cs-4", "css", "csg", new Semester(1L, 2020, "summer"), new ArrayList<>());
-		List<Student> students = groupDao.findGroupStudents(group);
-		group.setStudents(students);
+		Group group = new Group(1L, "cs-4", "css", "csg", new Semester(1L, 2020, "summer"));
+		int expected = groupDao.findAll().size() + 1;
 
-		Group inserted = groupDao.save(group);
+		groupDao.save(group);
 
-		Optional<Group> expected = Optional.of(inserted);
-		Optional<Group> actual = groupDao.findById(group.getId());
+		int actual = groupDao.findAll().size();
 		assertEquals(expected, actual);
 	}
 
