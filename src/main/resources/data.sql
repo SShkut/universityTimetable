@@ -68,3 +68,12 @@ INSERT INTO time_slots(id, start_time, end_time, course_id, teacher_id, group_id
 	(2, '9:00', '9:30', 2, 2, 2, 2, 1),
 	(3, '10:00', '11:50', 1, 1, 1, 1, 2);
 	
+ALTER sequence courses_id_seq restart with 6;
+ALTER sequence groups_id_seq restart with 4;
+ALTER sequence semesters_id_seq restart with 3;
+ALTER sequence students_id_seq restart with 6;
+ALTER sequence teachers_id_seq restart with 3;
+ALTER sequence rooms_id_seq restart with 3;
+ALTER sequence timetables_id_seq restart with 3;
+ALTER sequence daily_timetables_id_seq restart with 4;
+ALTER sequence time_slots_id_seq restart with 4;	
