@@ -5,6 +5,9 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,11 +15,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.foxminded.university_timetable.dao.row_mapper.CourseRowMapper;
+import com.foxminded.university_timetable.exception.DaoException;
 import com.foxminded.university_timetable.model.Course;
 
 @Repository
 public class CourseDao {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(CourseDao.class);
 	private static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM courses";
 	private static final String DELETE = "DELETE FROM courses WHERE id = ?";
@@ -39,43 +44,83 @@ public class CourseDao {
 
 	public Optional<Course> findById(Long id) {
 		try {
-			Course course = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, courseRowMapper);
+			logger.debug(FIND_BY_ID);	
+			logger.debug("Course id = {}", id);	
+			Course course = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, courseRowMapper);
 			List<Course> prerequisites = findCoursePrerequisites(course);
 			course.setPrerequisites(prerequisites);
 			return Optional.of(course);
 		} catch (EmptyResultDataAccessException e) {
+			logger.debug("Course with id = {} does not exist", id);
 			return Optional.empty();
 		}
 	}
 
 	public List<Course> findAll() {
-		return jdbcTemplate.query(FIND_ALL, courseRowMapper);
+		try {
+			logger.debug(FIND_ALL);
+			return jdbcTemplate.query(FIND_ALL, courseRowMapper);
+		} catch (DataAccessException e) {
+			throw new DaoException("Can not perform findAll method", e);
+		}
 	}
 
 	public void delete(Course course) {
-		jdbcTemplate.update(DELETE, course.getId());
+		try {
+			logger.debug(DELETE);
+			logger.debug(course.toString());
+			jdbcTemplate.update(DELETE, course.getId());
+			
+		} catch (DataAccessException e) {
+			throw new DaoException("Can not perform delete method", e);
+		}
 	}
 
 	public void save(Course course) {
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(connection -> {
-			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, course.getName());
-			return ps;
-		}, keyHolder);
-		Long id = (Long) keyHolder.getKeys().get("id");
-		course.setId(id);
+		try {
+			logger.debug(SAVE);
+			logger.debug("Course before insert: " + course.toString());
+			KeyHolder keyHolder = new GeneratedKeyHolder();
+			jdbcTemplate.update(connection -> {
+					PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
+					ps.setString(1, course.getName());
+					return ps;
+			}, keyHolder);
+			Long id = (Long) keyHolder.getKeys().get("id");
+			course.setId(id);
+			logger.debug("Course after insert: " + course.toString());
+		} catch (DataAccessException e) {
+			throw new DaoException("Can not perform save method", e);
+		}
 	}
 
 	public void update(Course course) {
-		jdbcTemplate.update(UPDATE, course.getName(), course.getId());
+		try {
+			logger.debug(UPDATE);
+			logger.debug(course.toString());
+			jdbcTemplate.update(UPDATE, course.getName(), course.getId());
+		} catch (DataAccessException e) {
+			throw new DaoException("Can not perform update method", e);
+		}
 	}
 
 	public List<Course> findCoursePrerequisites(Course course) {
-		return jdbcTemplate.query(FIND_COURSE_PREREQUISITES, new Object[] { course.getId() }, courseRowMapper);
+		try {
+			logger.debug(FIND_COURSE_PREREQUISITES);
+			logger.debug(course.toString());
+			return jdbcTemplate.query(FIND_COURSE_PREREQUISITES, new Object[] { course.getId() }, courseRowMapper);
+		} catch (DataAccessException e) {
+			throw new DaoException("Can not perform findCoursePrerequisites method", e);
+		}
 	}
 
 	public void addCoursePrerequisite(Course course, Course prerequisite) {
-		jdbcTemplate.update(ADD_COURSE_PREREQUISITE, course.getId(), prerequisite.getId());
+		try {
+			logger.debug(FIND_COURSE_PREREQUISITES);
+			logger.debug("Course: " + course.toString() + " Prerequisite: " + prerequisite);
+			jdbcTemplate.update(ADD_COURSE_PREREQUISITE, course.getId(), prerequisite.getId());
+		}  catch (DataAccessException e) {
+			throw new DaoException("Can not perform addCoursePrerequisite method", e);
+		}
 	}
 }
