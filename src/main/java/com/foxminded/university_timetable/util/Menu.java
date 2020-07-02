@@ -11,7 +11,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.foxminded.university_timetable.exception.ServiceException;
@@ -36,6 +39,8 @@ import com.foxminded.university_timetable.service.TimetableService;
 
 @Component
 public class Menu {
+
+	private static final Logger logger = LoggerFactory.getLogger(Menu.class);
 
 	private static final Scanner scanner = new Scanner(System.in);
 
@@ -69,92 +74,52 @@ public class Menu {
 		showPrompt();
 		while (scanner.hasNext()) {
 			int menuItem = scanner.nextInt();
-			if (menuItem > 12) {
-				System.out.println("Chose correct menu item.");
-			} else if (menuItem == 1) {
-				try {
+			try {
+				if (menuItem > 12) {
+					System.out.println("Chose correct menu item.");
+				} else if (menuItem == 1) {
 					createStudent();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 2) {
-				try {
+				} else if (menuItem == 2) {
 					createTeacher();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 3) {
-				try {
+				} else if (menuItem == 3) {
 					createCourse();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 4) {
-				try {
+				} else if (menuItem == 4) {
 					createGroup();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 5) {
-				try {
+				} else if (menuItem == 5) {
 					assignStudentToGroup();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 6) {
-				try {
+				} else if (menuItem == 6) {
 					createTimetable();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 7) {
-				try {
+				} else if (menuItem == 7) {
 					createDailyTimetable();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 8) {
-				try {
+				} else if (menuItem == 8) {
 					createTimeSlot();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 9) {
-				try {
+				} else if (menuItem == 9) {
 					printDailyTimetableForStudent();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 10) {
-				try {
+				} else if (menuItem == 10) {
 					printMonthlyTimetableForStudent();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 11) {
-				try {
+				} else if (menuItem == 11) {
 					printDailyTimetableForTeacher();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
-				}
-			} else if (menuItem == 12) {
-				try {
+				} else if (menuItem == 12) {
 					printMonthlyTimetableForTeacher();
 					showPrompt();
-				} catch (ServiceException e) {
-					System.out.println(e.getMessage());
 				}
+			} catch (ServiceException e) {
+				logger.warn(e.getMessage(), e);
+				System.out.println(e.getMessage());
+			} catch (DataAccessException e) {
+				logger.error(e.getMessage(), e);
+				System.out.println("Issue with database interaction. Contact with your administrator.");
 			}
 		}
 	}
@@ -305,6 +270,9 @@ public class Menu {
 
 	private void createTimeSlot() {
 		List<Course> courses = courseService.findAll();
+		if (courses.isEmpty()) {
+			System.out.println("There are no courses yet.");
+		}
 		List<Group> groups = groupService.findAll();
 		List<Teacher> teachers = teacherService.findAll();
 		List<Room> rooms = roomService.findAll();
@@ -324,7 +292,7 @@ public class Menu {
 			if (timetable.isPresent()) {
 				correct = true;
 			} else {
-				System.out.println("There is no such course.");
+				System.out.println("There is no such timetable.");
 			}
 		} while (!correct);
 		correct = false;
