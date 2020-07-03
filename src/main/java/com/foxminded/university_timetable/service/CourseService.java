@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.foxminded.university_timetable.dao.CourseDao;
-import com.foxminded.university_timetable.exception.RecordAlreadyExists;
+import com.foxminded.university_timetable.exception.RecordAlreadyExistsException;
 import com.foxminded.university_timetable.model.Course;
 
 @Service
@@ -48,7 +48,7 @@ public class CourseService {
 		if (!isPrerequisitePresent) {
 			courseDao.addCoursePrerequisite(course, prerequisite);
 		} else {
-			throw new RecordAlreadyExists(String.format("Course %s already added as prerequisite for course %s",
+			throw new RecordAlreadyExistsException(String.format("Course %s already added as prerequisite for course %s",
 					prerequisite.getName(), course.getName()));
 		}
 	}

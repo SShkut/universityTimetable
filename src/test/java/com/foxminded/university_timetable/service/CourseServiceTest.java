@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.foxminded.university_timetable.dao.CourseDao;
-import com.foxminded.university_timetable.exception.RecordAlreadyExists;
+import com.foxminded.university_timetable.exception.RecordAlreadyExistsException;
 import com.foxminded.university_timetable.model.Course;
 
 @ExtendWith(MockitoExtension.class)
@@ -97,7 +97,7 @@ class CourseServiceTest {
 		Course prerequisite = new Course(2L, "CS");
 		when(courseDao.findCoursePrerequisites(course)).thenReturn(Arrays.asList(prerequisite));
 		
-		assertThrows(RecordAlreadyExists.class,
+		assertThrows(RecordAlreadyExistsException.class,
 			() -> courseService.addCoursePrerequisite(course, prerequisite));
 
 		verify(courseDao, never()).addCoursePrerequisite(course, prerequisite);
