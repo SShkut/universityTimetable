@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,6 +21,8 @@ import com.foxminded.university_timetable.model.Student;
 
 @Repository
 public class StudentDao {
+
+	private static final Logger logger = LoggerFactory.getLogger(CourseDao.class);
 
 	private static final String FIND_BY_ID = "SELECT * FROM students WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM students";
@@ -46,20 +50,24 @@ public class StudentDao {
 
 	public Optional<Student> findById(Long id) {
 		try {
+			logger.debug(FIND_BY_ID + " id = {}", id);
 			Student student = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, studentRowMapper);
 			List<Course> courses = findAllStudentCourses(student);
 			student.setCourses(courses);
 			return Optional.of(student);
 		} catch (EmptyResultDataAccessException e) {
+			logger.debug("Student with id = {} does not exist", id);
 			return Optional.empty();
 		}
 	}
 
 	public List<Student> findAll() {
+		logger.debug(FIND_ALL);
 		return jdbcTemplate.query(FIND_ALL, studentRowMapper);
 	}
 
 	public void save(Student student) {
+		logger.debug(SAVE + " {}", student.toString());
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -76,35 +84,43 @@ public class StudentDao {
 	}
 
 	public void update(Student student) {
+		logger.debug(UPDATE + " {}", student.toString());
 		jdbcTemplate.update(UPDATE, student.getFirstName(), student.getLastName(), student.getTaxNumber(),
 				student.getPhoneNumber(), student.getEmail(), student.getStudentCardNumber(), student.getId());
 	}
 
 	public void delete(Student student) {
+		logger.debug(DELETE + " {}", student.toString());
 		jdbcTemplate.update(DELETE, student.getId());
 	}
 
 	public void addStudentToGroup(Student student, Group group) {
+		logger.debug(ADD_STUDENT_TO_GROUP + " student: {}, group: {}", student.toString(), group.toString());
 		jdbcTemplate.update(ADD_STUDENT_TO_GROUP, student.getId(), group.getId());
 	}
 
 	public void deleteStudentFromGroup(Student student, Group group) {
+		logger.debug(DELETE_STUDENT_FROM_GROUP + " student: {}, group: {}", student.toString(), group.toString());
 		jdbcTemplate.update(DELETE_STUDENT_FROM_GROUP, student.getId(), group.getId());
 	}
 
 	public void addStudentToCourse(Student student, Course course) {
+		logger.debug(ENROLL_COURSE + " student: {}, course: {}", student.toString(), course.toString());
 		jdbcTemplate.update(ENROLL_COURSE, student.getId(), course.getId());
 	}
 
 	public void deleteStudentFromCourse(Student student, Course course) {
+		logger.debug(LEAVE_COURSE + " student: {}, course: {}", student.toString(), course.toString());
 		jdbcTemplate.update(LEAVE_COURSE, student.getId(), course.getId());
 	}
 
 	public List<Course> findAllStudentCourses(Student student) {
+		logger.debug(FIND_ALL_STUDENT_COURSES + " {}", student.toString());
 		return jdbcTemplate.query(FIND_ALL_STUDENT_COURSES, new Object[] { student.getId() }, courseRowMapper);
 	}
 
 	public List<Student> findCourseStudents(Course course) {
+		logger.debug(FIND_COURSE_STUDENTS + " {}", course.toString());
 		return jdbcTemplate.query(FIND_COURSE_STUDENTS, new Object[] { course.getId() }, studentRowMapper);
 	}
 }

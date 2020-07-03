@@ -2,6 +2,7 @@ package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -98,6 +99,8 @@ class CourseServiceTest {
 		
 		assertThrows(RecordAlreadyExists.class,
 			() -> courseService.addCoursePrerequisite(course, prerequisite));
+
+		verify(courseDao, never()).addCoursePrerequisite(course, prerequisite);
 	}	
 	
 	@Test
@@ -107,7 +110,7 @@ class CourseServiceTest {
 		when(courseDao.findCoursePrerequisites(course)).thenReturn(new ArrayList<>());
 		
 		courseService.addCoursePrerequisite(course, prerequisite);
-		
+
 		verify(courseDao).addCoursePrerequisite(course, prerequisite);
 	}
 }
