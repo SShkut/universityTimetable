@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,6 +18,9 @@ import com.foxminded.university_timetable.model.Room;
 
 @Repository
 public class RoomDao {
+
+	private static final Logger logger = LoggerFactory.getLogger(CourseDao.class);
+
 	private static final String FIND_BY_ID = "SELECT * FROM rooms WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM rooms";
 	private static final String SAVE = "INSERT INTO rooms (symbol, capacity) VALUES (?, ?)";
@@ -32,18 +37,22 @@ public class RoomDao {
 
 	public Optional<Room> findById(Long id) {
 		try {
+			logger.debug(FIND_BY_ID + " id = {}", id);
 			Room room = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, roomRowMapper);
 			return Optional.of(room);
 		} catch (EmptyResultDataAccessException e) {
+			logger.debug("Room with id = {} does not exist", id);
 			return Optional.empty();
 		}
 	}
 
 	public List<Room> findAll() {
+		logger.debug(FIND_ALL);
 		return jdbcTemplate.query(FIND_ALL, roomRowMapper);
 	}
 
 	public void save(Room room) {
+		logger.debug(SAVE + " {}", room.toString());
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -56,10 +65,12 @@ public class RoomDao {
 	}
 
 	public void update(Room room) {
+		logger.debug(UPDATE + " {}", room.toString());
 		jdbcTemplate.update(UPDATE, room.getSybmol(), room.getCapacity(), room.getId());
 	}
 
 	public void delete(Room room) {
+		logger.debug(DELETE + " {}", room.toString());
 		jdbcTemplate.update(DELETE, room.getId());
 	}
 }

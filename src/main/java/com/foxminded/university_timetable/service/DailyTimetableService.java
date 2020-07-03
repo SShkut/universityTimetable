@@ -10,6 +10,8 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.foxminded.university_timetable.dao.DailyTimetableDao;
+import com.foxminded.university_timetable.exception.RecordAlreadyExistsException;
+import com.foxminded.university_timetable.exception.WeekendDayNotAllowedException;
 import com.foxminded.university_timetable.model.DailyTimetable;
 import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.model.Teacher;
@@ -41,12 +43,18 @@ public class DailyTimetableService {
 	public void update(DailyTimetable dailyTimetable) {
 		if (isNotWeekend(dailyTimetable)) {
 			dailyTimetableDao.update(dailyTimetable);
+		} else {
+			throw new WeekendDayNotAllowedException(String.format("Date %s is weekend. Chose anoser date.", 
+					dailyTimetable.getDate().toString()));
 		}
 	}
 	
 	public void save(DailyTimetable dailyTimetable) {
 		if (isNotWeekend(dailyTimetable)) {
 			dailyTimetableDao.save(dailyTimetable);
+		} else {
+			throw new WeekendDayNotAllowedException(String.format("Date %s is weekend. Chose anoser date.", 
+					dailyTimetable.getDate().toString()));
 		}
 	}
 	
@@ -60,6 +68,9 @@ public class DailyTimetableService {
 				.anyMatch(d -> d.getDate().equals(dailyTimetable.getDate()));
 		if (!isDateOccupied) {
 			dailyTimetableDao.addDailyTimetableToTimetable(dailyTimetable, timetable);
+		} else {
+			throw new RecordAlreadyExistsException(String.format("Daily timetable with %s date already exists", 
+					dailyTimetable.getDate().toString()));
 		}
 	}
 	

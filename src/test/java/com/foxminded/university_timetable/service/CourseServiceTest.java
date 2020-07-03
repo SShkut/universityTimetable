@@ -1,6 +1,7 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.foxminded.university_timetable.dao.CourseDao;
+import com.foxminded.university_timetable.exception.RecordAlreadyExistsException;
 import com.foxminded.university_timetable.model.Course;
 
 @ExtendWith(MockitoExtension.class)
@@ -95,8 +97,9 @@ class CourseServiceTest {
 		Course prerequisite = new Course(2L, "CS");
 		when(courseDao.findCoursePrerequisites(course)).thenReturn(Arrays.asList(prerequisite));
 		
-		courseService.addCoursePrerequisite(course, prerequisite);
-		
+		assertThrows(RecordAlreadyExistsException.class,
+			() -> courseService.addCoursePrerequisite(course, prerequisite));
+
 		verify(courseDao, never()).addCoursePrerequisite(course, prerequisite);
 	}	
 	
@@ -107,7 +110,7 @@ class CourseServiceTest {
 		when(courseDao.findCoursePrerequisites(course)).thenReturn(new ArrayList<>());
 		
 		courseService.addCoursePrerequisite(course, prerequisite);
-		
+
 		verify(courseDao).addCoursePrerequisite(course, prerequisite);
 	}
 }

@@ -1,6 +1,7 @@
 package com.foxminded.university_timetable.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,6 +21,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.foxminded.university_timetable.dao.GroupDao;
 import com.foxminded.university_timetable.dao.StudentDao;
+import com.foxminded.university_timetable.exception.GroupSizeExceededException;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.Group;
 import com.foxminded.university_timetable.model.Semester;
@@ -27,15 +29,15 @@ import com.foxminded.university_timetable.model.Student;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
-	
+
 	@Mock
 	private StudentDao studentDao;
-	
+
 	@Mock
 	private GroupDao groupDao;
-	
+
 	@InjectMocks
-	private StudentService studentService;	
+	private StudentService studentService;
 
 	@Test
 	void whenFindAll_thenReturnAllStudents() {
@@ -44,61 +46,61 @@ class StudentServiceTest {
 		expected.add(new Student(2L, "", "", "", "", "", ""));
 
 		when(studentDao.findAll()).thenReturn(expected);
-		
+
 		List<Student> actual = studentDao.findAll();
-		
+
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	void givenExistentStudentId_whenFindById_thenReturnOptionalOfStudent() {
 		Student student = new Student(1L, "", "", "", "", "", "");
 		Optional<Student> expected = Optional.of(student);
 		when(studentDao.findById(student.getId())).thenReturn(expected);
-		
+
 		Optional<Student> actual = studentService.findById(student.getId());
-		
+
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	void givenNonExistentStudentId_whenFindById_thenReturnEmptyOptional() {
 		Student student = new Student(1L, "", "", "", "", "", "");
 		Optional<Student> expected = Optional.empty();
 		when(studentDao.findById(student.getId())).thenReturn(expected);
-		
+
 		Optional<Student> actual = studentService.findById(student.getId());
-		
+
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	void givenStudent_whenDelete_thenDeleteStudent() {
 		Student student = new Student(1L, "", "", "", "", "", "");
-		
+
 		studentService.delete(student);
-		
+
 		verify(studentDao).delete(student);
 	}
-	
+
 	@Test
 	void givenStudent_whenUpdate_thenUpdateStudent() {
 		Student student = new Student(1L, "", "", "", "", "", "");
-		
+
 		studentService.update(student);
-		
+
 		verify(studentDao).update(student);
 	}
-	
+
 	@Test
 	void givenStudent_whenSave_thenSaveStudent() {
 		Student student = new Student(1L, "", "", "", "", "", "");
-		
+
 		studentService.save(student);
-		
+
 		verify(studentDao).save(student);
 	}
-	
+
 	@Test
 	void givenStudentAndFreeGroup_whenAddStudentToGroup_thenAddStudentToGroup() {
 		ReflectionTestUtils.setField(studentService, "groupMaxSize", 30);
@@ -110,10 +112,10 @@ class StudentServiceTest {
 		when(groupDao.findGroupStudents(group)).thenReturn(students);
 
 		studentService.addStudentToGroup(student, group);
-		
+
 		verify(studentDao).addStudentToGroup(student, group);
 	}
-	
+
 	@Test
 	void givenStudentAndFullGroup_whenAddStudentToGroup_thenDontAddStudentToGroup() {
 		ReflectionTestUtils.setField(studentService, "groupMaxSize", 30);
@@ -124,41 +126,41 @@ class StudentServiceTest {
 				.collect(Collectors.toList());
 		when(groupDao.findGroupStudents(group)).thenReturn(students);
 
-		studentService.addStudentToGroup(student, group);
-		
+		assertThrows(GroupSizeExceededException.class, () -> studentService.addStudentToGroup(student, group));
+
 		verify(studentDao, never()).addStudentToGroup(student, group);
 	}
-	
+
 	@Test
 	void givenStudentAndGroup_whenDeleteStudentFromGroup_thenDeleteStudentFromGroup() {
 		Student student = new Student(1L, "", "", "", "", "", "");
 		Group group = new Group(1L, "", "", "", new Semester());
-		
+
 		studentService.deleteStudentFromGroup(student, group);
-		
+
 		verify(studentDao).deleteStudentFromGroup(student, group);
 	}
-	
+
 	@Test
 	void givenStudentAndCourse_whenAddStudentToCourse_thenAddStudentToCourse() {
 		Student student = new Student(1L, "", "", "", "", "", "");
 		Course course = new Course(1L, "");
-		
-		studentService.addStudentToCourse(student, course);	
-		
+
+		studentService.addStudentToCourse(student, course);
+
 		verify(studentDao).addStudentToCourse(student, course);
 	}
-	
+
 	@Test
 	void givenStudentAndGroup_whenDeleteStudentFromCourse_thenDeleteStudentFromGroup() {
 		Student student = new Student(1L, "", "", "", "", "", "");
 		Course course = new Course(1L, "");
-		
+
 		studentService.deleteStudentFromCourse(student, course);
-		
+
 		verify(studentDao).deleteStudentFromCourse(student, course);
 	}
-	
+
 	@Test
 	void givenStudent_whenFindAllStudentCourses_thenReturnListOfStudentCourses() {
 		Student student = new Student(1L, "", "", "", "", "", "");
@@ -166,12 +168,12 @@ class StudentServiceTest {
 		expected.add(new Course(1L, ""));
 		expected.add(new Course(2L, ""));
 		when(studentDao.findAllStudentCourses(student)).thenReturn(expected);
-		
+
 		List<Course> actual = studentService.findAllStudentCourses(student);
-		
+
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
 	void givenCourse_whenFindCourseStudents_thenRerturnListOfStudntsOfCourse() {
 		Course course = new Course(1L, "");
@@ -179,9 +181,9 @@ class StudentServiceTest {
 		expected.add(new Student(1L, "", "", "", "", "", ""));
 		expected.add(new Student(2L, "", "", "", "", "", ""));
 		when(studentDao.findCourseStudents(course)).thenReturn(expected);
-		
+
 		List<Student> actual = studentService.findCourseStudents(course);
-		
+
 		assertEquals(expected, actual);
 	}
 }

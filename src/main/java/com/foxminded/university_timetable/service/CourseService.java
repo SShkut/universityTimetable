@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.foxminded.university_timetable.dao.CourseDao;
+import com.foxminded.university_timetable.exception.RecordAlreadyExistsException;
 import com.foxminded.university_timetable.model.Course;
 
 @Service
@@ -32,7 +33,7 @@ public class CourseService {
 	public void update(Course course) {
 		courseDao.update(course);
 	}
-	
+
 	public void save(Course course) {
 		courseDao.save(course);
 	}
@@ -43,11 +44,12 @@ public class CourseService {
 
 	public void addCoursePrerequisite(Course course, Course prerequisite) {
 		List<Course> prerequisites = courseDao.findCoursePrerequisites(course);
-		boolean isPrerequisitePresent = prerequisites
-				.stream()
-				.anyMatch(c -> c.equals(prerequisite));
+		boolean isPrerequisitePresent = prerequisites.stream().anyMatch(c -> c.equals(prerequisite));
 		if (!isPrerequisitePresent) {
 			courseDao.addCoursePrerequisite(course, prerequisite);
+		} else {
+			throw new RecordAlreadyExistsException(String.format("Course %s already added as prerequisite for course %s",
+					prerequisite.getName(), course.getName()));
 		}
 	}
 }
