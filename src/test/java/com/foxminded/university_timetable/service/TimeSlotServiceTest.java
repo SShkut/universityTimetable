@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.foxminded.university_timetable.dao.TeacherDao;
 import com.foxminded.university_timetable.dao.TimeSlotDao;
-import com.foxminded.university_timetable.exception.ActiveIsNotAvailableException;
+import com.foxminded.university_timetable.exception.UniversityResourceNotAvailableException;
 import com.foxminded.university_timetable.exception.TeacherHasNoQualificationException;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.DailyTimetable;
@@ -143,7 +143,7 @@ class TimeSlotServiceTest {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 3));
 		when(timeSlotDao.findByGroupAndTime(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), group)).thenReturn(Optional.of(timeSlot));
 
-		assertThrows(ActiveIsNotAvailableException.class,
+		assertThrows(UniversityResourceNotAvailableException.class,
 				() -> timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable));
 
 		verify(timeSlotDao, never()).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
@@ -156,7 +156,7 @@ class TimeSlotServiceTest {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 3));
 		when(timeSlotDao.findByTeacherAndTime(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), teacher)).thenReturn(Optional.of(timeSlot));
 
-		assertThrows(ActiveIsNotAvailableException.class,
+		assertThrows(UniversityResourceNotAvailableException.class,
 				() -> timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable));
 
 		verify(timeSlotDao, never()).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
@@ -169,7 +169,7 @@ class TimeSlotServiceTest {
 		DailyTimetable dailyTimetable = new DailyTimetable(1L, LocalDate.of(2020, 2, 3));
 		when(timeSlotDao.findByRoomAndTime(dailyTimetable, timeSlot.getStartTime(), timeSlot.getEndTime(), room)).thenReturn(Optional.of(timeSlot));
 
-		assertThrows(ActiveIsNotAvailableException.class,
+		assertThrows(UniversityResourceNotAvailableException.class,
 				() -> timeSlotService.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable));
 
 		verify(timeSlotDao, never()).addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);

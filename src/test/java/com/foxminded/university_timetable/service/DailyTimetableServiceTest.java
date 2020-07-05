@@ -89,13 +89,17 @@ class DailyTimetableServiceTest {
 	}
 
 	@Test
-	void givenDailyTimetablesWithWeekendDate_whenUpdate_thenDontUpdateTimetable() {
+	void givenDailyTimetablesWithSaturdayDate_whenUpdate_thenDontUpdateTimetable() {
 		DailyTimetable dailyTimetableSaturday = new DailyTimetable(1L, LocalDate.of(2020, 6, 6));
-		DailyTimetable dailyTimetableSunday = new DailyTimetable(1L, LocalDate.of(2020, 6, 7));
 
 		assertThrows(WeekendDayNotAllowedException.class, () -> dailyTimetableService.update(dailyTimetableSaturday));
 
 		verify(dailyTimetableDao, never()).update(dailyTimetableSaturday);
+	}
+
+	@Test
+	void givenDailyTimetablesWithSundayDate_whenUpdate_thenDontUpdateTimetable() {
+		DailyTimetable dailyTimetableSunday = new DailyTimetable(1L, LocalDate.of(2020, 6, 7));
 
 		assertThrows(WeekendDayNotAllowedException.class, () -> dailyTimetableService.update(dailyTimetableSunday));
 
@@ -112,17 +116,21 @@ class DailyTimetableServiceTest {
 	}
 
 	@Test
-	void givenDailyTimetableWithWeekendDate_whenSave_thenDontSaveDailyTimetable() {
+	void givenDailyTimetableWithSaturdayDate_whenSave_thenDontSaveDailyTimetable() {
 		DailyTimetable dailyTimetableSaturday = new DailyTimetable(1L, LocalDate.of(2020, 6, 6));
+
+		assertThrows(WeekendDayNotAllowedException.class, () -> dailyTimetableService.save(dailyTimetableSaturday));
+
+		verify(dailyTimetableDao, never()).save(dailyTimetableSaturday);
+	}
+
+	@Test
+	void givenDailyTimetableWithSundayDate_whenSave_thenDontSaveDailyTimetable() {
 		DailyTimetable dailyTimetableSunday = new DailyTimetable(1L, LocalDate.of(2020, 6, 7));
 
-		assertThrows(WeekendDayNotAllowedException.class, () -> dailyTimetableService.update(dailyTimetableSaturday));
+		assertThrows(WeekendDayNotAllowedException.class, () -> dailyTimetableService.save(dailyTimetableSunday));
 
-		verify(dailyTimetableDao, never()).update(dailyTimetableSaturday);
-
-		assertThrows(WeekendDayNotAllowedException.class, () -> dailyTimetableService.update(dailyTimetableSunday));
-
-		verify(dailyTimetableDao, never()).update(dailyTimetableSunday);
+		verify(dailyTimetableDao, never()).save(dailyTimetableSunday);
 	}
 
 	@Test

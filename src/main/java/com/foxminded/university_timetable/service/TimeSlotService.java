@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.foxminded.university_timetable.dao.TeacherDao;
 import com.foxminded.university_timetable.dao.TimeSlotDao;
-import com.foxminded.university_timetable.exception.ActiveIsNotAvailableException;
+import com.foxminded.university_timetable.exception.UniversityResourceNotAvailableException;
 import com.foxminded.university_timetable.exception.TeacherHasNoQualificationException;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.DailyTimetable;
@@ -66,15 +66,15 @@ public class TimeSlotService {
 				if (isRoomAvailable) {
 					timeSlotDao.addTimeSlotToDailyTimetable(timeSlot, dailyTimetable);
 				} else {
-					throw new ActiveIsNotAvailableException(String.format("Room %s is not available from %s to %s", timeSlot.getRoom(),
+					throw new UniversityResourceNotAvailableException(String.format("Room %s is not available from %s to %s", timeSlot.getRoom(),
 							timeSlot.getStartTime().toString(), timeSlot.getEndTime().toString()));
 				}
 			} else {
-				throw new ActiveIsNotAvailableException(String.format("Teacher %s is not available from %s to %s", timeSlot.getTeacher(),
+				throw new UniversityResourceNotAvailableException(String.format("Teacher %s is not available from %s to %s", timeSlot.getTeacher(),
 						timeSlot.getStartTime().toString(), timeSlot.getEndTime().toString()));
 			}
 		} else {
-			throw new ActiveIsNotAvailableException(String.format("Group %s is already has class from %s to %s", timeSlot.getRoom(),
+			throw new UniversityResourceNotAvailableException(String.format("Group %s is already has class from %s to %s", timeSlot.getRoom(),
 					timeSlot.getStartTime().toString(), timeSlot.getEndTime().toString()));
 		}
 	}
