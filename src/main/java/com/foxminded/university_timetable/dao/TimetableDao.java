@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,6 +19,8 @@ import com.foxminded.university_timetable.model.Timetable;
 
 @Repository
 public class TimetableDao {
+
+	private static final Logger logger = LoggerFactory.getLogger(CourseDao.class);
 
 	private static final String FIND_BY_ID = "SELECT * FROM timetables WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM timetables";
@@ -37,20 +41,24 @@ public class TimetableDao {
 
 	public Optional<Timetable> findById(Long id) {
 		try {
+			logger.debug(FIND_BY_ID + " id = {}", id);
 			Timetable timetable = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, timetableRowMapper);
 			List<DailyTimetable> dailyTimetables = dailyTimetableDao.findTimetableDailyTimetables(timetable);
 			timetable.setDailyTimetables(dailyTimetables);
 			return Optional.of(timetable);
 		} catch (EmptyResultDataAccessException e) {
+			logger.debug("Timetable with id = {} does not exist", id);
 			return Optional.empty();
 		}
 	}
 
 	public List<Timetable> findAll() {
+		logger.debug(FIND_ALL);
 		return jdbcTemplate.query(FIND_ALL, timetableRowMapper);
 	}
 
 	public void save(Timetable timetable) {
+		logger.debug(SAVE + " {}", timetable.toString());
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -62,10 +70,12 @@ public class TimetableDao {
 	}
 
 	public void update(Timetable timetable) {
+		logger.debug(UPDATE + " {}", timetable.toString());
 		jdbcTemplate.update(UPDATE, timetable.getName(), timetable.getId());
 	}
 
 	public void delete(Timetable timetable) {
+		logger.debug(DELETE + " {}", timetable.toString());
 		jdbcTemplate.update(DELETE, timetable.getId());
 	}
 }

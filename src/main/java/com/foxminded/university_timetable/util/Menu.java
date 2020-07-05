@@ -11,9 +11,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
+import com.foxminded.university_timetable.exception.ServiceException;
 import com.foxminded.university_timetable.model.Course;
 import com.foxminded.university_timetable.model.DailyTimetable;
 import com.foxminded.university_timetable.model.Group;
@@ -36,6 +40,8 @@ import com.foxminded.university_timetable.service.TimetableService;
 @Component
 public class Menu {
 
+	private static final Logger logger = LoggerFactory.getLogger(Menu.class);
+
 	private static final Scanner scanner = new Scanner(System.in);
 
 	private final StudentService studentService;
@@ -49,8 +55,9 @@ public class Menu {
 	private final TimeSlotService timeSlotService;
 
 	@Autowired
-	public Menu(StudentService studentService, TeacherService teacherService, CourseService courseService, GroupService groupService, RoomService roomService,
-			SemesterService semesterService, TimetableService timetableService, DailyTimetableService dailyTimetableService,
+	public Menu(StudentService studentService, TeacherService teacherService, CourseService courseService,
+			GroupService groupService, RoomService roomService, SemesterService semesterService,
+			TimetableService timetableService, DailyTimetableService dailyTimetableService,
 			TimeSlotService timeSlotService) {
 		this.studentService = studentService;
 		this.teacherService = teacherService;
@@ -67,44 +74,52 @@ public class Menu {
 		showPrompt();
 		while (scanner.hasNext()) {
 			int menuItem = scanner.nextInt();
-			if (menuItem > 12) {
-				System.out.println("Chose correct menu item.");
-			} else if (menuItem == 1) {
-				createStudent();
-				showPrompt();
-			} else if (menuItem == 2) {
-				createTeacher();
-				showPrompt();
-			} else if (menuItem == 3) {
-				createCourse();
-				showPrompt();
-			} else if (menuItem == 4) {
-				createGroup();
-				showPrompt();
-			} else if (menuItem == 5) {
-				assignStudentToGroup();
-				showPrompt();
-			} else if (menuItem == 6) {
-				createTimetable();
-				showPrompt();
-			} else if (menuItem == 7) {
-				createDailyTimetable();
-				showPrompt();
-			} else if (menuItem == 8) {
-				createTimeSlot();
-				showPrompt();
-			} else if (menuItem == 9) {
-				printDailyTimetableForStudent();
-				showPrompt();
-			} else if (menuItem == 10) {
-				printMonthlyTimetableForStudent();
-				showPrompt();
-			} else if (menuItem == 11) {
-				printDailyTimetableForTeacher();
-				showPrompt();
-			} else if (menuItem == 12) {
-				printMonthlyTimetableForTeacher();
-				showPrompt();
+			try {
+				if (menuItem > 12) {
+					System.out.println("Chose correct menu item.");
+				} else if (menuItem == 1) {
+					createStudent();
+					showPrompt();
+				} else if (menuItem == 2) {
+					createTeacher();
+					showPrompt();
+				} else if (menuItem == 3) {
+					createCourse();
+					showPrompt();
+				} else if (menuItem == 4) {
+					createGroup();
+					showPrompt();
+				} else if (menuItem == 5) {
+					assignStudentToGroup();
+					showPrompt();
+				} else if (menuItem == 6) {
+					createTimetable();
+					showPrompt();
+				} else if (menuItem == 7) {
+					createDailyTimetable();
+					showPrompt();
+				} else if (menuItem == 8) {
+					createTimeSlot();
+					showPrompt();
+				} else if (menuItem == 9) {
+					printDailyTimetableForStudent();
+					showPrompt();
+				} else if (menuItem == 10) {
+					printMonthlyTimetableForStudent();
+					showPrompt();
+				} else if (menuItem == 11) {
+					printDailyTimetableForTeacher();
+					showPrompt();
+				} else if (menuItem == 12) {
+					printMonthlyTimetableForTeacher();
+					showPrompt();
+				}
+			} catch (ServiceException e) {
+				logger.warn(e.getMessage(), e);
+				System.out.println(e.getMessage());
+			} catch (DataAccessException e) {
+				logger.error(e.getMessage(), e);
+				System.out.println("Issue with database interaction. Contact with your administrator.");
 			}
 		}
 	}
@@ -243,7 +258,8 @@ public class Menu {
 					dailyTimetableService.save(dt);
 					dailyTimetable = Optional.of(dt);
 				}
-				dailyTimetableService.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
+				dailyTimetableService.addDailyTimetableToTimetable(
+						dailyTimetable.orElseThrow(NoSuchElementException::new),
 						timetable.orElseThrow(NoSuchElementException::new));
 				correct = true;
 			} catch (DateTimeParseException e) {
@@ -254,6 +270,9 @@ public class Menu {
 
 	private void createTimeSlot() {
 		List<Course> courses = courseService.findAll();
+		if (courses.isEmpty()) {
+			System.out.println("There are no courses yet.");
+		}
 		List<Group> groups = groupService.findAll();
 		List<Teacher> teachers = teacherService.findAll();
 		List<Room> rooms = roomService.findAll();
@@ -273,7 +292,7 @@ public class Menu {
 			if (timetable.isPresent()) {
 				correct = true;
 			} else {
-				System.out.println("There is no such course.");
+				System.out.println("There is no such timetable.");
 			}
 		} while (!correct);
 		correct = false;
@@ -337,7 +356,8 @@ public class Menu {
 				String text = scanner.next();
 				LocalDate date = LocalDate.parse(text);
 				dailyTimetable = dailyTimetableService.findByDate(date);
-				dailyTimetableService.addDailyTimetableToTimetable(dailyTimetable.orElseThrow(NoSuchElementException::new),
+				dailyTimetableService.addDailyTimetableToTimetable(
+						dailyTimetable.orElseThrow(NoSuchElementException::new),
 						timetable.orElseThrow(NoSuchElementException::new));
 				correct = true;
 			} catch (DateTimeParseException e) {
@@ -354,7 +374,8 @@ public class Menu {
 			try {
 				LocalTime startTime = LocalTime.parse(start, DateTimeFormatter.ofPattern("HH:mm"));
 				LocalTime endTime = LocalTime.parse(end, DateTimeFormatter.ofPattern("HH:mm"));
-				TimeSlot timeSlot = new TimeSlot(startTime, endTime, course.get(), teacher.get(), group.get(), room.get());
+				TimeSlot timeSlot = new TimeSlot(startTime, endTime, course.get(), teacher.get(), group.get(),
+						room.get());
 				timeSlotService.save(timeSlot);
 				timeSlotService.addTimeSlotToDailyTimetable(timeSlot,
 						dailyTimetable.orElseThrow(NoSuchElementException::new));
@@ -458,8 +479,9 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Student> student = findStudent(firstName, lastName);
 			if (student.isPresent()) {
-				List<DailyTimetable> dailyTimetables = dailyTimetableService
-						.findTimetableForStudent(student.orElseThrow(NoSuchElementException::new), YearMonth.of(2020, month).atDay(1), YearMonth.of(2020, month).atEndOfMonth());
+				List<DailyTimetable> dailyTimetables = dailyTimetableService.findTimetableForStudent(
+						student.orElseThrow(NoSuchElementException::new), YearMonth.of(2020, month).atDay(1),
+						YearMonth.of(2020, month).atEndOfMonth());
 				if (!dailyTimetables.isEmpty()) {
 					dailyTimetables.forEach(System.out::println);
 					correct = true;
@@ -492,8 +514,9 @@ public class Menu {
 			String lastName = scanner.next();
 			Optional<Teacher> teacher = findTeacher(firstName, lastName);
 			if (teacher.isPresent()) {
-				List<DailyTimetable> dailyTimetable = dailyTimetableService
-						.findTimetableForTeacher(teacher.orElseThrow(NoSuchElementException::new), YearMonth.of(2020, month).atDay(1), YearMonth.of(2020, month).atEndOfMonth());
+				List<DailyTimetable> dailyTimetable = dailyTimetableService.findTimetableForTeacher(
+						teacher.orElseThrow(NoSuchElementException::new), YearMonth.of(2020, month).atDay(1),
+						YearMonth.of(2020, month).atEndOfMonth());
 				if (!dailyTimetable.isEmpty()) {
 					dailyTimetable.forEach(System.out::println);
 					correct = true;

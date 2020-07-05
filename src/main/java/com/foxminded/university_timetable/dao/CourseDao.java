@@ -5,6 +5,8 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,6 +18,8 @@ import com.foxminded.university_timetable.model.Course;
 
 @Repository
 public class CourseDao {
+
+	private static final Logger logger = LoggerFactory.getLogger(CourseDao.class);
 
 	private static final String FIND_BY_ID = "SELECT * FROM courses WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM courses";
@@ -39,24 +43,29 @@ public class CourseDao {
 
 	public Optional<Course> findById(Long id) {
 		try {
-			Course course = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, courseRowMapper);
+			logger.debug(FIND_BY_ID + " id = {}", id);
+			Course course = jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id }, courseRowMapper);
 			List<Course> prerequisites = findCoursePrerequisites(course);
 			course.setPrerequisites(prerequisites);
 			return Optional.of(course);
 		} catch (EmptyResultDataAccessException e) {
+			logger.debug("Course with id = {} does not exist", id);
 			return Optional.empty();
 		}
 	}
 
 	public List<Course> findAll() {
+		logger.debug(FIND_ALL);
 		return jdbcTemplate.query(FIND_ALL, courseRowMapper);
 	}
 
 	public void delete(Course course) {
+		logger.debug(DELETE + " {}", course.toString());
 		jdbcTemplate.update(DELETE, course.getId());
 	}
 
 	public void save(Course course) {
+		logger.debug(SAVE + " {}", course.toString());
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -68,14 +77,18 @@ public class CourseDao {
 	}
 
 	public void update(Course course) {
+		logger.debug(UPDATE + " {}", course.toString());
 		jdbcTemplate.update(UPDATE, course.getName(), course.getId());
 	}
 
 	public List<Course> findCoursePrerequisites(Course course) {
+		logger.debug(FIND_COURSE_PREREQUISITES + " {}", course.toString());
 		return jdbcTemplate.query(FIND_COURSE_PREREQUISITES, new Object[] { course.getId() }, courseRowMapper);
 	}
 
 	public void addCoursePrerequisite(Course course, Course prerequisite) {
+		logger.debug(FIND_COURSE_PREREQUISITES + " course: {}, prerequisite: {}", course.toString(),
+				prerequisite.toString());
 		jdbcTemplate.update(ADD_COURSE_PREREQUISITE, course.getId(), prerequisite.getId());
 	}
 }
