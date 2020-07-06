@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,6 +23,8 @@ import com.foxminded.university_timetable.model.Timetable;
 
 @Repository
 public class DailyTimetableDao {
+
+	Logger logger = LoggerFactory.getLogger(DailyTimetableDao.class);
 
 	private static final String FIND_BY_ID = "SELECT * FROM daily_timetables WHERE id = ?";
 	private static final String FIND_ALL = "SELECT * FROM daily_timetables";
@@ -51,19 +55,23 @@ public class DailyTimetableDao {
 
 	public Optional<DailyTimetable> findById(Long id) {
 		try {
+			logger.debug(FIND_BY_ID + " id = {}", id);
 			DailyTimetable dailyTimetable = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id },
 					dailyTimetableRowMapper);
 			return Optional.of(dailyTimetable);
 		} catch (EmptyResultDataAccessException e) {
+			logger.debug("Daily timetable with id = {} does not exist", id);
 			return Optional.empty();
 		}
 	}
 
 	public List<DailyTimetable> findAll() {
+		logger.debug(FIND_ALL);
 		return jdbcTemplate.query(FIND_ALL, dailyTimetableRowMapper);
 	}
 
 	public void save(DailyTimetable dailyTimetable) {
+		logger.debug(SAVE + " {}", dailyTimetable.toString());
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(connection -> {
 			PreparedStatement ps = connection.prepareStatement(SAVE, Statement.RETURN_GENERATED_KEYS);
@@ -75,38 +83,49 @@ public class DailyTimetableDao {
 	}
 
 	public void update(DailyTimetable dailyTimetable) {
+		logger.debug(UPDATE + " {}", dailyTimetable.toString());
 		jdbcTemplate.update(UPDATE, dailyTimetable.getDate(), dailyTimetable.getId());
 	}
 
 	public void delete(DailyTimetable dailyTimetable) {
+		logger.debug(DELETE + " {}", dailyTimetable.toString());
 		jdbcTemplate.update(DELETE, dailyTimetable.getId());
 	}
 
 	public void addDailyTimetableToTimetable(DailyTimetable dailyTimetable, Timetable timetable) {
+		logger.debug(ADD_DAILY_TIMETABLE_TO_TIMETABLE + " dailyTimetable = {}, timetable = {}",
+				dailyTimetable.toString(), timetable.toString());
 		jdbcTemplate.update(ADD_DAILY_TIMETABLE_TO_TIMETABLE, timetable.getId(), dailyTimetable.getId());
 	}
 
 	public Optional<DailyTimetable> findByDate(LocalDate date) {
 		try {
+			logger.debug(FIND_BY_DATE + " date: {}", date);
 			DailyTimetable dailyTimetable = jdbcTemplate.queryForObject(FIND_BY_DATE, new Object[] { date },
 					dailyTimetableRowMapper);
 			return Optional.of(dailyTimetable);
 		} catch (EmptyResultDataAccessException e) {
+			logger.debug("Daily timetable for date: {} does not exist", date);
 			return Optional.empty();
 		}
 	}
 
 	public List<DailyTimetable> findTimetableForStudent(Student student, LocalDate start, LocalDate end) {
+		logger.debug(FIND_TIMETABLE_FOR_STUDENT + " student: {}, start date: {}, end date: {}", student.toString(),
+				start, end);
 		return jdbcTemplate.query(FIND_TIMETABLE_FOR_STUDENT, new Object[] { start, end, student.getId() },
 				dailyTimetableRowMapper);
 	}
 
 	public List<DailyTimetable> findTimetableForTeacher(Teacher teacher, LocalDate start, LocalDate end) {
+		logger.debug(FIND_TIMETABLE_FOR_TEACHER + " teacher: {}, start date: {}, end date: {}", teacher.toString(),
+				start, end);
 		return jdbcTemplate.query(FIND_TIMETABLE_FOR_TEACHER, new Object[] { start, end, teacher.getId() },
 				dailyTimetableRowMapper);
 	}
 
 	public List<DailyTimetable> findTimetableDailyTimetables(Timetable timetable) {
+		logger.debug(FIND_TIMETABLE_DAILY_TIMETABLES + " timetable: ", timetable.toString());
 		return jdbcTemplate.query(FIND_TIMETABLE_DAILY_TIMETABLES, new Object[] { timetable.getId() },
 				dailyTimetableRowMapper);
 	}

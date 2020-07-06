@@ -67,4 +67,3 @@ INSERT INTO time_slots(id, start_time, end_time, course_id, teacher_id, group_id
 	(1, '9:00', '9:30', 1, 1, 1, 1, 1),
 	(2, '9:00', '9:30', 2, 2, 2, 2, 1),
 	(3, '10:00', '11:50', 1, 1, 1, 1, 2);
-	
