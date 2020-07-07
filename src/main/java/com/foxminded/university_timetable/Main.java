@@ -8,7 +8,7 @@ import com.foxminded.university_timetable.util.Menu;
 
 public class Main {
 
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		ApplicationContext context = new AnnotationConfigApplicationContext(JdbcConfig.class);
 		Menu menu = context.getBean(Menu.class);
 		menu.showMenu();

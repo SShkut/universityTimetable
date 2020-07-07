@@ -27,15 +27,15 @@ public class JdbcConfig {
 		dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
 		return dataSource;
 	}
-	
+
 	@Bean
 	public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
-	    ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
-	    resourceDatabasePopulator.addScript(new ClassPathResource("/schema.sql"));
-	    DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
-	    dataSourceInitializer.setDataSource(dataSource);
-	    dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
-	    return dataSourceInitializer;
+		ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+		resourceDatabasePopulator.addScript(new ClassPathResource("/schema.sql"));
+		DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+		dataSourceInitializer.setDataSource(dataSource);
+		dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+		return dataSourceInitializer;
 	}
 
 	@Bean
