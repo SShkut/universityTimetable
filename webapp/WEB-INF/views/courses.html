@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>University timetable</title>
+</head>
+<body>
+   <h1>Spring MVC + Thymeleaf  Hello World example</h1>
+	<tr th:each="course : ${courses}">
+		<td th:text="${course.name}">1</td>
+
+	</tr>
+</body>
+</html>
