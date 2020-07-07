@@ -14,7 +14,7 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 @Configuration
-@ComponentScan("com.foxminded.university_timetable")
+@ComponentScan("com.foxminded.university_timetable.dao")
 @PropertySource(value = { "classpath:application.properties" })
 public class JdbcConfig {
 
