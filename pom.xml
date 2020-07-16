@@ -95,6 +95,12 @@
 			<version>${h2.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -104,18 +110,6 @@
 				<configuration>
 					<source>${maven.compile.source}</source>
 					<target>${maven.compile.target}</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tomcat-maven-plugin</artifactId>
-				<configuration>
-					<url>http://localhost:8080/manager/text</url>
-					<server>TomcatServer</server>
-					<username>user</username>
-					<password>user</password>
-					<path>/university-timetable</path>
-					<update>true</update>
 				</configuration>
 			</plugin>
 			<plugin>
