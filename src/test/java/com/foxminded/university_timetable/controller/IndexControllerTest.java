@@ -1,5 +1,6 @@
 package com.foxminded.university_timetable.controller;
 
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -23,9 +24,10 @@ class IndexControllerTest {
 
 	@BeforeEach
 	public void setUp() {
-        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/views/");
-        viewResolver.setSuffix(".html");
+		initMocks(this);
+		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+		viewResolver.setPrefix("/WEB-INF/views/");
+		viewResolver.setSuffix(".html");
 		mockMvc = MockMvcBuilders
 				.standaloneSetup(indexController)
 				.setViewResolvers(viewResolver)
@@ -35,7 +37,7 @@ class IndexControllerTest {
 	@Test
 	void whenIndex_thenShowStartPage() throws Exception {
 		mockMvc.perform(get("/"))
-				.andExpect(status().isOk())
-				.andExpect(view().name("index"));
+		.andExpect(status().isOk())
+		.andExpect(view().name("index"));
 	}
 }
