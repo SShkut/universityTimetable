@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title th:text="'Group ' + ${group.name}"></title>
+<title th:text="'Student ' + student.studentCardNumber"></title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
 	integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
@@ -10,28 +10,24 @@
 </head>
 <body>
 	<header th:replace="fragments/header :: header"></header>
-	<div class="countainer-fluid">
+	<div class="container-fluid">
 		<div>
-			<h3 th:if="${group.students.empty}">There are no students</h3>
-			<h3 th:if="${!group.students.empty}">Students</h3>
+			<h3 th:if="${student.courses.empty}">There is no courses</h3>
+			<h3 th:if="${!student.courses.empty}">Courses</h3>
 		</div>
-		<table class="table" th:if="${!group.students.empty}">
+		<table class="table" th:if="${!student.courses.empty}">
 			<thead>
 				<tr>
-					<th scope="col">First name</th>
-					<th scope="col">Last name</th>
-					<th scope="col">Tax number</th>
-					<th scope="col">Phone number</th>
-					<th scope="col">Email</th>
+					<th scope="col">Course name</th>
+					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="student : ${group.students}">
-					<td th:text="${student.firstName}"></td>
-					<td th:text="${student.lastName}"></td>
-					<td th:text="${student.taxNumber}"></td>
-					<td th:text="${student.phoneNumber}"></td>
-					<td th:text="${student.email}"></td>
+				<tr th:each="course : ${student.courses}">
+					<td th:text="${course.name}"></td>
+					<td>
+						<a th:href="@{/courses/{id}(id=${course.id})}">Details</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>
