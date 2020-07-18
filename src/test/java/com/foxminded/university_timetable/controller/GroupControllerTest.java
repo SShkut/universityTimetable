@@ -54,7 +54,6 @@ class GroupControllerTest {
 			.andExpect(model().attribute("groups", hasSize(2)));
 
 		verify(groupService).findAll();
-
 	}
 
 	@Test
