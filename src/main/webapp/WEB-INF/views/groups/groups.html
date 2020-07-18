@@ -21,6 +21,7 @@
 					<th scope="col">Major</th>
 					<th scope="col">Department</th>
 					<th scope="col">Semester</th>
+					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -29,6 +30,9 @@
 					<td th:text="${group.major}"></td>
 					<td th:text="${group.department}"></td>
 					<td th:text="${group.semester}"></td>
+					<td>
+						<a th:href="@{/groups/{id}(id=${group.id})}">Details</a>
+					<td>
 				</tr>
 			</tbody>
 		</table>
