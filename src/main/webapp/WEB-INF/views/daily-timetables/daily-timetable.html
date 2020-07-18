@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title th:text="course.name">Course</title>
+<title th:text="'Schedule for ' + ${dailyTimetable.date}"></title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
 	integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
@@ -12,18 +12,33 @@
 	<header th:replace="fragments/header :: header"></header>
 	<div class="container-fluid">
 		<h2>
-			<span class="badge badge-secondary" th:text=${course.name}></span>
+			<span class="badge badge-secondary" th:text=${dailyTimetable.date}></span>
 		</h2>
-		<h3>Prerequisites</h3>
-		<div th:if="${course.prerequisites.empty}">
-			<h3>Course has no prerequisites</h3>
+		<div th:if="${dailyTimetable.timeSlots.empty}">
+			<h3>There are no schedules for this date</h3>
 		</div>
-		<div class="list-group"
-			th:each="prerequisite : ${course.prerequisites}">
-			<a th:href="@{/courses/{id}(id=${prerequisite.id})}"
-				class="list-group-item list-group-item-action"
-				th:text="${prerequisite.name}"></a>
-		</div>
+		<table class="table" th:if="${!dailyTimetable.timeSlots.empty}">
+			<thead class="dark">
+				<tr>
+					<th scope="col">Course</th>
+					<th scope="col">Room</th>
+					<th scope="col">Group</th>
+					<th scope="col">Start time</th>
+					<th scope="col">End time</th>
+					<th scope="col">Teacher</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="timeSlot : ${dailyTimetable.timeSlots}">
+					<td th:text="${timeSlot.course.name}"></td>
+					<td th:text="${timeSlot.room.sybmol}"></td>
+					<td th:text="${timeSlot.group.name}"></td>
+					<td th:text="${timeSlot.startTime}"></td>
+					<td th:text="${timeSlot.endTime}"></td>
+					<td th:text="${timeSlot.teacher.firstName + timeSlot.teacher.lastName}"></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

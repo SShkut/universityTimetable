@@ -68,5 +68,4 @@ class CourseControllerTest {
 
 		verify(courseService).findById(1L);
 	}
-
 }

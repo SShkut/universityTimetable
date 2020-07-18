@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title th:text="course.name">Course</title>
+<title>Daily timetables</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
 	integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
@@ -10,19 +10,14 @@
 </head>
 <body>
 	<header th:replace="fragments/header :: header"></header>
-	<div class="container-fluid">
-		<h2>
-			<span class="badge badge-secondary" th:text=${course.name}></span>
-		</h2>
-		<h3>Prerequisites</h3>
-		<div th:if="${course.prerequisites.empty}">
-			<h3>Course has no prerequisites</h3>
+	<div class="countainer-fluid">
+		<div th:if="${dailyTimetables.empty}">
+			<h3>There are no timetables</h3>
 		</div>
-		<div class="list-group"
-			th:each="prerequisite : ${course.prerequisites}">
-			<a th:href="@{/courses/{id}(id=${prerequisite.id})}"
+		<div class="list-group" th:each="dailyTimetable : ${dailyTimetables}">
+			<a th:href="@{/daily-timetables/{id}(id=${dailyTimetable.id})}"
 				class="list-group-item list-group-item-action"
-				th:text="${prerequisite.name}"></a>
+				th:text="${dailyTimetable.date}"></a>
 		</div>
 	</div>
 
