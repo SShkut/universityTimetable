@@ -12,7 +12,7 @@
 	<header th:replace="fragments/header :: header"></header>
 	<div class="container-fluid">
 		<div>
-			<h3 th:if="${teacher.courses.empty}">There is no qualifications</h3>
+			<h3 th:if="${teacher.courses.empty}">There are no qualifications</h3>
 			<h3 th:if="${!teacher.courses.empty}">Qualifications</h3>
 		</div>
 		<table class="table" th:if="${!teacher.courses.empty}">
