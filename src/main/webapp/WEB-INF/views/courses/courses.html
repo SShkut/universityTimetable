@@ -11,14 +11,26 @@
 <body>
 	<header th:replace="fragments/header :: header"></header>
 	<div class="countainer-fluid">
-		<div th:if="${courses.empty}">
-			<h3>There are no courses</h3>
+		<div>
+			<h3 th:if="${courses.empty}">There is no courses</h3>
+			<h3 th:if="${!courses.empty}">Courses</h3>
 		</div>
-		<div class="list-group" th:each="course : ${courses}">
-			<a th:href="@{/courses/{id}(id=${course.id})}"
-				class="list-group-item list-group-item-action"
-				th:text="${course.name}"></a>
-		</div>
+		<table class="table" th:if="${!courses.empty}">
+			<thead>
+				<tr>
+					<th scope="col">Course name</th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="course : ${courses}">
+					<td th:text="${course.name}"></td>
+					<td>
+						<a th:href="@{/courses/{id}(id=${course.id})}">Details</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

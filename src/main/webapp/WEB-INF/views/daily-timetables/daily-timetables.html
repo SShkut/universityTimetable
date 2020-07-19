@@ -11,14 +11,25 @@
 <body>
 	<header th:replace="fragments/header :: header"></header>
 	<div class="countainer-fluid">
-		<div th:if="${dailyTimetables.empty}">
-			<h3>There are no timetables</h3>
+		<div>
+			<h3 th:if="${dailyTimetables.empty}">There are no daily timetables</h3>
+			<h3 th:if="${!dailyTimetables.empty}">Daily Timetables</h3>
 		</div>
-		<div class="list-group" th:each="dailyTimetable : ${dailyTimetables}">
-			<a th:href="@{/daily-timetables/{id}(id=${dailyTimetable.id})}"
-				class="list-group-item list-group-item-action"
-				th:text="${dailyTimetable.date}"></a>
-		</div>
+		<table class="table" th:if="${!dailyTimetables.empty}">
+			<thead>
+				<tr>
+					<th scope="col">Date</th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="dailyTimetable : ${dailyTimetables}">
+					<td th:text="${dailyTimetable.date}"></td>
+					<td><a th:href="@{/daily-timetables/{id}(id=${dailyTimetable.id})}">Details</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
