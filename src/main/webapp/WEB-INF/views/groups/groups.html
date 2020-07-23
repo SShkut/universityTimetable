@@ -30,9 +30,7 @@
 					<td th:text="${group.major}"></td>
 					<td th:text="${group.department}"></td>
 					<td th:text="${group.semester}"></td>
-					<td>
-						<a th:href="@{/groups/{id}(id=${group.id})}">Details</a>
-					<td>
+					<td><a th:href="@{/groups/{id}(id=${group.id})}">Details</a><td>
 				</tr>
 			</tbody>
 		</table>

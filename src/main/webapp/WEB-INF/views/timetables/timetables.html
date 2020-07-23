@@ -24,9 +24,7 @@
 			<tbody>
 				<tr th:each="timetable : ${timetables}">
 					<td th:text="${timetable.name}"></td>
-					<td>
-						<a th:href="@{/timetables/{id}(id=${timetable.id})}">Details</a>
-					</td>
+					<td><a th:href="@{/timetables/{id}(id=${timetable.id})}">Details</a></td>
 				</tr>
 			</tbody>
 		</table>
