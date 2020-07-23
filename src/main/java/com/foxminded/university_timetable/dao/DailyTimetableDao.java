@@ -19,6 +19,7 @@ import com.foxminded.university_timetable.dao.row_mapper.DailyTimetableRowMapper
 import com.foxminded.university_timetable.model.DailyTimetable;
 import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.model.Teacher;
+import com.foxminded.university_timetable.model.TimeSlot;
 import com.foxminded.university_timetable.model.Timetable;
 
 @Repository
@@ -47,10 +48,13 @@ public class DailyTimetableDao {
 
 	private final JdbcTemplate jdbcTemplate;
 	private final DailyTimetableRowMapper dailyTimetableRowMapper;
+	private final TimeSlotDao timeSlotDao;
 
-	public DailyTimetableDao(JdbcTemplate jdbcTemplate, DailyTimetableRowMapper dailyTimetableRowMapper) {
+	public DailyTimetableDao(JdbcTemplate jdbcTemplate, DailyTimetableRowMapper dailyTimetableRowMapper,
+			TimeSlotDao timeSlotDao) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.dailyTimetableRowMapper = dailyTimetableRowMapper;
+		this.timeSlotDao = timeSlotDao;
 	}
 
 	public Optional<DailyTimetable> findById(Long id) {
@@ -58,6 +62,8 @@ public class DailyTimetableDao {
 			logger.debug(FIND_BY_ID + " id = {}", id);
 			DailyTimetable dailyTimetable = this.jdbcTemplate.queryForObject(FIND_BY_ID, new Object[] { id },
 					dailyTimetableRowMapper);
+			List<TimeSlot> timeSlots = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
+			dailyTimetable.setTimeSlots(timeSlots);
 			return Optional.of(dailyTimetable);
 		} catch (EmptyResultDataAccessException e) {
 			logger.debug("Daily timetable with id = {} does not exist", id);
@@ -103,6 +109,8 @@ public class DailyTimetableDao {
 			logger.debug(FIND_BY_DATE + " date: {}", date);
 			DailyTimetable dailyTimetable = jdbcTemplate.queryForObject(FIND_BY_DATE, new Object[] { date },
 					dailyTimetableRowMapper);
+			List<TimeSlot> timeSlots = timeSlotDao.findAllDailyTimetableTimeSlots(dailyTimetable);
+			dailyTimetable.setTimeSlots(timeSlots);
 			return Optional.of(dailyTimetable);
 		} catch (EmptyResultDataAccessException e) {
 			logger.debug("Daily timetable for date: {} does not exist", date);
