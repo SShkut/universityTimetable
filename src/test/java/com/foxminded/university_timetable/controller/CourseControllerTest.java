@@ -62,7 +62,6 @@ class CourseControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(view().name("courses/course"))
 				.andExpect(model().attributeExists("course"))
-				.andExpect(model().attribute("course", expected))
-				.andReturn();
+				.andExpect(model().attribute("course", expected));
 	}
 }
