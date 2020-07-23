@@ -24,6 +24,7 @@
 					<th scope="col">Email</th>
 					<th scope="col">Card number</th>
 					<th scope="col"></th>
+					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -34,9 +35,8 @@
 					<td th:text="${student.phoneNumber}"></td>
 					<td th:text="${student.email}"></td>
 					<td th:text="${student.studentCardNumber}"></td>
-					<td>
-						<a th:href="@{/students/{id}(id=${student.id})}">Details</a>
-					</td>
+					<td><a th:href="@{/students/{id}(id=${student.id})}">Details</a></td>
+					<td><a th:href="@{/daily-timetables/student/{id}(id=${student.id})}">Timetables</a></td>
 				</tr>
 			</tbody>
 		</table>

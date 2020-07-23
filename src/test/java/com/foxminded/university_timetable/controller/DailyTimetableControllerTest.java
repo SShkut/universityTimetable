@@ -23,7 +23,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.foxminded.university_timetable.model.DailyTimetable;
+import com.foxminded.university_timetable.model.Student;
 import com.foxminded.university_timetable.service.DailyTimetableService;
+import com.foxminded.university_timetable.service.StudentService;
 
 @ExtendWith(MockitoExtension.class)
 class DailyTimetableControllerTest {
@@ -33,6 +35,9 @@ class DailyTimetableControllerTest {
 	@Mock
 	DailyTimetableService dailyTimetableService;
 
+	@Mock
+	StudentService studentService;
+
 	@InjectMocks
 	DailyTimetableController dailyTimetableController;
 
@@ -40,7 +45,7 @@ class DailyTimetableControllerTest {
 	public void setUp() {
 		mockMvc = MockMvcBuilders.standaloneSetup(dailyTimetableController).build();
 	}
-	
+
 	@Test
 	void givenModel_whenFindAll_thenShowAllDailyTimetables() throws Exception {
 		List<DailyTimetable> dailyTimetables = new ArrayList<>();
@@ -68,5 +73,28 @@ class DailyTimetableControllerTest {
 			.andExpect(model().attributeExists("dailyTimetable"));
 
 		verify(dailyTimetableService).findById(1L);
+	}
+
+	@Test
+	void givenCommandObjectModelStudentId_whenFindTimetableForStudent_thenShowFormForDateRangeChose() throws Exception {
+		Student student = new Student(1L, "", "", "", "", "", "");
+		LocalDate start = LocalDate.of(2020, 1, 1);
+		LocalDate end = LocalDate.of(2020, 2, 2);
+		List<DailyTimetable> dailyTimetables = new ArrayList<>();
+		dailyTimetables.add(new DailyTimetable(1L, LocalDate.now(), new ArrayList<>()));
+		dailyTimetables.add(new DailyTimetable(2L, LocalDate.now(), new ArrayList<>()));
+		when(studentService.findById(1L)).thenReturn(Optional.of(student));
+		when(dailyTimetableService.findTimetableForStudent(student, start, end)).thenReturn(dailyTimetables);
+
+		mockMvc.perform(get("/daily-timetables/student/1")
+				.param("dateFrom", "2020-01-01")
+				.param("dateTo", "2020-02-02"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("daily-timetables/student-timetables"))
+			.andExpect(model().attributeExists("dailyTimetables", "student"))
+			.andExpect(model().attribute("dailyTimetables", hasSize(2)));
+		
+		verify(dailyTimetableService).findTimetableForStudent(student, start, end);
+		verify(studentService).findById(student.getId());		
 	}
 }

@@ -10,10 +10,21 @@
 </head>
 <body>
 	<header th:replace="fragments/header :: header"></header>
-	<div class="countainer-fluid">
+	<div class="countainer">
+		<form class="form-inline" action="#" th:action="@{/daily-timetables/student/{id}(id=${student.id})}" th:object="${dateRange}" method="get">
+			<div class="form-group ml-2">
+				<label for="dateFrom">From</label>
+				<input type="date" id="dateFrom" class="form-control-sm ml-2" th:field="*{dateFrom}">
+			</div>
+			<div class="form-group ml-2">
+				<label for="dateTo">To</label>
+				<input type="date" id="dateTo" class="form-control-sm ml-2" th:field="*{dateTo}">
+			</div>
+			<button type="submit" class="btn btn-primary ml-2">Show</button>
+		</form>
 		<div>
-			<h3 th:if="${dailyTimetables.empty}">There are no daily timetables</h3>
-			<h3 th:if="${!dailyTimetables.empty}">Daily Timetables</h3>
+			<h3 th:if="${dailyTimetables.empty}" th:text="'Student ' + ${student.studentCardNumber} + ' has no timetables'"></h3>
+			<h3 th:if="${!dailyTimetables.empty}" th:text="'Daily timetables for student ' + ${student.studentCardNumber}"></h3>
 		</div>
 		<table class="table" th:if="${!dailyTimetables.empty}">
 			<thead>
