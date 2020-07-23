@@ -40,7 +40,8 @@ public class DailyTimetableController {
 
 	@GetMapping("daily-timetables/{id}")
 	public String getById(Model model, @PathVariable Long id) {
-		model.addAttribute("dailyTimetable", dailyTimetableService.findById(id).orElseThrow(NoSuchElementException::new));
+		model.addAttribute("dailyTimetable", dailyTimetableService.findById(id).orElseThrow(
+				() -> new NoSuchElementException(String.format("Daily timetable with id: %d does not exist", id))));
 		return "daily-timetables/daily-timetable";
 	}
 
@@ -48,7 +49,8 @@ public class DailyTimetableController {
 	public String findTimetableForStudent(@ModelAttribute("dateRange") DailyTimetableDateRangeCommand dateRangeCommand,
 			Model model, @PathVariable Long id) {
 		List<DailyTimetable> dailyTimetables = new ArrayList<>();
-		Student student = studentService.findById(id).orElseThrow(NoSuchElementException::new);
+		Student student = studentService.findById(id)
+				.orElseThrow(() -> new NoSuchElementException(String.format("Student with id: %d does not exist", id)));
 		if (dateRangeCommand.getDateFrom() != null || dateRangeCommand.getDateTo() != null) {
 			dailyTimetables = dailyTimetableService
 					.findTimetableForStudent(student, dateRangeCommand.getDateFrom(), dateRangeCommand.getDateTo());
@@ -62,7 +64,8 @@ public class DailyTimetableController {
 	public String findTimetableForTeacher(@ModelAttribute("dateRange") DailyTimetableDateRangeCommand dateRangeCommand,
 			Model model, @PathVariable Long id) {
 		List<DailyTimetable> dailyTimetables = new ArrayList<>();
-		Teacher teacher = teacherService.findById(id).orElseThrow(NoSuchElementException::new);
+		Teacher teacher = teacherService.findById(id)
+				.orElseThrow(() -> new NoSuchElementException(String.format("Teacher with id: %d does not exist", id)));
 		if (dateRangeCommand.getDateFrom() != null || dateRangeCommand.getDateTo() != null) {
 			dailyTimetables = dailyTimetableService
 					.findTimetableForTeacher(teacher, dateRangeCommand.getDateFrom(), dateRangeCommand.getDateTo());

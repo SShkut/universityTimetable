@@ -26,7 +26,8 @@ public class TimetableController {
 
 	@GetMapping("timetables/{id}")
 	public String getById(Model model, @PathVariable Long id) {
-		model.addAttribute("timetable", timetableService.findById(id).orElseThrow(NoSuchElementException::new));
+		model.addAttribute("timetable", timetableService.findById(id)
+				.orElseThrow(() -> new NoSuchElementException(String.format("Timetable with id: %d does not exist", id))));
 		return "timetables/timetable";
 	}
 }

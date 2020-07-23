@@ -26,7 +26,8 @@ public class CourseController {
 
 	@GetMapping("courses/{id}")
 	public String getById(Model model, @PathVariable Long id) {
-		model.addAttribute("course", courseService.findById(id).orElseThrow(NoSuchElementException::new));
+		model.addAttribute("course", courseService.findById(id)
+				.orElseThrow(() -> new NoSuchElementException(String.format("Course with id: %d does not exist", id))));
 		return "courses/course";
 	}
 }

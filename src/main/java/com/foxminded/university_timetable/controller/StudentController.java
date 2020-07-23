@@ -26,7 +26,8 @@ public class StudentController {
 
 	@GetMapping("students/{id}")
 	public String getById(Model model, @PathVariable Long id) {
-		model.addAttribute("student", studentService.findById(id).orElseThrow(NoSuchElementException::new));
+		model.addAttribute("student", studentService.findById(id)
+				.orElseThrow(() -> new NoSuchElementException(String.format("Student with id: %d does not exist", id))));
 		return "students/student";
 	}
 }

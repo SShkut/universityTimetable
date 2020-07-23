@@ -26,7 +26,8 @@ public class GroupController {
 
 	@GetMapping("groups/{id}")
 	public String getById(Model model, @PathVariable Long id) {
-		model.addAttribute("group", groupService.findById(id).orElseThrow(NoSuchElementException::new));
+		model.addAttribute("group", groupService.findById(id)
+				.orElseThrow(() -> new NoSuchElementException(String.format("Group with id: %d does not exist", id))));
 		return "groups/group";
 	}
 }
