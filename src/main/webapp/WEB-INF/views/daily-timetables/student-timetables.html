@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Daily timetables</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+	integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+	crossorigin="anonymous">
+</head>
+<body>
+	<header th:replace="fragments/header :: header"></header>
+	<div class="countainer">
+		<form class="form-inline" action="#" th:action="@{/daily-timetables/student/{id}(id=${student.id})}" th:object="${dateRange}" method="get">
+			<div class="form-group ml-2">
+				<label for="dateFrom">From</label>
+				<input type="date" id="dateFrom" class="form-control-sm ml-2" th:field="*{dateFrom}">
+			</div>
+			<div class="form-group ml-2">
+				<label for="dateTo">To</label>
+				<input type="date" id="dateTo" class="form-control-sm ml-2" th:field="*{dateTo}">
+			</div>
+			<button type="submit" class="btn btn-primary ml-2">Show</button>
+		</form>
+		<div>
+			<h3 th:if="${dailyTimetables.empty}" th:text="'Student ' + ${student.studentCardNumber} + ' has no timetables'"></h3>
+			<h3 th:if="${!dailyTimetables.empty}" th:text="'Daily timetables for student ' + ${student.studentCardNumber}"></h3>
+		</div>
+		<table class="table" th:if="${!dailyTimetables.empty}">
+			<thead>
+				<tr>
+					<th scope="col">Date</th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="dailyTimetable : ${dailyTimetables}">
+					<td th:text="${dailyTimetable.date}"></td>
+					<td><a th:href="@{/daily-timetables/{id}(id=${dailyTimetable.id})}">Details</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+		integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+		crossorigin="anonymous"></script>
+</body>
+</html>
