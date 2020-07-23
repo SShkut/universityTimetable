@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.controller;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -62,22 +61,19 @@ class DailyTimetableControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("daily-timetables/daily-timetables"))
 			.andExpect(model().attribute("dailyTimetables", hasSize(2)));
-
-		verify(dailyTimetableService).findAll();
-
 	}
 
 	@Test
 	void givenModel_whenFindById_thenShowDailyTimetable() throws Exception {
-		Optional<DailyTimetable> dailyTimetable = Optional.of(new DailyTimetable(1L, LocalDate.now(), new ArrayList<>()));
+		DailyTimetable expected = new DailyTimetable(1L, LocalDate.now(), new ArrayList<>());
+		Optional<DailyTimetable> dailyTimetable = Optional.of(expected);
 		when(dailyTimetableService.findById(1L)).thenReturn(dailyTimetable);
 
 		mockMvc.perform(get("/daily-timetables/1"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("daily-timetables/daily-timetable"))
-			.andExpect(model().attributeExists("dailyTimetable"));
-
-		verify(dailyTimetableService).findById(1L);
+			.andExpect(model().attributeExists("dailyTimetable"))
+			.andExpect(model().attribute("dailyTimetable", expected));
 	}
 
 	@Test
@@ -98,9 +94,6 @@ class DailyTimetableControllerTest {
 			.andExpect(view().name("daily-timetables/student-timetables"))
 			.andExpect(model().attributeExists("dailyTimetables", "student"))
 			.andExpect(model().attribute("dailyTimetables", hasSize(2)));
-
-		verify(dailyTimetableService).findTimetableForStudent(student, start, end);
-		verify(studentService).findById(student.getId());
 	}
 
 	@Test
@@ -120,8 +113,5 @@ class DailyTimetableControllerTest {
 			.andExpect(status().isOk()).andExpect(view().name("daily-timetables/teacher-timetables"))
 			.andExpect(model().attributeExists("dailyTimetables", "teacher"))
 			.andExpect(model().attribute("dailyTimetables", hasSize(2)));
-
-		verify(dailyTimetableService).findTimetableForTeacher(teacher, start, end);
-		verify(teacherService).findById(teacher.getId());
 	}
 }

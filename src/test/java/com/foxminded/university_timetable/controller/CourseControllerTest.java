@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.controller;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -51,21 +50,19 @@ class CourseControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("courses/courses"))
 			.andExpect(model().attribute("courses", hasSize(2)));
-
-		verify(courseService).findAll();
-
 	}
 
 	@Test
 	void givenModel_whenFindById_thenShowCourse() throws Exception {
-		Optional<Course> course = Optional.of(new Course(1L, "CS", new ArrayList<>()));
+		Course expected = new Course(1L, "CS", new ArrayList<>());
+		Optional<Course> course = Optional.of(expected);
 		when(courseService.findById(1L)).thenReturn(course);
 
 		mockMvc.perform(get("/courses/1"))
-			.andExpect(status().isOk())
-			.andExpect(view().name("courses/course"))
-			.andExpect(model().attributeExists("course"));
-
-		verify(courseService).findById(1L);
+				.andExpect(status().isOk())
+				.andExpect(view().name("courses/course"))
+				.andExpect(model().attributeExists("course"))
+				.andExpect(model().attribute("course", expected))
+				.andReturn();
 	}
 }

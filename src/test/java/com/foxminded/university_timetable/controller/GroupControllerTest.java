@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.controller;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -52,20 +51,18 @@ class GroupControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("groups/groups"))
 			.andExpect(model().attribute("groups", hasSize(2)));
-
-		verify(groupService).findAll();
 	}
 
 	@Test
 	void givenModel_whenFindById_thenShowGroup() throws Exception {
-		Optional<Group> group = Optional.of(new Group(1L, "g1", "cs", "cs", new Semester(), new ArrayList<>()));
+		Group expected = new Group(1L, "g1", "cs", "cs", new Semester(), new ArrayList<>());
+		Optional<Group> group = Optional.of(expected);
 		when(groupService.findById(1L)).thenReturn(group);
 
 		mockMvc.perform(get("/groups/1"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("groups/group"))
-			.andExpect(model().attributeExists("group"));
-
-		verify(groupService).findById(1L);
+			.andExpect(model().attributeExists("group"))
+			.andExpect(model().attribute("group", expected));
 	}
 }

@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.controller;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -48,23 +47,21 @@ class StudentControllerTest {
 		when(studentService.findAll()).thenReturn(students);
 
 		mockMvc.perform(get("/students"))
-		.andExpect(status().isOk())
-		.andExpect(view().name("students/students"))
-		.andExpect(model().attribute("students", hasSize(2)));
-
-		verify(studentService).findAll();
+			.andExpect(status().isOk())
+			.andExpect(view().name("students/students"))
+			.andExpect(model().attribute("students", hasSize(2)));
 	}
 
 	@Test
 	void givenModel_whenGiveById_thenShowStudent() throws Exception {
-		Optional<Student> student = Optional.of(new Student(1L, "", "", "", "", "", ""));
+		Student expected = new Student(1L, "", "", "", "", "", ""); 
+		Optional<Student> student = Optional.of(expected);
 		when(studentService.findById(1L)).thenReturn(student);
 		
 		mockMvc.perform(get("/students/1"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("students/student"))
-			.andExpect(model().attributeExists("student"));
-		
-		verify(studentService).findById(1L);
+			.andExpect(model().attributeExists("student"))
+			.andExpect(model().attribute("student", expected));
 	}
 }

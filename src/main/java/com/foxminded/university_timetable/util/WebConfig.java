@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.util;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,17 +15,10 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 @Configuration
 @EnableWebMvc
 @ComponentScan("com.foxminded.university_timetable")
-public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
-
-	private ApplicationContext applicationContext;
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
+public class WebConfig implements WebMvcConfigurer {
 
 	@Bean
-	public SpringResourceTemplateResolver templateResolver() {
+	public SpringResourceTemplateResolver templateResolver(ApplicationContext applicationContext) {
 		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
 		templateResolver.setApplicationContext(applicationContext);
 		templateResolver.setPrefix("/WEB-INF/views/");
@@ -35,18 +27,18 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 	}
 
 	@Bean
-	public SpringTemplateEngine templateEngine() {
+	public SpringTemplateEngine templateEngine(SpringResourceTemplateResolver templateResolver) {
 		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver());
+		templateEngine.setTemplateResolver(templateResolver);
 		templateEngine.setEnableSpringELCompiler(true);
 		return templateEngine;
 	}
 
 	@Bean
-	public ViewResolver viewResolver() {
+	public ViewResolver viewResolver(SpringTemplateEngine templateEngine, ApplicationContext applicationContext) {
 		ThymeleafViewResolver resolver = new ThymeleafViewResolver();
 		ViewResolverRegistry registry = new ViewResolverRegistry(null, applicationContext);
-		resolver.setTemplateEngine(templateEngine());
+		resolver.setTemplateEngine(templateEngine);
 		registry.viewResolver(resolver);
 		return resolver;
 	}

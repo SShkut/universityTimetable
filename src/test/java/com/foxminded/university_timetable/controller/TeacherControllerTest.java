@@ -1,7 +1,6 @@
 package com.foxminded.university_timetable.controller;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -51,20 +50,18 @@ class TeacherControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(view().name("teachers/teachers"))
 			.andExpect(model().attribute("teachers", hasSize(2)));
-
-		verify(teacherService).findAll();
 	}
 
 	@Test
 	void givenModel_whenGiveById_thenShowTeacher() throws Exception {
-		Optional<Teacher> teacher = Optional.of(new Teacher(1L, "", "", "", "", "", ""));
+		Teacher expected = new Teacher(1L, "", "", "", "", "", "");
+		Optional<Teacher> teacher = Optional.of(expected);
 		when(teacherService.findById(1L)).thenReturn(teacher);
 		
 		mockMvc.perform(get("/teachers/1"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("teachers/teacher"))
-			.andExpect(model().attributeExists("teacher"));
-		
-		verify(teacherService).findById(1L);
+			.andExpect(model().attributeExists("teacher"))
+			.andExpect(model().attribute("teacher", expected));
 	}
 }
