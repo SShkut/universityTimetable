@@ -66,6 +66,6 @@ public class Semester {
 
 	@Override
 	public String toString() {
-		return "Semester id=" + id + ", yearOfStudy=" + yearOfStudy + ", period=" + period;
+		return String.format("%s/%s", yearOfStudy, period);
 	}
 }
